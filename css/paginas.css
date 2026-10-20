@@ -1,0 +1,628 @@
+/* =========================================================
+   Saint Paul Jr · fundo em grade e
+   estilos das páginas Serviços, Cases e Contato
+   ========================================================= */
+
+/* ---------- Fundo em grade ---------- */
+
+.fundo-grade {
+  --celula: 112px;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  color: var(--branco);
+  background-color: #0f2326;
+  background-image:
+    linear-gradient(rgba(159, 211, 203, 0.13) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(159, 211, 203, 0.13) 1px, transparent 1px);
+  background-size: var(--celula) var(--celula);
+  background-position: right 0 top 0;
+}
+
+/* Luz suave em petróleo por cima da grade */
+.fundo-grade::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(ellipse 60% 70% at 15% 35%, rgba(24, 72, 72, 0.55), transparent 70%),
+    radial-gradient(ellipse 50% 60% at 95% 100%, rgba(8, 20, 22, 0.7), transparent 70%);
+  pointer-events: none;
+}
+
+.fundo-grade .lead {
+  color: rgba(255, 255, 255, 0.86);
+}
+
+.fundo-grade :focus-visible {
+  outline-color: var(--petroleo-claro);
+}
+
+/* ---------- Topo das páginas internas ---------- */
+
+.pagina-topo {
+  padding-top: calc(var(--altura-cabecalho) + clamp(56px, 9vw, 120px));
+  padding-bottom: clamp(64px, 8vw, 112px);
+}
+
+.pagina-topo .titulo {
+  max-width: 16ch;
+  font-size: clamp(2.5rem, 1.4rem + 3.6vw, 4.5rem);
+}
+
+.pagina-topo .lead {
+  max-width: 58ch;
+}
+
+/* ---------- Início: cards de serviços ---------- */
+
+.servicos-grid {
+  display: grid;
+  gap: 20px;
+}
+
+@media (min-width: 640px) {
+  .servicos-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1100px) {
+  .servicos-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.servico-card {
+  display: flex;
+  flex-direction: column;
+  padding: 28px 24px;
+  border: 1px solid var(--linha);
+  border-top: 4px solid var(--petroleo);
+  border-radius: 6px;
+  background: var(--branco);
+  color: var(--preto);
+  text-decoration: none;
+  transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s;
+}
+
+.servico-card:hover {
+  transform: translateY(-4px);
+  border-top-color: var(--mostarda);
+  box-shadow: 0 16px 32px rgba(25, 24, 24, 0.12);
+}
+
+/* Foto no topo do card, sangrando até as bordas, em preto e branco */
+.servico-foto {
+  display: block;
+  margin: -28px -24px 22px;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  background: #d9d9d9;
+}
+
+.servico-foto img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), filter 0.3s;
+}
+
+.servico-card:hover .servico-foto img {
+  transform: scale(1.06);
+  filter: brightness(1.06);
+}
+
+/* Foto da frente no topo de cada painel da página Serviços */
+.painel-foto {
+  margin-bottom: 28px;
+  aspect-ratio: 21 / 9;
+  overflow: hidden;
+  border-radius: 6px;
+  background: #d9d9d9;
+}
+
+.painel-foto img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Preto e branco claro: mais luz e menos contraste para não pesar */
+  filter: grayscale(1) brightness(1.12) contrast(0.9);
+}
+
+.servico-num {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: var(--mostarda-botao);
+}
+
+.servico-card h3 {
+  margin: 10px 0;
+  font-family: var(--fonte-titulo);
+  font-size: 1.5rem;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+}
+
+.servico-card p {
+  color: var(--texto-apoio);
+}
+
+.servico-card ul {
+  display: grid;
+  gap: 8px;
+  margin: 18px 0 24px;
+  font-size: 0.9375rem;
+  font-weight: 500;
+}
+
+.servico-card li {
+  position: relative;
+  padding-left: 18px;
+}
+
+.servico-card li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--petroleo);
+}
+
+.servico-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  margin-top: auto;
+  font-weight: 600;
+  color: var(--petroleo);
+}
+
+.servico-link svg {
+  width: 18px;
+  height: 18px;
+  transition: transform 0.2s;
+}
+
+.servico-card:hover .servico-link svg {
+  transform: translateX(4px);
+}
+
+/* Link "Ver todos os serviços" no menu suspenso */
+.submenu .submenu-todos {
+  margin-top: 4px;
+  border-top: 1px solid var(--linha-escura);
+  border-radius: 0 0 var(--raio) var(--raio);
+  color: var(--petroleo-claro);
+}
+
+.nav-link.ativo {
+  color: var(--petroleo-claro);
+}
+
+a.gaveta-grupo {
+  text-decoration: none;
+}
+
+/* ---------- Cases ---------- */
+
+.formato-case {
+  display: grid;
+  gap: 16px;
+  counter-reset: none;
+}
+
+@media (min-width: 640px) {
+  .formato-case {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .formato-case {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.formato-case li {
+  padding: 24px;
+  border-radius: 6px;
+  background: var(--areia);
+  color: var(--petroleo-escuro);
+}
+
+.formato-num {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: var(--mostarda-botao);
+}
+
+.formato-case h3 {
+  margin: 10px 0 6px;
+  font-family: var(--fonte-titulo);
+  font-size: 1.375rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.lista-cases {
+  display: grid;
+  gap: 20px;
+  margin-top: clamp(40px, 5vw, 64px);
+}
+
+.case-vazio {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 18px;
+  row-gap: 8px;
+  padding: clamp(28px, 4vw, 48px);
+  border: 2px dashed #cfc8ab;
+  border-radius: 8px;
+}
+
+.case-vazio .ponto {
+  grid-row: span 2;
+  width: 18px;
+  height: 18px;
+  margin-top: 6px;
+  border-radius: 50%;
+  background: var(--petroleo);
+}
+
+.case-vazio h3 {
+  font-family: var(--fonte-titulo);
+  font-size: clamp(1.25rem, 1.1rem + 0.6vw, 1.625rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.case-vazio p {
+  color: var(--texto-apoio);
+  max-width: 62ch;
+}
+
+.case-card {
+  padding: 28px;
+  border: 1px solid var(--linha);
+  border-top: 4px solid var(--petroleo);
+  border-radius: 6px;
+}
+
+/* Painel de aba aberto por link (#frente) não fica com contorno de foco */
+.painel:focus {
+  outline: none;
+}
+
+/* ---------- Contato (página própria) ---------- */
+
+.subtitulo#titulo-contato {
+  margin-bottom: 8px;
+}
+
+/* ---------- Animações das páginas ---------- */
+
+@media (prefers-reduced-motion: no-preference) {
+  /* Topo das páginas internas entra ao abrir */
+  .pagina-topo .container > * {
+    animation: spj-subir 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .pagina-topo .container > :nth-child(2) {
+    animation-delay: 0.12s;
+  }
+
+  .pagina-topo .container > :nth-child(3) {
+    animation-delay: 0.24s;
+  }
+
+  .pagina-topo .titulo-barra::after {
+    animation: spj-barra 0.8s 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+}
+
+@keyframes spj-barra {
+  from {
+    width: 0;
+  }
+  to {
+    width: 72px;
+  }
+}
+
+
+/* =========================================================
+   Sintomas (página inicial) e páginas de cada dor
+   ========================================================= */
+
+/* Palavra sublinhada em mostarda no título, como no protótipo */
+/* Barra mostarda sob "estrutura": acompanha a palavra inteira,
+   com a mesma espessura das barras dos títulos (6 px) */
+.sublinhado {
+  position: relative;
+  display: inline-block;
+}
+
+.sublinhado::after {
+  content: "";
+  position: absolute;
+  left: 0.04em;
+  right: 0.02em;
+  bottom: -0.1em;
+  height: 6px;
+  background: var(--mostarda);
+  transform-origin: left center;
+}
+
+/* Seção de sintomas com a Avenida Paulista colorida de fundo */
+.secao-sintomas-foto {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  color: var(--branco);
+  background: var(--petroleo-escuro);
+}
+
+.sintomas-fundo {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 40%;
+  filter: grayscale(1);
+}
+
+/* Véu escuro em petróleo: a foto aparece, mas o texto continua legível */
+.secao-sintomas-foto::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(90deg, rgba(12, 28, 30, 0.8) 0%, rgba(12, 28, 30, 0.5) 50%, rgba(12, 28, 30, 0.15) 100%),
+    linear-gradient(0deg, rgba(12, 28, 30, 0.7) 0%, rgba(12, 28, 30, 0) 45%);
+}
+
+.secao-sintomas-foto .titulo {
+  color: var(--branco);
+}
+
+.secao-sintomas-foto .lead {
+  color: rgba(255, 255, 255, 0.88);
+}
+
+/* Botões levemente translúcidos sobre a foto, com borda clara */
+.secao-sintomas-foto .sintoma-card {
+  background: rgba(24, 72, 72, 0.88);
+  border: 1px solid rgba(159, 211, 203, 0.25);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+}
+
+.secao-sintomas-foto .sintoma-card:hover {
+  background: rgba(18, 59, 59, 0.95);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* A foto se aproxima devagar enquanto a seção está na tela */
+  .sintomas-fundo {
+    animation: spj-zoom-lento 12s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+}
+
+.sintomas-cards {
+  display: grid;
+  gap: 20px;
+}
+
+@media (min-width: 860px) {
+  .sintomas-cards {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .sintomas-cards-duplo {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Botão de sintoma: bloco petróleo com texto mostarda (protótipo) */
+.sintoma-card {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-height: 280px;
+  padding: clamp(28px, 3vw, 36px);
+  border-radius: 6px;
+  background: var(--petroleo);
+  color: var(--branco);
+  text-decoration: none;
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s, background-color 0.3s;
+}
+
+/* Ponto do j cortado no canto, cresce ao passar o mouse */
+.sintoma-card::after {
+  content: "";
+  position: absolute;
+  right: -70px;
+  bottom: -70px;
+  z-index: -1;
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  background: rgba(159, 211, 203, 0.12);
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.sintoma-card:hover {
+  background: #123b3b;
+  transform: translateY(-6px);
+  box-shadow: 0 20px 40px rgba(25, 24, 24, 0.22);
+}
+
+.sintoma-card:hover::after {
+  transform: scale(1.6);
+}
+
+.sintoma-num {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--petroleo-claro);
+}
+
+/* Mostarda um tom mais claro: passa de 4,5:1 sobre o petróleo */
+.sintoma-texto {
+  font-family: var(--fonte-titulo);
+  font-size: clamp(1.375rem, 1.15rem + 0.8vw, 1.75rem);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+  color: #d9a520;
+}
+
+.sintoma-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  margin-top: auto;
+  font-weight: 600;
+}
+
+.sintoma-link svg {
+  width: 18px;
+  height: 18px;
+  transition: transform 0.2s;
+}
+
+.sintoma-card:hover .sintoma-link svg {
+  transform: translateX(5px);
+}
+
+/* ---------- Página da dor ---------- */
+
+.voltar {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 28px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+}
+
+.voltar svg {
+  width: 18px;
+  height: 18px;
+  transition: transform 0.2s;
+}
+
+.voltar:hover {
+  color: var(--branco);
+}
+
+.voltar:hover svg {
+  transform: translateX(-4px);
+}
+
+.pagina-topo .titulo.titulo-barra {
+  max-width: 20ch;
+}
+
+.dor-problema {
+  padding: clamp(28px, 4vw, 48px);
+  border-left: 6px solid var(--mostarda);
+  border-radius: 0 6px 6px 0;
+  background: var(--areia);
+}
+
+.dor-problema .eyebrow {
+  margin-bottom: 10px;
+}
+
+.dor-problema-texto {
+  font-family: var(--fonte-titulo);
+  font-size: clamp(1.75rem, 1.3rem + 1.8vw, 2.75rem);
+  font-weight: 800;
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+  color: var(--petroleo-escuro);
+  max-width: 28ch;
+}
+
+.dor-cabeca {
+  margin-top: clamp(56px, 7vw, 88px);
+  margin-bottom: 28px;
+}
+
+.dor-porques {
+  display: grid;
+  gap: 16px;
+}
+
+@media (min-width: 760px) {
+  .dor-porques {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.dor-porques li {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 16px;
+  padding: 24px;
+  border: 1px solid var(--linha);
+  border-radius: 6px;
+}
+
+.dor-porques .ponto {
+  width: 14px;
+  height: 14px;
+  margin-top: 6px;
+  border-radius: 50%;
+  background: var(--petroleo);
+}
+
+.dor-porques h4 {
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+.dor-porques p {
+  margin-top: 6px;
+  color: var(--texto-apoio);
+}
+
+.secao-areia .metodo + .link-seta {
+  margin-top: 48px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* A barra de "estrutura" se desenha da esquerda para a direita */
+  .js .revelar .sublinhado::after {
+    transform: scaleX(0);
+    transition: transform 0.9s 0.35s cubic-bezier(0.65, 0, 0.35, 1);
+  }
+
+  .js .revelar.visivel .sublinhado::after {
+    transform: scaleX(1);
+  }
+
+  .pagina-topo .voltar {
+    animation: spj-subir 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+}

@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Saint Paul Jr | Consultoria estratégica</title>
+  <meta name="description" content="A Saint Paul Jr é a consultoria estratégica da Escola de Negócios Saint Paul: diagnóstico, redesenho e implementação para empresas que cresceram e precisam de estrutura.">
+  <meta name="theme-color" content="#142627">
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/paginas.css">
+  <link rel="stylesheet" href="css/animacoes.css">
+  <script>/* ?estatico mostra tudo parado (para capturar e levar ao Figma) */document.documentElement.classList.add(/[?&]estatico/.test(location.search) ? 'estatico' : 'js')</script>
+  <script src="js/main.js" defer></script>
+</head>
+<body>
+  <a class="pular" href="#conteudo">Pular para o conteúdo</a>
+
+  <!-- ===== Cabeçalho ===== -->
+  <header class="cabecalho escuro" data-cabecalho>
+    <div class="container cabecalho-inner">
+      <button class="menu-toggle" type="button" aria-controls="gaveta" aria-expanded="false" aria-label="Abrir menu" data-abrir-gaveta>
+        <span></span><span></span><span></span>
+      </button>
+      <a class="logo" href="index.html" aria-label="Saint Paul Jr, página inicial" data-logo>
+        <span class="logo-anim" aria-hidden="true"><span>S</span><span class="logo-ext"><span>aint&nbsp;</span></span><span>P</span><span class="logo-ext"><span>aul&nbsp;</span></span><span class="logo-j">ȷ<i class="logo-ponto"></i></span><span>r</span></span>
+      </a>
+      <nav class="nav-principal" aria-label="Principal">
+        <ul>
+          <li><a class="nav-link" href="index.html" aria-current="page">Início</a></li>
+          <li class="tem-sub" data-submenu>
+            <button class="nav-link" type="button" aria-expanded="false" aria-controls="sub-servicos">
+              Serviços
+              <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+            </button>
+            <ul class="submenu" id="sub-servicos">
+              <li><a href="servicos.html#plano-de-negocios">Plano de negócios<small>Modelagem, pitch e valuation, viabilidade</small></a></li>
+              <li><a href="servicos.html#analise-mercadologica">Análise mercadológica<small>Mercado, concorrência e público-alvo</small></a></li>
+              <li><a href="servicos.html#consultoria-operacional">Consultoria operacional<small>Processos e ferramentas de gestão</small></a></li>
+              <li><a href="servicos.html#consultoria-financeira">Consultoria financeira<small>Diagnóstico financeiro e precificação</small></a></li>
+              <li><a class="submenu-todos" href="servicos.html">Ver todos os serviços</a></li>
+            </ul>
+          </li>
+          <li><a class="nav-link" href="#sobre-nos">Sobre nós</a></li>
+          <li><a class="nav-link" href="cases.html">Cases</a></li>
+          <li><a class="nav-link" href="contato.html">Contato</a></li>
+        </ul>
+      </nav>
+      <a class="btn btn-mostarda btn-cabecalho" href="contato.html">Fale conosco</a>
+    </div>
+  </header>
+
+  <!-- ===== Menu lateral ===== -->
+  <div class="gaveta escuro" id="gaveta" aria-hidden="true" inert data-gaveta>
+    <div class="gaveta-fundo" data-fechar-gaveta></div>
+    <div class="gaveta-painel" role="dialog" aria-modal="true" aria-label="Menu">
+      <div class="gaveta-topo">
+        <img class="gaveta-logo" src="assets/img/spjr-logo-negativo.png" alt="Saint Paul Jr" width="780" height="412">
+        <button class="gaveta-fechar" type="button" aria-label="Fechar menu" data-fechar-gaveta>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+      </div>
+      <nav aria-label="Menu completo">
+        <ul class="gaveta-links" role="list">
+          <li><a href="index.html" aria-current="page">Início</a></li>
+          <li>
+            <a class="gaveta-grupo" href="servicos.html">Serviços</a>
+            <ul class="gaveta-sub">
+              <li><a href="servicos.html#plano-de-negocios">Plano de negócios</a></li>
+              <li><a href="servicos.html#analise-mercadologica">Análise mercadológica</a></li>
+              <li><a href="servicos.html#consultoria-operacional">Consultoria operacional</a></li>
+              <li><a href="servicos.html#consultoria-financeira">Consultoria financeira</a></li>
+            </ul>
+          </li>
+          <li><a href="#sobre-nos">Sobre nós</a></li>
+          <li><a href="cases.html">Cases</a></li>
+          <li><a href="contato.html">Contato</a></li>
+        </ul>
+      </nav>
+      <a class="btn btn-mostarda" href="contato.html">Fale conosco</a>
+      <div class="gaveta-contato">
+        <p class="eyebrow">Contato</p>
+        <a class="contato-item" data-contato="email" href="#"><span class="icone" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3.5 6.5 12 13l8.5-6.5"/></svg></span><span data-rotulo>E-mail</span></a>
+      </div>
+    </div>
+  </div>
+
+  <main id="conteudo">
+    <!-- ===== Hero (protótipo Figma: Início) ===== -->
+    <section class="hero escuro" aria-labelledby="titulo-hero">
+      <img class="hero-foto" src="assets/img/saint-paul-predio.jpg" alt="" width="1600" height="1454" fetchpriority="high">
+      <div class="hero-faixa">
+        <div class="container">
+          <h1 id="titulo-hero">Preparamos sua empresa para <br class="so-desktop"><mark class="destaque"><span>inovar</span></mark> de verdade</h1>
+          <p class="hero-sub">Diagnóstico, redesenho e implementação para empresas que cresceram e precisam de estrutura.</p>
+          <div class="hero-acoes">
+            <a class="btn btn-mostarda btn-grande" href="servicos.html">Confira nossos escopos</a>
+          </div>
+        </div>
+      </div>
+      <nav class="hero-frentes" aria-label="Frentes de consultoria">
+        <ul class="container" role="list">
+          <li><a href="servicos.html#plano-de-negocios">Plano de negócios</a></li>
+          <li><a href="servicos.html#analise-mercadologica">Análise mercadológica</a></li>
+          <li><a href="servicos.html#consultoria-operacional">Consultoria operacional</a></li>
+          <li><a href="servicos.html#consultoria-financeira">Consultoria financeira</a></li>
+        </ul>
+      </nav>
+    </section>
+
+    <!-- ===== Para quem é ===== -->
+    <section class="secao secao-sintomas-foto escuro" id="para-quem" aria-labelledby="titulo-sintomas">
+      <img class="sintomas-fundo" src="assets/img/avenida-paulista.jpg" alt="" width="2000" height="1332" loading="lazy">
+      <div class="container">
+        <div class="secao-cabeca">
+          <h2 class="titulo" id="titulo-sintomas">Sua empresa cresceu.<br>E a <span class="sublinhado">estrutura</span>?</h2>
+          <p class="lead">Os sintomas aparecem antes de o problema ganhar nome. Escolha o que mais parece com a sua empresa e veja o que está por trás dele.</p>
+        </div>
+        <div class="sintomas-cards">
+          <a class="sintoma-card" href="dor-caixa.html">
+            <span class="sintoma-num">Sintoma 01</span>
+            <span class="sintoma-texto">Sua empresa gera lucro, mas o caixa não acompanha.</span>
+            <span class="sintoma-link">Entender por quê <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+          </a>
+          <a class="sintoma-card" href="dor-inovacao.html">
+            <span class="sintoma-num">Sintoma 02</span>
+            <span class="sintoma-texto">Sua empresa investe em inovação, mas não vê resultado.</span>
+            <span class="sintoma-link">Entender por quê <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+          </a>
+          <a class="sintoma-card" href="dor-recorrencia.html">
+            <span class="sintoma-num">Sintoma 03</span>
+            <span class="sintoma-texto">Sua empresa capta clientes, mas não consegue recorrência.</span>
+            <span class="sintoma-link">Entender por quê <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Serviços (resumo) ===== -->
+    <section class="secao" id="servicos" aria-labelledby="titulo-servicos">
+      <div class="container">
+        <div class="secao-cabeca">
+          <p class="eyebrow">Serviços</p>
+          <h2 class="titulo titulo-barra" id="titulo-servicos">Consultoria estratégica em quatro frentes.</h2>
+          <p class="lead">Cada frente tem escopos definidos. Escolha a que conversa com o seu desafio e veja exatamente o que entregamos.</p>
+        </div>
+        <div class="servicos-grid">
+          <a class="servico-card" href="servicos.html#plano-de-negocios">
+            <span class="servico-foto"><img src="assets/img/servico-plano.jpg" alt="Apresentação para uma plateia na Escola de Negócios Saint Paul" width="1600" height="880" loading="lazy" style="object-position:center 35%"></span>
+            <span class="servico-num">01</span>
+            <h3>Plano de negócios</h3>
+            <p>Para tirar uma ideia do papel ou decidir uma expansão com número na mão.</p>
+            <ul role="list"><li>Modelagem de negócio</li><li>Pitch e valuation</li><li>Viabilidade e business case</li></ul>
+            <span class="servico-link">Ver escopos <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+          </a>
+          <a class="servico-card" href="servicos.html#analise-mercadologica">
+            <span class="servico-foto"><img src="assets/img/servico-mercado.jpg" alt="Turma em sala de aula com painel do Valor Econômico ao fundo" width="1931" height="1287" loading="lazy" style="object-position:center 40%"></span>
+            <span class="servico-num">02</span>
+            <h3>Análise mercadológica</h3>
+            <p>Para saber onde você compete, contra quem e para quem vende.</p>
+            <ul role="list"><li>Pesquisa de mercado e concorrência</li><li>Definição de público-alvo</li></ul>
+            <span class="servico-link">Ver escopos <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+          </a>
+          <a class="servico-card" href="servicos.html#consultoria-operacional">
+            <span class="servico-foto"><img src="assets/img/servico-operacional.webp" alt="Professor conduz discussão sobre protagonismo e accountability com a turma" width="2000" height="1125" loading="lazy" style="object-position:center 45%"></span>
+            <span class="servico-num">03</span>
+            <h3>Consultoria operacional</h3>
+            <p>Para a operação que cresceu mais rápido que os processos.</p>
+            <ul role="list"><li>Mapeamento e redesenho de processos</li><li>Implementação de ferramentas de gestão</li></ul>
+            <span class="servico-link">Ver escopos <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+          </a>
+          <a class="servico-card" href="servicos.html#consultoria-financeira">
+            <span class="servico-foto"><img src="assets/img/servico-financeira.jpg" alt="Palestra em auditório da Saint Paul com gráfico na tela" width="1280" height="735" loading="lazy" style="object-position:70% center"></span>
+            <span class="servico-num">04</span>
+            <h3>Consultoria financeira</h3>
+            <p>Para saber para onde vai o dinheiro e quanto cobrar.</p>
+            <ul role="list"><li>Diagnóstico financeiro</li><li>Precificação</li></ul>
+            <span class="servico-link">Ver escopos <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Como trabalhamos ===== -->
+    <section class="secao secao-areia" id="como-trabalhamos" aria-labelledby="titulo-metodo">
+      <div class="container">
+        <div class="secao-cabeca">
+          <p class="eyebrow">Como trabalhamos</p>
+          <h2 class="titulo titulo-barra" id="titulo-metodo">Você sabe o que recebe e quando.</h2>
+          <p class="lead">Entramos na operação, mapeamos o que existe de fato e ficamos ao seu lado até a mudança virar rotina.</p>
+        </div>
+
+        <ol class="metodo" role="list">
+          <li class="metodo-etapa">
+            <span class="metodo-ponto" aria-hidden="true"></span>
+            <h3>Diagnóstico</h3>
+            <p>Acompanhamos a operação de perto para entender o contexto, os gargalos e o que precisa mudar.</p>
+          </li>
+          <li class="metodo-etapa">
+            <span class="metodo-ponto" aria-hidden="true"></span>
+            <h3>Redesenho</h3>
+            <p>Desenhamos o processo novo com a sua equipe: fluxo, procedimento e indicadores.</p>
+          </li>
+          <li class="metodo-etapa">
+            <span class="metodo-ponto" aria-hidden="true"></span>
+            <h3>Implementação</h3>
+            <p>O processo redesenhado é testado com a equipe e ajustado antes de virar rotina.</p>
+          </li>
+        </ol>
+
+        <ul class="pilares escuro" role="list">
+          <li><span class="ponto" aria-hidden="true"></span><div><h3>Escopo fechado</h3><p>Você sabe o que recebe antes de começar.</p></div></li>
+          <li><span class="ponto" aria-hidden="true"></span><div><h3>Prazo por etapa</h3><p>Cada entrega tem data e validação.</p></div></li>
+          <li><span class="ponto" aria-hidden="true"></span><div><h3>Reunião de acompanhamento</h3><p>Uma por etapa, para validar antes de seguir.</p></div></li>
+          <li><span class="ponto" aria-hidden="true"></span><div><h3>Professor orientador</h3><p>Todo projeto tem um acompanhando.</p></div></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ===== Sobre nós: quem está por trás (protótipo Figma: Página-2) ===== -->
+    <section class="secao fundo-grade escuro" id="sobre-nos" aria-labelledby="titulo-sobre">
+      <div class="container ecossistema-grid">
+        <figure class="ecossistema-figura">
+          <img loading="lazy" src="assets/img/ecossistema-escuro.svg" width="690" height="690" data-svg-inline
+               alt="Ecossistema da Saint Paul Jr: Escola de Negócios Saint Paul, Exame e BTG Pactual, ligados por estratégia, conexão, mentorias, orientação, inovação, networking e planejamento.">
+        </figure>
+        <div class="ecossistema-texto">
+          <p class="eyebrow">Sobre nós</p>
+          <h2 class="titulo titulo-barra" id="titulo-sobre">Quem está por trás</h2>
+          <p class="lead">Somos a consultoria estratégica da Escola de Negócios Saint Paul. Entramos na operação do cliente, mapeamos o que existe de fato e ficamos ao lado dele na implementação.</p>
+          <ul class="lista-pontos lista-pontos-escura" role="list">
+            <li><strong>Escola de Negócios Saint Paul.</strong> Corpo docente e conselho estratégico por trás de cada projeto.</li>
+            <li><strong>Ecossistema Exame e BTG Pactual.</strong> A rede de educação e negócios da qual a escola faz parte.</li>
+            <li><strong>Professor orientador.</strong> Todo projeto tem um acompanhando, do diagnóstico à entrega.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Sobre nós: propósito ===== -->
+    <section class="secao" aria-labelledby="titulo-proposito">
+      <div class="container proposito-grid">
+        <div>
+          <p class="eyebrow">Nosso propósito</p>
+          <h2 class="titulo titulo-barra" id="titulo-proposito">Onde o potencial ganha direção.</h2>
+        </div>
+        <div class="proposito-texto">
+          <p class="lead">Estratégia é traçar um caminho de um ponto até um objetivo.</p>
+          <p>Para o cliente, é sair de onde a empresa está hoje e chegar aonde ela quer, com etapas, prazo e acompanhamento. Para quem faz parte da Saint Paul Jr, é descobrir do que gosta, do que não gosta e construir um propósito.</p>
+          <div class="ponto-a-ponto" aria-hidden="true"><span></span><i></i><span></span><i></i><span></span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Sobre nós: missão, visão e valores ===== -->
+    <section class="secao secao-areia" aria-labelledby="titulo-mvv">
+      <div class="container">
+        <div class="secao-cabeca">
+          <p class="eyebrow">Missão, visão e valores</p>
+          <h2 class="titulo titulo-barra" id="titulo-mvv">O que move cada projeto.</h2>
+        </div>
+
+        <div class="mvv-grid">
+          <article class="mvv-card mvv-preto escuro">
+            <h3 class="eyebrow">Missão</h3>
+            <p class="mvv-texto">Transformar potencial em impacto, formando profissionais capazes de resolver problemas reais por meio da prática e da inovação, e entregando às empresas projetos de excelência.</p>
+          </article>
+          <article class="mvv-card mvv-petroleo escuro">
+            <h3 class="eyebrow">Visão</h3>
+            <p class="mvv-texto">Ser uma EJ referência em consultoria e IA e na criação de líderes, que incentive a iniciativa empreendedora e a busca por inovação.</p>
+          </article>
+        </div>
+
+        <blockquote class="crenca">
+          <cite>No que acreditamos</cite>
+          <p>Sempre existe um jeito melhor, ou diferente, de fazer o que é feito há anos. Perguntamos “por quê” antes de aceitar o “como”.</p>
+        </blockquote>
+
+        <h3 class="subtitulo valores-titulo">Valores</h3>
+        <ul class="valores" role="list">
+          <li>Curiosidade</li>
+          <li>Meritocracia</li>
+          <li>Proatividade</li>
+          <li>Sentimento de dono</li>
+          <li>Espírito empreendedor</li>
+          <li>Cooperação</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ===== Chamada final ===== -->
+    <section class="secao secao-escura cta-faixa" aria-labelledby="titulo-cta">
+      <div class="container">
+        <h2 class="titulo" id="titulo-cta">O próximo passo é uma conversa.</h2>
+        <div class="cta-acoes">
+          <a class="btn btn-mostarda btn-grande" href="contato.html">Fale conosco</a>
+        </div>
+      </div>
+      <div class="ponto-cortado" aria-hidden="true"></div>
+    </section>
+  </main>
+
+  <!-- ===== Rodapé ===== -->
+  <footer class="rodape escuro">
+    <div class="container rodape-grid">
+      <div>
+        <img class="rodape-logo" src="assets/img/spjr-logo-negativo.png" alt="Saint Paul Jr" width="780" height="412" loading="lazy">
+        <p class="rodape-frase">Onde o potencial ganha direção.</p>
+        <p class="rodape-desc">Consultoria estratégica da Escola de Negócios Saint Paul.</p>
+      </div>
+      <div>
+        <h2 class="rodape-titulo">Nossas áreas</h2>
+        <ul role="list">
+          <li><a href="servicos.html#plano-de-negocios">Plano de negócios</a></li>
+          <li><a href="servicos.html#analise-mercadologica">Análise mercadológica</a></li>
+          <li><a href="servicos.html#consultoria-operacional">Consultoria operacional</a></li>
+          <li><a href="servicos.html#consultoria-financeira">Consultoria financeira</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2 class="rodape-titulo">Navegação</h2>
+        <ul role="list">
+          <li><a href="index.html">Início</a></li>
+          <li><a href="servicos.html">Serviços</a></li>
+          <li><a href="#sobre-nos">Sobre nós</a></li>
+          <li><a href="cases.html">Cases</a></li>
+          <li><a href="contato.html">Contato</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2 class="rodape-titulo">Contato</h2>
+        <ul role="list">
+          <li><a class="contato-item" data-contato="email" href="#"><span class="icone" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3.5 6.5 12 13l8.5-6.5"/></svg></span><span data-rotulo>E-mail</span></a></li>
+          <li><a class="contato-item" data-contato="linkedin" href="#"><span class="icone" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9.5h4V21H3zM9.5 9.5h3.8v1.6h.06c.53-1 1.83-2.06 3.77-2.06 4.03 0 4.77 2.65 4.77 6.1V21h-4v-5.1c0-1.22-.02-2.78-1.7-2.78-1.7 0-1.96 1.33-1.96 2.7V21h-4z"/></svg></span><span data-rotulo>LinkedIn</span></a></li>
+          <li><a class="contato-item" data-contato="instagram" href="#"><span class="icone" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></span><span data-rotulo>Instagram</span></a></li>
+          <li><a class="contato-item" data-contato="whatsapp" href="#"><span class="icone" aria-hidden="true"><svg viewBox="0 0 32 32" fill="currentColor"><path d="M16.04 3C8.86 3 3.04 8.82 3.04 16c0 2.3.6 4.53 1.74 6.5L3 29l6.68-1.75A12.95 12.95 0 0 0 16.04 29C23.2 29 29 23.18 29 16S23.2 3 16.04 3zm0 23.6c-2 0-3.95-.54-5.65-1.56l-.4-.24-3.97 1.04 1.06-3.87-.26-.4A10.56 10.56 0 0 1 5.43 16c0-5.85 4.76-10.6 10.61-10.6 5.84 0 10.57 4.75 10.57 10.6 0 5.85-4.73 10.6-10.57 10.6zm5.8-7.94c-.32-.16-1.88-.93-2.17-1.03-.29-.11-.5-.16-.71.16-.21.32-.82 1.03-1 1.24-.19.21-.37.24-.69.08-.32-.16-1.34-.5-2.55-1.58-.94-.84-1.58-1.88-1.76-2.2-.19-.32-.02-.49.14-.65.14-.14.32-.37.48-.56.16-.19.21-.32.32-.53.1-.21.05-.4-.03-.56-.08-.16-.71-1.72-.98-2.35-.26-.62-.52-.53-.71-.54h-.61c-.21 0-.56.08-.85.4-.29.32-1.11 1.09-1.11 2.65 0 1.56 1.14 3.07 1.3 3.28.16.21 2.24 3.42 5.43 4.8.76.33 1.35.52 1.81.67.76.24 1.45.21 2 .13.61-.09 1.88-.77 2.14-1.51.27-.74.27-1.38.19-1.51-.08-.13-.29-.21-.61-.37z"/></svg></span><span data-rotulo>WhatsApp</span></a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="container rodape-base">
+      <p>© <span data-ano>2026</span> Saint Paul Jr. Todos os direitos reservados.</p>
+    </div>
+  </footer>
+
+  <a class="whatsapp-flutuante" href="contato.html" aria-label="Fale com a gente" data-whatsapp-flutuante>
+    <span class="bolha"><svg aria-hidden="true" viewBox="0 0 32 32" fill="currentColor"><path d="M16.04 3C8.86 3 3.04 8.82 3.04 16c0 2.3.6 4.53 1.74 6.5L3 29l6.68-1.75A12.95 12.95 0 0 0 16.04 29C23.2 29 29 23.18 29 16S23.2 3 16.04 3zm0 23.6c-2 0-3.95-.54-5.65-1.56l-.4-.24-3.97 1.04 1.06-3.87-.26-.4A10.56 10.56 0 0 1 5.43 16c0-5.85 4.76-10.6 10.61-10.6 5.84 0 10.57 4.75 10.57 10.6 0 5.85-4.73 10.6-10.57 10.6zm5.8-7.94c-.32-.16-1.88-.93-2.17-1.03-.29-.11-.5-.16-.71.16-.21.32-.82 1.03-1 1.24-.19.21-.37.24-.69.08-.32-.16-1.34-.5-2.55-1.58-.94-.84-1.58-1.88-1.76-2.2-.19-.32-.02-.49.14-.65.14-.14.32-.37.48-.56.16-.19.21-.32.32-.53.1-.21.05-.4-.03-.56-.08-.16-.71-1.72-.98-2.35-.26-.62-.52-.53-.71-.54h-.61c-.21 0-.56.08-.85.4-.29.32-1.11 1.09-1.11 2.65 0 1.56 1.14 3.07 1.3 3.28.16.21 2.24 3.42 5.43 4.8.76.33 1.35.52 1.81.67.76.24 1.45.21 2 .13.61-.09 1.88-.77 2.14-1.51.27-.74.27-1.38.19-1.51-.08-.13-.29-.21-.61-.37z"/></svg></span>
+    <span class="rotulo">Fale com a gente</span>
+  </a>
+</body>
+</html>

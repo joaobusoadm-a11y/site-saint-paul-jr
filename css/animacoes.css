@@ -1,0 +1,446 @@
+/* =========================================================
+   Saint Paul Jr · logo animado, mapa e animações
+   Tudo que se move fica dentro de "prefers-reduced-motion:
+   no-preference": quem pediu menos movimento no sistema vê o
+   site parado.
+   ========================================================= */
+
+/* ---------- Mapa ---------- */
+
+.mapa {
+  margin-top: 20px;
+  overflow: hidden;
+  border: 1px solid var(--linha);
+  border-radius: 6px;
+  aspect-ratio: 16 / 10;
+  background: var(--areia);
+}
+
+.mapa iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+/* ---------- Logo do cabeçalho ----------
+   "SPjr" desliza para "Saint Paul jr" e o ponto muda de cor
+   junto com o deslizamento */
+
+.logo {
+  color: var(--branco);
+  text-decoration: none;
+}
+
+.logo-anim {
+  display: inline-flex;
+  align-items: baseline;
+  padding-top: 0.18em;
+  font: 800 2.125rem/1 var(--fonte-titulo);
+  letter-spacing: -0.035em;
+  white-space: nowrap;
+}
+
+.logo-ext {
+  display: inline-grid;
+  grid-template-columns: 0fr;
+  transition: grid-template-columns 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.logo-ext > span {
+  min-width: 0;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateX(-60%);
+  transition: opacity 0.45s ease, transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.logo-j {
+  position: relative;
+}
+
+.logo-ponto {
+  position: absolute;
+  left: 0.1em;
+  top: -0.2em;
+  width: 0.3em;
+  height: 0.3em;
+  border-radius: 50%;
+  /* Metade petróleo claro, metade mostarda: ao deslizar, a cor troca */
+  background: linear-gradient(90deg, var(--petroleo-claro) 0 50%, var(--mostarda) 50% 100%);
+  background-size: 200% 100%;
+  background-position: 0 0;
+  transition: background-position 0.6s cubic-bezier(0.22, 1, 0.36, 1), transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.logo:hover .logo-ext,
+.logo:focus-visible .logo-ext,
+.logo.aberto .logo-ext {
+  grid-template-columns: 1fr;
+}
+
+.logo:hover .logo-ext > span,
+.logo:focus-visible .logo-ext > span,
+.logo.aberto .logo-ext > span {
+  opacity: 1;
+  transform: none;
+}
+
+.logo:hover .logo-ext + span + .logo-ext > span,
+.logo.aberto .logo-ext + span + .logo-ext > span {
+  transition-delay: 0.08s;
+}
+
+.logo:hover .logo-ponto,
+.logo:focus-visible .logo-ponto,
+.logo.aberto .logo-ponto {
+  background-position: 100% 0;
+}
+
+/* O pingo do j cai do alto e quica até o lugar: ao abrir a página
+   e de novo ao passar o mouse no logo */
+@keyframes spj-pingo-cai {
+  0% {
+    transform: translateY(-2.2em);
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  55% {
+    transform: translateY(0) scale(1.25, 0.75);
+  }
+  70% {
+    transform: translateY(-0.35em) scale(0.92, 1.08);
+  }
+  85% {
+    transform: translateY(0) scale(1.08, 0.92);
+  }
+  93% {
+    transform: translateY(-0.08em);
+  }
+  100% {
+    transform: none;
+  }
+}
+
+/* Mesmo movimento com outro nome, para a animação recomeçar no hover */
+@keyframes spj-pingo-quica {
+  0% {
+    transform: translateY(-1em);
+  }
+  55% {
+    transform: translateY(0) scale(1.25, 0.75);
+  }
+  70% {
+    transform: translateY(-0.3em) scale(0.92, 1.08);
+  }
+  85% {
+    transform: translateY(0) scale(1.08, 0.92);
+  }
+  100% {
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .logo-ponto {
+    transform-origin: 50% 100%;
+    animation: spj-pingo-cai 1s 0.4s cubic-bezier(0.55, 0, 0.45, 1) both;
+  }
+
+  .logo:hover .logo-ponto,
+  .logo:focus-visible .logo-ponto {
+    animation: spj-pingo-quica 0.8s cubic-bezier(0.55, 0, 0.45, 1) both;
+  }
+}
+
+@media (max-width: 380px) {
+  .logo-anim {
+    font-size: 1.75rem;
+  }
+}
+
+/* ---------- Keyframes ---------- */
+
+@keyframes spj-subir {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes spj-aparecer {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes spj-zoom-lento {
+  from {
+    transform: scale(1.12);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+@keyframes spj-faixa {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes spj-destaque-fundo {
+  to {
+    background-size: 100% 100%;
+  }
+}
+
+@keyframes spj-pulso {
+  0% {
+    box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.55);
+  }
+  70% {
+    box-shadow: 0 0 0 18px rgba(37, 211, 102, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(37, 211, 102, 0);
+  }
+}
+
+@keyframes spj-flutuar {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: -10px -14px;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* ---------- Hero: entrada ao abrir o site ---------- */
+
+  .cabecalho {
+    animation: spj-aparecer 0.8s 0.1s both;
+  }
+
+  .hero-foto {
+    animation: spj-zoom-lento 7s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .hero-faixa {
+    animation: spj-faixa 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .hero h1 {
+    animation: spj-subir 0.8s 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  /* INOVAR: começa sem mostarda e a faixa mostarda desliza da
+     esquerda para a direita por trás da palavra até cobri-la */
+  .hero h1 .destaque {
+    background-image: linear-gradient(var(--mostarda), var(--mostarda));
+    background-repeat: no-repeat;
+    background-position: 0 0;
+    background-size: 0% 100%;
+    background-color: transparent;
+    animation: spj-destaque-fundo 0.9s 0.9s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+  }
+
+  .hero-sub {
+    animation: spj-subir 0.8s 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .hero-acoes {
+    animation: spj-subir 0.8s 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .hero-frentes li {
+    animation: spj-subir 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .hero-frentes li:nth-child(1) {
+    animation-delay: 1.2s;
+  }
+
+  .hero-frentes li:nth-child(2) {
+    animation-delay: 1.3s;
+  }
+
+  .hero-frentes li:nth-child(3) {
+    animation-delay: 1.4s;
+  }
+
+  .hero-frentes li:nth-child(4) {
+    animation-delay: 1.5s;
+  }
+
+  /* ---------- Revelar ao rolar (classe posta pelo main.js) ---------- */
+
+  .js .revelar {
+    opacity: 0;
+    transform: translateY(32px);
+    transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+    transition-delay: var(--atraso, 0s);
+  }
+
+  .js .revelar.visivel {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* A barra mostarda do título cresce quando aparece */
+  .js .revelar .titulo-barra::after {
+    width: 0;
+    transition: width 0.8s 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .js .revelar.visivel .titulo-barra::after {
+    width: 72px;
+  }
+
+  /* Método: os pontos crescem e o traço se desenha em sequência */
+  .js .metodo-etapa .metodo-ponto::before {
+    transform: scale(0);
+    transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transition-delay: calc(var(--atraso, 0s) + 0.2s);
+  }
+
+  .js .metodo-etapa.visivel .metodo-ponto::before {
+    transform: scale(1);
+  }
+
+  .js .metodo-etapa:not(:last-child)::after {
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.7s cubic-bezier(0.65, 0, 0.35, 1);
+    transition-delay: calc(var(--atraso, 0s) + 0.45s);
+  }
+
+  .js .metodo-etapa.visivel::after {
+    transform: scaleX(1);
+  }
+
+  /* ---------- Detalhes contínuos ---------- */
+
+  .ponto-cortado {
+    animation: spj-flutuar 9s ease-in-out infinite;
+  }
+
+  .whatsapp-flutuante .bolha {
+    animation: spj-pulso 2.6s 2s infinite;
+  }
+
+  /* ---------- Troca de aba ---------- */
+
+  .painel:not([hidden]) {
+    animation: spj-subir 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .painel:not([hidden]) .escopos li {
+    animation: spj-subir 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .painel:not([hidden]) .escopos li:nth-child(2) {
+    animation-delay: 0.08s;
+  }
+
+  .painel:not([hidden]) .escopos li:nth-child(3) {
+    animation-delay: 0.16s;
+  }
+
+  /* ---------- Passar o mouse ---------- */
+
+  .btn {
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+  }
+
+  .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 22px rgba(0, 0, 0, 0.18);
+  }
+
+  .btn svg {
+    transition: transform 0.2s;
+  }
+
+  .btn:hover svg {
+    transform: translateX(4px);
+  }
+
+  .nav-link {
+    position: relative;
+  }
+
+  a.nav-link::after {
+    content: "";
+    position: absolute;
+    left: 14px;
+    right: 14px;
+    bottom: 4px;
+    height: 2px;
+    background: var(--mostarda);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  a.nav-link:hover::after,
+  a.nav-link[aria-current="page"]::after {
+    transform: scaleX(1);
+  }
+
+  .hero-frentes a {
+    transition: border-color 0.2s, color 0.2s, padding-top 0.25s;
+  }
+
+  .hero-frentes a:hover {
+    padding-top: 20px;
+  }
+
+  .lista-pontos li::before,
+  .escopos li::before {
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .lista-pontos li:hover::before,
+  .escopos li:hover::before {
+    transform: scale(1.4);
+  }
+
+  .valores li,
+  .mvv-card {
+    transition: transform 0.25s, box-shadow 0.25s;
+  }
+
+  .valores li:hover,
+  .mvv-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 14px 28px rgba(25, 24, 24, 0.12);
+  }
+}
+
+/* Modo estático (?estatico): tudo no estado final, sem movimento.
+   Usado para capturar as páginas e levar ao Figma. */
+.estatico *,
+.estatico *::before,
+.estatico *::after {
+  animation: none !important;
+  transition: none !important;
+}
+
+.estatico .hero h1 .destaque {
+  background-size: 100% 100%;
+}

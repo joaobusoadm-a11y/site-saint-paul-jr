@@ -371,7 +371,7 @@ function iniciarAnimacoes() {
   alvos.forEach((el) => observador.observe(el));
 }
 
-/* ---------- Hero: uma foto por frente, trocando a cada 8 s ---------- */
+/* ---------- Hero: capa e depois uma foto por frente, trocando a cada 8 s ---------- */
 
 function iniciarHeroSlides() {
   const caixa = document.querySelector('[data-hero-slides]');
@@ -389,10 +389,10 @@ function iniciarHeroSlides() {
       fotos[indice].classList.add('ativo');
       atual = indice;
     }
-    // Reinicia a barra de progresso da frente ativa
+    // Reinicia a barra de progresso da frente da foto (a capa não tem frente)
     frentes.forEach((li) => li.classList.remove('ativo'));
     void caixa.offsetWidth;
-    frentes[atual]?.classList.add('ativo');
+    frentes[fotos[atual].dataset.frente]?.classList.add('ativo');
     clearTimeout(timer);
     timer = setTimeout(() => mostrar((atual + 1) % fotos.length), DURACAO);
   };
@@ -401,7 +401,10 @@ function iniciarHeroSlides() {
   if (document.documentElement.classList.contains('estatico') || fotos.length < 2) return;
 
   // Passar o mouse sobre uma frente mostra a foto dela
-  frentes.forEach((li, i) => li.addEventListener('mouseenter', () => mostrar(i)));
+  frentes.forEach((li, i) => {
+    const indice = fotos.findIndex((f) => f.dataset.frente === String(i));
+    if (indice >= 0) li.addEventListener('mouseenter', () => mostrar(indice));
+  });
   mostrar(0);
 }
 

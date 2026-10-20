@@ -353,14 +353,15 @@ const sobreNos = `<section class="secao fundo-grade escuro" id="sobre-nos" aria-
 const proposito = secao(sobreAntigo, 'Propósito');
 const mvv = secao(sobreAntigo, 'Missão, visão e valores');
 
-// Hero: uma foto por frente, que desliza a cada 8 s (iniciarHeroSlides em main.js)
+// Hero: abre com a foto do prédio (capa) e depois desliza uma foto por frente
+// a cada 8 s (iniciarHeroSlides em main.js)
 const heroFotos = Object.values(FOTOS)
   .map(([arquivo, , w, h, foco], i) =>
-    `<img class="hero-foto${i === 0 ? ' ativo' : ''}" src="assets/img/${arquivo}" alt="" width="${w}" height="${h}" style="object-position:${foco}"${i === 0 ? ' fetchpriority="high"' : ' decoding="async"'}>`)
+    `<img class="hero-foto" data-frente="${i}" src="assets/img/${arquivo}" alt="" width="${w}" height="${h}" style="object-position:${foco}" decoding="async">`)
   .join('\n        ');
 const heroComFotos = hero.replace(
-  /<img class="hero-foto"[^>]*>/,
-  `<div class="hero-fotos" data-hero-slides>\n        ${heroFotos}\n      </div>`
+  /<img class="hero-foto"([^>]*)>/,
+  (_, atributos) => `<div class="hero-fotos" data-hero-slides>\n        <img class="hero-foto ativo"${atributos}>\n        ${heroFotos}\n      </div>`
 );
 
 pagina(

@@ -114,7 +114,7 @@ function rodape(atual) {
       <div>
         <img class="rodape-logo" src="assets/img/spjr-logo-negativo.png" alt="Saint Paul Jr" width="780" height="412" loading="lazy">
         <p class="rodape-frase">Onde o potencial ganha direção.</p>
-        <p class="rodape-desc">Consultoria estratégica da Escola de Negócios Saint Paul.</p>
+        <p class="rodape-desc">Consultoria estratégica dos alunos da Escola de Negócios Saint Paul.</p>
       </div>
       <div>
         <h2 class="rodape-titulo">Nossas áreas</h2>

@@ -371,14 +371,14 @@ function iniciarAnimacoes() {
   alvos.forEach((el) => observador.observe(el));
 }
 
-/* ---------- Hero: uma foto por frente, trocando a cada 15 s ---------- */
+/* ---------- Hero: uma foto por frente, trocando a cada 8 s ---------- */
 
 function iniciarHeroSlides() {
   const caixa = document.querySelector('[data-hero-slides]');
   if (!caixa) return;
   const fotos = [...caixa.querySelectorAll('.hero-foto')];
   const frentes = [...document.querySelectorAll('.hero-frentes li')];
-  const DURACAO = 15000;
+  const DURACAO = 8000;
   let atual = 0;
   let timer = null;
 

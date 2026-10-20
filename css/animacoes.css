@@ -183,6 +183,15 @@
   }
 }
 
+@keyframes spj-zoom-suave {
+  from {
+    transform: scale(1.08);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
 @keyframes spj-zoom-lento {
   from {
     transform: scale(1.12);
@@ -236,13 +245,11 @@
     animation: spj-aparecer 0.8s 0.1s both;
   }
 
-  .hero-foto.ativo {
-    animation: spj-zoom-lento 7s cubic-bezier(0.22, 1, 0.36, 1) both;
-  }
-
+  /* Zoom contínuo durante toda a exibição; segue rodando enquanto a foto sai */
   .hero-foto.ativo,
   .hero-foto.saindo {
-    transition: translate 1.2s cubic-bezier(0.65, 0, 0.35, 1);
+    animation: spj-zoom-suave calc(var(--duracao-slide, 8s) + 2s) linear both;
+    transition: translate 1.8s cubic-bezier(0.45, 0, 0.15, 1);
   }
 
   .hero-faixa {

@@ -353,7 +353,7 @@ const sobreNos = `<section class="secao fundo-grade escuro" id="sobre-nos" aria-
 const proposito = secao(sobreAntigo, 'Propósito');
 const mvv = secao(sobreAntigo, 'Missão, visão e valores');
 
-// Hero: uma foto por frente, que desliza a cada 15 s (iniciarHeroSlides em main.js)
+// Hero: uma foto por frente, que desliza a cada 8 s (iniciarHeroSlides em main.js)
 const heroFotos = Object.values(FOTOS)
   .map(([arquivo, , w, h, foco], i) =>
     `<img class="hero-foto${i === 0 ? ' ativo' : ''}" src="assets/img/${arquivo}" alt="" width="${w}" height="${h}" style="object-position:${foco}"${i === 0 ? ' fetchpriority="high"' : ' decoding="async"'}>`)

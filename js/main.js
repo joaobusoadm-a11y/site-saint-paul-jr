@@ -8,12 +8,34 @@
   Enquanto um campo estiver vazio, o site mostra "a definir".
 */
 const CONTATO = {
-  email: '', // ex.: 'contato@seudominio.com.br'
-  whatsapp: '', // só números, com DDI e DDD. ex.: '5511999999999'
-  whatsappTexto: '', // como o número aparece no site. ex.: '(11) 99999-9999'
-  linkedin: '', // URL completa da página no LinkedIn
-  instagram: '', // URL completa do perfil no Instagram
+  email: 'saintpauljr29@gmail.com',
+  whatsapp: '556281770062', // só números, com DDI e DDD
+  whatsappTexto: '+55 (62) 8177-0062', // como o número aparece no site
+  linkedin: 'https://www.linkedin.com/company/saintpauljr/',
+  linkedinTexto: 'Saint Paul Jr', // como o LinkedIn aparece no site
+  instagram: 'https://www.instagram.com/saintpauljrr/',
+  instagramTexto: 'Saintpauljrr', // como o Instagram aparece no site
 };
+
+/*
+  MENSAGENS DO WHATSAPP: texto que já chega escrito quando a pessoa abre a conversa.
+  "geral" vale para o botão flutuante e os links de WhatsApp; as demais valem para
+  os botões "Conversar sobre..." / "Fale conosco" de cada frente (contato.html?frente=...).
+*/
+const MENSAGENS_WHATSAPP = {
+  geral: 'Olá, Saint Paul Jr! Vim pelo site e gostaria de saber mais sobre as consultorias de vocês.',
+  'Plano de negócios':
+    'Olá, Saint Paul Jr! Vim pelo site e tenho interesse em um plano de negócios (modelagem de negócio, pitch e valuation ou viabilidade). Podemos conversar?',
+  'Análise mercadológica':
+    'Olá, Saint Paul Jr! Vim pelo site e tenho interesse em uma análise mercadológica (pesquisa de mercado e concorrência ou definição de público-alvo). Podemos conversar?',
+  'Consultoria operacional':
+    'Olá, Saint Paul Jr! Vim pelo site e tenho interesse em consultoria operacional (mapeamento de processos ou ferramentas de gestão). Podemos conversar?',
+  'Consultoria financeira':
+    'Olá, Saint Paul Jr! Vim pelo site e tenho interesse em consultoria financeira (diagnóstico financeiro ou precificação). Podemos conversar?',
+};
+
+const linkWhatsapp = (mensagem = MENSAGENS_WHATSAPP.geral) =>
+  `https://wa.me/${CONTATO.whatsapp}?text=${encodeURIComponent(mensagem)}`;
 
 document.addEventListener('DOMContentLoaded', () => {
   preencherContatos();
@@ -38,16 +60,16 @@ function preencherContatos() {
       texto: CONTATO.email || 'E-mail a definir',
     },
     whatsapp: {
-      href: CONTATO.whatsapp && `https://wa.me/${CONTATO.whatsapp}`,
+      href: CONTATO.whatsapp && linkWhatsapp(),
       texto: CONTATO.whatsappTexto || (CONTATO.whatsapp ? 'WhatsApp' : 'WhatsApp a definir'),
     },
     linkedin: {
       href: CONTATO.linkedin,
-      texto: CONTATO.linkedin ? 'LinkedIn' : 'LinkedIn a definir',
+      texto: CONTATO.linkedin ? CONTATO.linkedinTexto || 'LinkedIn' : 'LinkedIn a definir',
     },
     instagram: {
       href: CONTATO.instagram,
-      texto: CONTATO.instagram ? 'Instagram' : 'Instagram a definir',
+      texto: CONTATO.instagram ? CONTATO.instagramTexto || 'Instagram' : 'Instagram a definir',
     },
   };
 
@@ -72,11 +94,20 @@ function preencherContatos() {
   // Botão flutuante: sem número configurado, leva para a seção de contato
   const flutuante = document.querySelector('[data-whatsapp-flutuante]');
   if (flutuante && CONTATO.whatsapp) {
-    flutuante.href = `https://wa.me/${CONTATO.whatsapp}`;
+    flutuante.href = linkWhatsapp();
     flutuante.target = '_blank';
     flutuante.rel = 'noopener';
     flutuante.setAttribute('aria-label', 'Fale com a gente pelo WhatsApp');
   }
+
+  // Botões de cada frente (contato.html?frente=...) abrem o WhatsApp com a mensagem da frente
+  if (!CONTATO.whatsapp) return;
+  document.querySelectorAll('a[href*="contato.html?frente="]').forEach((link) => {
+    const frente = new URL(link.href).searchParams.get('frente');
+    link.href = linkWhatsapp(MENSAGENS_WHATSAPP[frente] || MENSAGENS_WHATSAPP.geral);
+    link.target = '_blank';
+    link.rel = 'noopener';
+  });
 }
 
 /* ---------- Cabeçalho: fica sólido ao rolar ---------- */

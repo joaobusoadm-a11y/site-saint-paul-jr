@@ -103,6 +103,14 @@ function preencherContatos() {
     flutuante.setAttribute('aria-label', 'Fale com a gente pelo WhatsApp');
   }
 
+  // Botão flutuante só aparece depois que a primeira seção (capa) sai da tela
+  const capa = document.querySelector('main > section');
+  if (flutuante && capa && 'IntersectionObserver' in window) {
+    new IntersectionObserver(([entrada]) => flutuante.classList.toggle('escondido', entrada.isIntersecting), {
+      rootMargin: '-50% 0px 0px 0px', // aparece quando a capa sobe acima da metade da tela
+    }).observe(capa);
+  }
+
   // Botões de cada frente (contato.html?frente=...) abrem o WhatsApp com a mensagem da frente
   if (!CONTATO.whatsapp) return;
   document.querySelectorAll('a[href*="contato.html?frente="]').forEach((link) => {

@@ -1715,6 +1715,15 @@ a.contato-item:hover span:last-child {
   justify-items: center;
   gap: 4px;
   text-decoration: none;
+  transition: opacity 0.4s, translate 0.4s cubic-bezier(0.22, 1, 0.36, 1), visibility 0.4s;
+}
+
+/* Escondido enquanto a primeira seção (capa) está na tela (main.js) */
+.whatsapp-flutuante.escondido {
+  opacity: 0;
+  translate: 0 24px;
+  visibility: hidden;
+  pointer-events: none;
 }
 
 .whatsapp-flutuante .bolha {

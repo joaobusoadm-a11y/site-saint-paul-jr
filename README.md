@@ -13,7 +13,7 @@ Publicado pelo GitHub Pages a partir da branch `main`: toda alteração salva aq
 |---|---|
 | Textos e seções da página inicial | `index.html` |
 | Frentes e escopos | `servicos.html` |
-| Cases | `cases.html` |
+| Resultados | `resultados.html` |
 | Contato e formulário | `contato.html` |
 | Páginas dos 3 sintomas | `dor-caixa.html`, `dor-inovacao.html`, `dor-recorrencia.html` |
 | Cores, fontes, espaçamentos | `css/style.css` e `css/paginas.css` |

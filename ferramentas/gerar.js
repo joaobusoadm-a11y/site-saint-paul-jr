@@ -1,5 +1,5 @@
 // Gera as páginas do site a partir do mapa do site:
-// Início (com Sobre nós), Serviços, Cases e Contate-nos.
+// Início (com Sobre nós), Serviços, Resultados e Contate-nos.
 // Uso: node gerar.js <pasta-backup> <pasta-do-site>
 const fs = require('fs');
 const path = require('path');
@@ -66,7 +66,7 @@ function cabecalho(atual) {
             </ul>
           </li>
           <li><a class="nav-link" href="${link(atual, 'index.html', 'sobre-nos')}">Sobre nós</a></li>
-          <li><a class="nav-link" href="cases.html"${atualAttr('cases.html')}>Cases</a></li>
+          <li><a class="nav-link" href="resultados.html"${atualAttr('resultados.html')}>Resultados</a></li>
           <li><a class="nav-link" href="contato.html"${atualAttr('contato.html')}>Contato</a></li>
         </ul>
       </nav>
@@ -94,7 +94,7 @@ function cabecalho(atual) {
             </ul>
           </li>
           <li><a href="${link(atual, 'index.html', 'sobre-nos')}">Sobre nós</a></li>
-          <li><a href="cases.html"${atualAttr('cases.html')}>Cases</a></li>
+          <li><a href="resultados.html"${atualAttr('resultados.html')}>Resultados</a></li>
           <li><a href="contato.html"${atualAttr('contato.html')}>Contato</a></li>
         </ul>
       </nav>
@@ -128,7 +128,7 @@ function rodape(atual) {
           <li><a href="index.html">Início</a></li>
           <li><a href="servicos.html">Serviços</a></li>
           <li><a href="${link(atual, 'index.html', 'sobre-nos')}">Sobre nós</a></li>
-          <li><a href="cases.html">Cases</a></li>
+          <li><a href="resultados.html">Resultados</a></li>
           <li><a href="contato.html">Contato</a></li>
         </ul>
       </div>
@@ -405,12 +405,12 @@ pagina(
   ].join('\n\n')
 );
 
-/* ================= Cases ================= */
+/* ================= Resultados ================= */
 
 const cases = `<section class="secao" aria-labelledby="titulo-formato">
       <div class="container">
         <div class="secao-cabeca">
-          <p class="eyebrow">Como mostramos cada case</p>
+          <p class="eyebrow">Como mostramos cada resultado</p>
           <h2 class="titulo titulo-barra" id="titulo-formato">Do ponto de partida ao resultado.</h2>
         </div>
         <ol class="formato-case" role="list">
@@ -421,7 +421,7 @@ const cases = `<section class="secao" aria-labelledby="titulo-formato">
         </ol>
 
         <!--
-          Para publicar um case, copie o bloco abaixo para dentro de .lista-cases
+          Para publicar um resultado, copie o bloco abaixo para dentro de .lista-cases
           e apague o aviso "case-vazio":
           <article class="case-card">
             <p class="eyebrow">Setor do cliente · Frente</p>
@@ -433,7 +433,7 @@ const cases = `<section class="secao" aria-labelledby="titulo-formato">
         <div class="lista-cases">
           <div class="case-vazio">
             <span class="ponto" aria-hidden="true"></span>
-            <h3>Os primeiros cases estão em andamento.</h3>
+            <h3>Os primeiros projetos estão em andamento.</h3>
             <p>Cada um entra aqui quando o projeto termina e o cliente autoriza a publicação, com os números do antes e do depois.</p>
           </div>
         </div>
@@ -441,12 +441,12 @@ const cases = `<section class="secao" aria-labelledby="titulo-formato">
     </section>`;
 
 pagina(
-  'cases.html',
-  'Cases | Saint Paul Jr',
+  'resultados.html',
+  'Resultados | Saint Paul Jr',
   'Projetos da Saint Paul Jr com ponto de partida, o que foi feito e o resultado medido.',
   [
-    topo('Cases', 'Resultado medido, com antes e depois.', 'Cada case mostra o problema, o que foi feito e o resultado com número. Prova vale mais que promessa.', 'titulo-pagina'),
-    '    <!-- ===== Formato dos cases ===== -->\n    ' + cases,
+    topo('Resultados', 'Resultado medido, com antes e depois.', 'Cada projeto mostra o problema, o que foi feito e o resultado com número. Prova vale mais que promessa.', 'titulo-pagina'),
+    '    <!-- ===== Formato dos resultados ===== -->\n    ' + cases,
     ctaFinal('Quer ver como isso funciona na sua operação?', 'Fale conosco', 'contato.html'),
   ].join('\n\n')
 );

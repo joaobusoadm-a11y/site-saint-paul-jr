@@ -236,8 +236,13 @@
     animation: spj-aparecer 0.8s 0.1s both;
   }
 
-  .hero-foto {
+  .hero-foto.ativo {
     animation: spj-zoom-lento 7s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .hero-foto.ativo,
+  .hero-foto.saindo {
+    transition: translate 1.2s cubic-bezier(0.65, 0, 0.35, 1);
   }
 
   .hero-faixa {

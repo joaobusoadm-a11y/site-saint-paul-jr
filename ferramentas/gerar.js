@@ -353,12 +353,22 @@ const sobreNos = `<section class="secao fundo-grade escuro" id="sobre-nos" aria-
 const proposito = secao(sobreAntigo, 'Propósito');
 const mvv = secao(sobreAntigo, 'Missão, visão e valores');
 
+// Hero: uma foto por frente, que desliza a cada 15 s (iniciarHeroSlides em main.js)
+const heroFotos = Object.values(FOTOS)
+  .map(([arquivo, , w, h, foco], i) =>
+    `<img class="hero-foto${i === 0 ? ' ativo' : ''}" src="assets/img/${arquivo}" alt="" width="${w}" height="${h}" style="object-position:${foco}"${i === 0 ? ' fetchpriority="high"' : ' decoding="async"'}>`)
+  .join('\n        ');
+const heroComFotos = hero.replace(
+  /<img class="hero-foto"[^>]*>/,
+  `<div class="hero-fotos" data-hero-slides>\n        ${heroFotos}\n      </div>`
+);
+
 pagina(
   'index.html',
   'Saint Paul Jr | Consultoria estratégica',
   'A Saint Paul Jr é a consultoria estratégica da Escola de Negócios Saint Paul: diagnóstico, redesenho e implementação para empresas que cresceram e precisam de estrutura.',
   [
-    '    <!-- ===== Hero (protótipo Figma: Início) ===== -->\n    ' + hero,
+    '    <!-- ===== Hero (protótipo Figma: Início) ===== -->\n    ' + heroComFotos,
     '    <!-- ===== Para quem é ===== -->\n    ' + sintomas,
     '    <!-- ===== Serviços (resumo) ===== -->\n    ' + servicosResumo,
     '    <!-- ===== Como trabalhamos ===== -->\n    ' + comoTrabalhamos,

@@ -43,6 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
   iniciarGaveta();
   iniciarSubmenus();
   iniciarAbas();
+  iniciarHeroSlides();
   iniciarFormulario();
   inlinearSvgs();
   iniciarAnimacoes();
@@ -368,6 +369,40 @@ function iniciarAnimacoes() {
     { rootMargin: '0px 0px -8% 0px', threshold: 0.12 }
   );
   alvos.forEach((el) => observador.observe(el));
+}
+
+/* ---------- Hero: uma foto por frente, trocando a cada 15 s ---------- */
+
+function iniciarHeroSlides() {
+  const caixa = document.querySelector('[data-hero-slides]');
+  if (!caixa) return;
+  const fotos = [...caixa.querySelectorAll('.hero-foto')];
+  const frentes = [...document.querySelectorAll('.hero-frentes li')];
+  const DURACAO = 15000;
+  let atual = 0;
+  let timer = null;
+
+  const mostrar = (indice) => {
+    if (indice !== atual) {
+      fotos.forEach((f) => f.classList.remove('saindo'));
+      fotos[atual].classList.replace('ativo', 'saindo');
+      fotos[indice].classList.add('ativo');
+      atual = indice;
+    }
+    // Reinicia a barra de progresso da frente ativa
+    frentes.forEach((li) => li.classList.remove('ativo'));
+    void caixa.offsetWidth;
+    frentes[atual]?.classList.add('ativo');
+    clearTimeout(timer);
+    timer = setTimeout(() => mostrar((atual + 1) % fotos.length), DURACAO);
+  };
+
+  document.documentElement.style.setProperty('--duracao-slide', `${DURACAO / 1000}s`);
+  if (document.documentElement.classList.contains('estatico') || fotos.length < 2) return;
+
+  // Passar o mouse sobre uma frente mostra a foto dela
+  frentes.forEach((li, i) => li.addEventListener('mouseenter', () => mostrar(i)));
+  mostrar(0);
 }
 
 /* ---------- SVGs com texto: insere no HTML para usar as fontes do site ---------- */

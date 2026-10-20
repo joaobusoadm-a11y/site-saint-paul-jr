@@ -716,14 +716,30 @@ blockquote {
   background: var(--preto);
 }
 
-.hero-foto {
+/* Uma foto por frente; a ativa desliza para dentro a cada 15 s (main.js) */
+.hero-fotos {
   position: absolute;
   inset: 0;
   z-index: -2;
+  overflow: hidden;
+}
+
+.hero-foto {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
   object-position: center 35%;
+  translate: 100% 0;
+}
+
+.hero-foto.ativo {
+  translate: 0 0;
+}
+
+.hero-foto.saindo {
+  translate: -100% 0;
 }
 
 .hero::before {
@@ -800,6 +816,37 @@ blockquote {
 .hero-frentes a:hover {
   border-color: var(--mostarda);
   color: var(--branco);
+}
+
+/* Frente cuja foto está no fundo: a linha enche de mostarda durante os 15 s */
+.hero-frentes a {
+  position: relative;
+}
+
+.hero-frentes a::before {
+  content: "";
+  position: absolute;
+  top: -2px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--mostarda);
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+.hero-frentes .ativo a {
+  color: var(--branco);
+}
+
+.hero-frentes .ativo a::before {
+  animation: spj-progresso var(--duracao-slide, 15s) linear forwards;
+}
+
+@keyframes spj-progresso {
+  to {
+    transform: scaleX(1);
+  }
 }
 
 @media (max-width: 759px) {

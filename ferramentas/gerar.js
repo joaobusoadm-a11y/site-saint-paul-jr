@@ -23,6 +23,7 @@ const FRENTES = [
   ['analise-mercadologica', 'Análise mercadológica', 'Mercado, concorrência e público-alvo'],
   ['consultoria-operacional', 'Consultoria operacional', 'Processos e ferramentas de gestão'],
   ['consultoria-financeira', 'Consultoria financeira', 'Diagnóstico financeiro e precificação'],
+  ['consultoria-de-ia', 'Consultoria de IA', 'Oportunidades, automação e capacitação'],
 ];
 
 const SETA = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
@@ -300,6 +301,7 @@ const DESCRICOES = {
   'analise-mercadologica': ['Para saber onde você compete, contra quem e para quem vende.', ['Pesquisa de mercado e concorrência', 'Definição de público-alvo']],
   'consultoria-operacional': ['Para a operação que cresceu mais rápido que os processos.', ['Mapeamento e redesenho de processos', 'Implementação de ferramentas de gestão']],
   'consultoria-financeira': ['Para saber para onde vai o dinheiro e quanto cobrar.', ['Diagnóstico financeiro', 'Precificação']],
+  'consultoria-de-ia': ['Para usar inteligência artificial onde ela resolve um problema real.', ['Diagnóstico de oportunidades com IA', 'Automação de processos com IA', 'Capacitação da equipe']],
 };
 
 // Foto de cada frente (em preto e branco via CSS) e o enquadramento
@@ -308,25 +310,25 @@ const FOTOS = {
   'analise-mercadologica': ['servico-mercado.jpg', 'Turma em sala de aula com painel do Valor Econômico ao fundo', 1931, 1287, 'center 40%'],
   'consultoria-operacional': ['servico-operacional.webp', 'Professor conduz discussão sobre protagonismo e accountability com a turma', 2000, 1125, 'center 45%'],
   'consultoria-financeira': ['servico-financeira.jpg', 'Palestra em auditório da Saint Paul com gráfico na tela', 1280, 735, '70% center'],
+  'consultoria-de-ia': ['servico-ia.svg', 'Ilustração de uma rede de conexões representando inteligência artificial', 1600, 900, 'center'],
 };
 
 const servicosResumo = `<section class="secao" id="servicos" aria-labelledby="titulo-servicos">
       <div class="container">
         <div class="secao-cabeca">
           <p class="eyebrow">Serviços</p>
-          <h2 class="titulo titulo-barra" id="titulo-servicos">Consultoria estratégica em quatro frentes.</h2>
+          <h2 class="titulo titulo-barra" id="titulo-servicos">Consultoria estratégica em cinco frentes.</h2>
           <p class="lead">Cada frente tem escopos definidos. Escolha a que conversa com o seu desafio e veja exatamente o que entregamos.</p>
         </div>
         <div class="servicos-grid">
           ${FRENTES.map(([id, nome], i) => {
-            const [desc, escopos] = DESCRICOES[id];
+            const [desc] = DESCRICOES[id];
             const [arquivo, alt, w, h, foco] = FOTOS[id];
             return `<a class="servico-card" href="servicos.html#${id}">
             <span class="servico-foto"><img src="assets/img/${arquivo}" alt="${alt}" width="${w}" height="${h}" loading="lazy" style="object-position:${foco}"></span>
             <span class="servico-num">0${i + 1}</span>
             <h3>${nome}</h3>
             <p>${desc}</p>
-            <ul role="list">${escopos.map((e) => `<li>${e}</li>`).join('')}</ul>
             <span class="servico-link">Ver escopos ${SETA}</span>
           </a>`;
           }).join('\n          ')}
@@ -395,9 +397,9 @@ const solucoes = secao(indexAntigo, 'Nossas soluções')
 pagina(
   'servicos.html',
   'Serviços | Saint Paul Jr',
-  'Plano de negócios, análise mercadológica, consultoria operacional e consultoria financeira: os serviços da Saint Paul Jr, com escopo fechado e prazo por etapa.',
+  'Plano de negócios, análise mercadológica, consultoria operacional, consultoria financeira e consultoria de IA: os serviços da Saint Paul Jr, com escopo fechado e prazo por etapa.',
   [
-    topo('Serviços', 'Consultoria estratégica em quatro frentes.', 'Cada frente tem escopos definidos, prazo por etapa e professor orientador. Escolha a que conversa com o seu desafio e veja exatamente o que entregamos.', 'titulo-pagina'),
+    topo('Serviços', 'Consultoria estratégica em cinco frentes.', 'Cada frente tem escopos definidos, prazo por etapa e professor orientador. Escolha a que conversa com o seu desafio e veja exatamente o que entregamos.', 'titulo-pagina'),
     '    <!-- ===== Frentes e escopos ===== -->\n    ' + solucoes,
     ctaFinal('Não sabe por qual frente começar?', 'Conte o que está acontecendo', 'contato.html'),
   ].join('\n\n')

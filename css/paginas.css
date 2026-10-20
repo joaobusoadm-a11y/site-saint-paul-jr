@@ -68,9 +68,15 @@
   }
 }
 
-@media (min-width: 1100px) {
+@media (min-width: 900px) {
   .servicos-grid {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 1200px) {
+  .servicos-grid {
+    grid-template-columns: repeat(5, 1fr);
   }
 }
 
@@ -148,31 +154,8 @@
 }
 
 .servico-card p {
+  margin-bottom: 24px;
   color: var(--texto-apoio);
-}
-
-.servico-card ul {
-  display: grid;
-  gap: 8px;
-  margin: 18px 0 24px;
-  font-size: 0.9375rem;
-  font-weight: 500;
-}
-
-.servico-card li {
-  position: relative;
-  padding-left: 18px;
-}
-
-.servico-card li::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0.55em;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--petroleo);
 }
 
 .servico-link {

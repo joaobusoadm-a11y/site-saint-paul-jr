@@ -32,6 +32,8 @@ const MENSAGENS_WHATSAPP = {
     'Olá, Saint Paul Jr! Vim pelo site e tenho interesse em consultoria operacional (mapeamento de processos ou ferramentas de gestão). Podemos conversar?',
   'Consultoria financeira':
     'Olá, Saint Paul Jr! Vim pelo site e tenho interesse em consultoria financeira (diagnóstico financeiro ou precificação). Podemos conversar?',
+  'Consultoria de IA':
+    'Olá, Saint Paul Jr! Vim pelo site e tenho interesse em consultoria de IA (diagnóstico de oportunidades, automação de processos ou capacitação da equipe). Podemos conversar?',
 };
 
 const linkWhatsapp = (mensagem = MENSAGENS_WHATSAPP.geral) =>

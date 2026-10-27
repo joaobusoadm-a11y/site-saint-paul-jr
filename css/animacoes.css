@@ -66,11 +66,23 @@
   width: 0.3em;
   height: 0.3em;
   border-radius: 50%;
-  /* Metade petróleo claro, metade mostarda: ao deslizar, a cor troca */
-  background: linear-gradient(90deg, var(--petroleo-claro) 0 50%, var(--mostarda) 50% 100%);
+  /* O pingo se move ao abrir o logo: se contasse para o mouse, sairia de baixo
+     do cursor e o logo ficaria abrindo e fechando sem parar */
+  pointer-events: none;
+  /* Metade branco, metade cor do pingo: ao abrir, o pingo cai já na cor */
+  background: linear-gradient(90deg, var(--branco) 0 50%, var(--pingo-logo) 50% 100%);
   background-size: 200% 100%;
   background-position: 0 0;
   transition: background-position 0.6s cubic-bezier(0.22, 1, 0.36, 1), transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Mesma escrita, parada, no rodapé e no menu lateral: pingo sempre na cor do pingo */
+.logo-fixo {
+  color: var(--branco);
+}
+
+.logo-fixo .logo-ponto {
+  background: var(--pingo-logo);
 }
 
 .logo:hover .logo-ext,
@@ -97,34 +109,7 @@
   background-position: 100% 0;
 }
 
-/* O pingo do j cai do alto e quica até o lugar: ao abrir a página
-   e de novo ao passar o mouse no logo */
-@keyframes spj-pingo-cai {
-  0% {
-    transform: translateY(-2.2em);
-    opacity: 0;
-  }
-  15% {
-    opacity: 1;
-  }
-  55% {
-    transform: translateY(0) scale(1.25, 0.75);
-  }
-  70% {
-    transform: translateY(-0.35em) scale(0.92, 1.08);
-  }
-  85% {
-    transform: translateY(0) scale(1.08, 0.92);
-  }
-  93% {
-    transform: translateY(-0.08em);
-  }
-  100% {
-    transform: none;
-  }
-}
-
-/* Mesmo movimento com outro nome, para a animação recomeçar no hover */
+/* O pingo do j cai do alto e quica até o lugar sempre que o logo abre */
 @keyframes spj-pingo-quica {
   0% {
     transform: translateY(-1em);
@@ -146,11 +131,11 @@
 @media (prefers-reduced-motion: no-preference) {
   .logo-ponto {
     transform-origin: 50% 100%;
-    animation: spj-pingo-cai 1s 0.4s cubic-bezier(0.55, 0, 0.45, 1) both;
   }
 
   .logo:hover .logo-ponto,
-  .logo:focus-visible .logo-ponto {
+  .logo:focus-visible .logo-ponto,
+  .logo.aberto .logo-ponto {
     animation: spj-pingo-quica 0.8s cubic-bezier(0.55, 0, 0.45, 1) both;
   }
 }

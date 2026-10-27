@@ -79,7 +79,7 @@ function cabecalho(atual) {
     <div class="gaveta-fundo" data-fechar-gaveta></div>
     <div class="gaveta-painel" role="dialog" aria-modal="true" aria-label="Menu">
       <div class="gaveta-topo">
-        <img class="gaveta-logo" src="assets/img/spjr-logo-negativo.png" alt="Saint Paul Jr" width="780" height="412">
+        <span class="logo-anim logo-fixo gaveta-logo" role="img" aria-label="Saint Paul Jr"><span>S</span><span>P</span><span class="logo-j">ȷ<i class="logo-ponto"></i></span><span>r</span></span>
         <button class="gaveta-fechar" type="button" aria-label="Fechar menu" data-fechar-gaveta>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
         </button>
@@ -112,7 +112,7 @@ function rodape(atual) {
   <footer class="rodape escuro">
     <div class="container rodape-grid">
       <div>
-        <img class="rodape-logo" src="assets/img/spjr-logo-negativo.png" alt="Saint Paul Jr" width="780" height="412" loading="lazy">
+        <span class="logo-anim logo-fixo rodape-logo" role="img" aria-label="Saint Paul Jr"><span>S</span><span>P</span><span class="logo-j">ȷ<i class="logo-ponto"></i></span><span>r</span></span>
         <p class="rodape-frase">Onde o potencial ganha direção.</p>
         <p class="rodape-desc">Consultoria estratégica dos alunos da Escola de Negócios Saint Paul.</p>
       </div>

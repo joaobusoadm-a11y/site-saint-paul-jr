@@ -37,12 +37,13 @@
               <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
             </button>
             <ul class="submenu" id="sub-servicos">
-              <li><a href="servicos.html#plano-de-negocios">Plano de negócios<small>Modelagem, pitch e valuation, viabilidade</small></a></li>
-              <li><a href="servicos.html#analise-mercadologica">Análise mercadológica<small>Mercado, concorrência e público-alvo</small></a></li>
-              <li><a href="servicos.html#marketing">Marketing<small>Site, SEO e GEO</small></a></li>
-              <li><a href="servicos.html#consultoria-operacional">Consultoria operacional<small>Processos e ferramentas de gestão</small></a></li>
-              <li><a href="servicos.html#consultoria-financeira">Consultoria financeira<small>Diagnóstico financeiro e precificação</small></a></li>
-              <li><a href="servicos.html#consultoria-de-ia">Consultoria de IA<small>Oportunidades, automação e capacitação</small></a></li>
+              <li><a href="servicos.html#plano-de-negocios">Plano de negócios<small>GTM, OKRs, expansão e pitch</small></a></li>
+              <li><a href="servicos.html#analise-mercadologica">Análise mercadológica<small>Mercado, concorrentes, PESTEL e SWOT</small></a></li>
+              <li><a href="servicos.html#analise-do-consumidor">Análise do consumidor<small>Perfil, NPS, jornada e fidelização</small></a></li>
+              <li><a href="servicos.html#marketing">Marketing<small>Marca, redes sociais, tráfego e vendas</small></a></li>
+              <li><a href="servicos.html#financeiro">Financeiro<small>Valuation, KPIs, fluxo de caixa e custos</small></a></li>
+              <li><a href="servicos.html#operacoes">Operações<small>Processos, POPs, gestão ágil e cargos</small></a></li>
+              <li><a href="servicos.html#ia">IA<small>Agentes, automação, sites e treinamento</small></a></li>
               <li><a class="submenu-todos" href="servicos.html">Ver todos os serviços</a></li>
             </ul>
           </li>
@@ -60,7 +61,7 @@
     <div class="gaveta-fundo" data-fechar-gaveta></div>
     <div class="gaveta-painel" role="dialog" aria-modal="true" aria-label="Menu">
       <div class="gaveta-topo">
-        <img class="gaveta-logo" src="assets/img/spjr-logo-negativo.png" alt="Saint Paul Jr" width="780" height="412">
+        <span class="logo-anim logo-fixo gaveta-logo" role="img" aria-label="Saint Paul Jr"><span>S</span><span>P</span><span class="logo-j">ȷ<i class="logo-ponto"></i></span><span>r</span></span>
         <button class="gaveta-fechar" type="button" aria-label="Fechar menu" data-fechar-gaveta>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
         </button>
@@ -73,10 +74,11 @@
             <ul class="gaveta-sub">
               <li><a href="servicos.html#plano-de-negocios">Plano de negócios</a></li>
               <li><a href="servicos.html#analise-mercadologica">Análise mercadológica</a></li>
+              <li><a href="servicos.html#analise-do-consumidor">Análise do consumidor</a></li>
               <li><a href="servicos.html#marketing">Marketing</a></li>
-              <li><a href="servicos.html#consultoria-operacional">Consultoria operacional</a></li>
-              <li><a href="servicos.html#consultoria-financeira">Consultoria financeira</a></li>
-              <li><a href="servicos.html#consultoria-de-ia">Consultoria de IA</a></li>
+              <li><a href="servicos.html#financeiro">Financeiro</a></li>
+              <li><a href="servicos.html#operacoes">Operações</a></li>
+              <li><a href="servicos.html#ia">IA</a></li>
             </ul>
           </li>
           <li><a href="index.html#sobre-nos">Sobre nós</a></li>
@@ -98,7 +100,7 @@
           <h1 class="titulo titulo-barra" id="titulo-pagina">O próximo passo é uma conversa.</h1>
           <p class="lead">Conte em poucas linhas o que está acontecendo na empresa. Na primeira reunião, mapeamos o cenário e mostramos qual escopo faz sentido, com etapas e prazo.</p>
           <dl class="contato-numeros">
-            <div><dt>frentes de consultoria</dt><dd>6</dd></div>
+            <div><dt>frentes de consultoria</dt><dd>7</dd></div>
             <div><dt>dos projetos com professor orientador</dt><dd>100%</dd></div>
           </dl>
           <ul class="contato-selos" role="list" aria-label="Ecossistema da Saint Paul Jr">
@@ -133,10 +135,11 @@
               <option>Ainda não sei</option>
               <option>Plano de negócios</option>
               <option>Análise mercadológica</option>
+              <option>Análise do consumidor</option>
               <option>Marketing</option>
-              <option>Consultoria operacional</option>
-              <option>Consultoria financeira</option>
-              <option>Consultoria de IA</option>
+              <option>Financeiro</option>
+              <option>Operações</option>
+              <option>IA</option>
             </select>
           </div>
           <div class="campo">
@@ -201,7 +204,7 @@
   <footer class="rodape escuro">
     <div class="container rodape-grid">
       <div>
-        <img class="rodape-logo" src="assets/img/spjr-logo-negativo.png" alt="Saint Paul Jr" width="780" height="412" loading="lazy">
+        <span class="logo-anim logo-fixo rodape-logo" role="img" aria-label="Saint Paul Jr"><span>S</span><span>P</span><span class="logo-j">ȷ<i class="logo-ponto"></i></span><span>r</span></span>
         <p class="rodape-frase">Onde o potencial ganha direção.</p>
         <p class="rodape-desc">Consultoria estratégica dos alunos da Escola de Negócios Saint Paul.</p>
       </div>
@@ -210,10 +213,11 @@
         <ul role="list">
           <li><a href="servicos.html#plano-de-negocios">Plano de negócios</a></li>
           <li><a href="servicos.html#analise-mercadologica">Análise mercadológica</a></li>
+          <li><a href="servicos.html#analise-do-consumidor">Análise do consumidor</a></li>
           <li><a href="servicos.html#marketing">Marketing</a></li>
-          <li><a href="servicos.html#consultoria-operacional">Consultoria operacional</a></li>
-          <li><a href="servicos.html#consultoria-financeira">Consultoria financeira</a></li>
-          <li><a href="servicos.html#consultoria-de-ia">Consultoria de IA</a></li>
+          <li><a href="servicos.html#financeiro">Financeiro</a></li>
+          <li><a href="servicos.html#operacoes">Operações</a></li>
+          <li><a href="servicos.html#ia">IA</a></li>
         </ul>
       </div>
       <div>

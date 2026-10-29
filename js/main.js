@@ -25,17 +25,19 @@ const CONTATO = {
 const MENSAGENS_WHATSAPP = {
   geral: 'Olá, Saint Paul Jr! Vim pelo site e gostaria de saber mais sobre as consultorias de vocês.',
   'Plano de negócios':
-    'Olá, Saint Paul Jr! Vim pelo site e tenho interesse em um plano de negócios (modelagem de negócio, pitch e valuation ou viabilidade). Podemos conversar?',
+    'Olá, Saint Paul Jr! Vim pelo site e tenho interesse em um plano de negócios (validação, plano GTM, OKRs, expansão ou pitch). Podemos conversar?',
   'Análise mercadológica':
-    'Olá, Saint Paul Jr! Vim pelo site e tenho interesse em uma análise mercadológica (pesquisa de mercado e concorrência ou definição de público-alvo). Podemos conversar?',
+    'Olá, Saint Paul Jr! Vim pelo site e tenho interesse em uma análise mercadológica (tamanho de mercado, concorrentes, PESTEL ou SWOT). Podemos conversar?',
+  'Análise do consumidor':
+    'Olá, Saint Paul Jr! Vim pelo site e tenho interesse em uma análise do consumidor (perfil, NPS, jornada do cliente ou fidelização). Podemos conversar?',
   Marketing:
-    'Olá, Saint Paul Jr! Vim pelo site e tenho interesse em marketing (reestruturação de site com SEO e GEO). Podemos conversar?',
-  'Consultoria operacional':
-    'Olá, Saint Paul Jr! Vim pelo site e tenho interesse em consultoria operacional (mapeamento de processos ou ferramentas de gestão). Podemos conversar?',
-  'Consultoria financeira':
-    'Olá, Saint Paul Jr! Vim pelo site e tenho interesse em consultoria financeira (diagnóstico financeiro ou precificação). Podemos conversar?',
-  'Consultoria de IA':
-    'Olá, Saint Paul Jr! Vim pelo site e tenho interesse em consultoria de IA (diagnóstico de oportunidades, automação de processos ou capacitação da equipe). Podemos conversar?',
+    'Olá, Saint Paul Jr! Vim pelo site e tenho interesse em consultoria de marketing (marca, redes sociais, tráfego pago ou funil de vendas). Podemos conversar?',
+  Financeiro:
+    'Olá, Saint Paul Jr! Vim pelo site e tenho interesse em consultoria financeira (valuation, viabilidade, fluxo de caixa, precificação ou custos). Podemos conversar?',
+  Operações:
+    'Olá, Saint Paul Jr! Vim pelo site e tenho interesse em consultoria de operações (processos, POPs, gestão ágil ou estrutura organizacional). Podemos conversar?',
+  IA:
+    'Olá, Saint Paul Jr! Vim pelo site e tenho interesse em consultoria de IA (chatbots, agentes, automação, dashboards ou treinamento). Podemos conversar?',
 };
 
 const linkWhatsapp = (mensagem = MENSAGENS_WHATSAPP.geral) =>
@@ -53,6 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
   iniciarValores();
   iniciarMetodo();
   iniciarHeroSlides();
+  iniciarHistoria();
   iniciarFormulario();
   iniciarAnimacoes();
   document.querySelectorAll('[data-ano]').forEach((el) => {
@@ -247,7 +250,7 @@ function iniciarAbas() {
     });
   });
 
-  // Links para uma frente (#plano-de-negocios etc.) abrem a aba certa
+  // Links para uma frente (#financeiro etc.) abrem a aba certa
   const abrirPorHash = (hash) => {
     const indice = paineis.findIndex((p) => `#${p.id}` === hash);
     if (indice < 0) return false;
@@ -375,6 +378,78 @@ function iniciarAnimacoes() {
     { rootMargin: '0px 0px -8% 0px', threshold: 0.12 }
   );
   alvos.forEach((el) => observador.observe(el));
+}
+
+/* ---------- História do caminho: a etapa acompanha a rolagem da página ---------- */
+
+function iniciarHistoria() {
+  const caixa = document.querySelector('[data-historia]');
+  const trilho = document.querySelector('[data-historia-trilho]');
+  if (!caixa || !trilho) return;
+  const secao = trilho.querySelector('.historia-secao');
+  const espaco = trilho.querySelector('.historia-espaco');
+  const abas = [...caixa.querySelectorAll('[role="tab"]')];
+  const paineis = [...caixa.querySelectorAll('[role="tabpanel"]')];
+  const bolas = abas.map((aba) => aba.querySelector('.historia-bola'));
+  const MENOR = 0.39;
+  let atual = 0;
+  let pedido = false;
+  let topoFixo = 0;
+
+  // Onde a seção gruda: logo abaixo do cabeçalho, ou mais acima se ela não couber na tela
+  const medir = () => {
+    const cabecalho = document.querySelector('[data-cabecalho]')?.offsetHeight || 0;
+    topoFixo = Math.min(cabecalho, window.innerHeight - secao.offsetHeight);
+    secao.style.top = `${topoFixo}px`;
+  };
+
+  // 0 quando a seção acabou de grudar, 1 quando todo o espaço abaixo dela foi rolado
+  const progresso = () => {
+    const p = (topoFixo - trilho.getBoundingClientRect().top) / espaco.offsetHeight;
+    return Math.min(Math.max(p, 0), 1) * (abas.length - 1);
+  };
+
+  const mostrar = (indice) => {
+    if (indice === atual) return;
+    atual = indice;
+    abas.forEach((aba, i) => aba.setAttribute('aria-selected', String(i === indice)));
+    paineis.forEach((painel, i) => painel.classList.toggle('ativo', i === indice));
+  };
+
+  // Enquanto uma bola diminui, a seguinte cresce na mesma proporção
+  const atualizar = () => {
+    pedido = false;
+    const posicao = progresso();
+    bolas.forEach((bola, i) => {
+      const distancia = Math.min(Math.abs(posicao - i), 1);
+      bola.style.setProperty('--escala', (1 - distancia * (1 - MENOR)).toFixed(3));
+    });
+    mostrar(Math.round(posicao));
+  };
+
+  const agendar = () => {
+    if (pedido) return;
+    pedido = true;
+    requestAnimationFrame(atualizar);
+  };
+
+  // Clicar numa bola rola a página até a etapa dela
+  abas.forEach((aba, i) =>
+    aba.addEventListener('click', () => {
+      const alvo = (i / (abas.length - 1)) * espaco.offsetHeight;
+      const desejado = topoFixo - alvo;
+      window.scrollBy({ top: trilho.getBoundingClientRect().top - desejado + 1, behavior: 'smooth' });
+    })
+  );
+
+  if (document.documentElement.classList.contains('estatico')) return;
+  window.addEventListener('scroll', agendar, { passive: true });
+  window.addEventListener('resize', () => {
+    medir();
+    agendar();
+  });
+  medir();
+  atualizar();
 }
 
 /* ---------- Hero: capa e depois uma foto por frente, trocando a cada 8 s ---------- */

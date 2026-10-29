@@ -22,6 +22,7 @@
   --destaque-botao-texto: var(--branco);
 
   --cabecalho: #142627;
+  --pingo-logo: var(--petroleo-claro); /* Brand Book, p. 9: ponto do j em petróleo claro na versão negativa */
   --texto-apoio: #3d3d3d;
   --linha: #e3dfcf;
   --linha-escura: rgba(255, 255, 255, 0.16);
@@ -599,9 +600,8 @@ blockquote {
   justify-content: space-between;
 }
 
-.gaveta-logo {
-  height: 36px;
-  width: auto;
+.logo-anim.gaveta-logo {
+  font-size: 2rem;
 }
 
 .gaveta-fechar {
@@ -859,7 +859,7 @@ blockquote {
 
 .hero-frentes ul {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(7, 1fr);
   gap: 20px;
 }
 
@@ -1109,6 +1109,34 @@ blockquote {
 .escopos p {
   margin-top: 6px;
   color: var(--texto-apoio);
+}
+
+/* Lista só com nomes de serviços: linhas mais baixas, duas colunas na tela larga */
+.escopos-lista {
+  border-top: 1px solid var(--linha);
+}
+
+.escopos-lista li {
+  padding: 14px 0 14px 30px;
+  border-top: 0;
+  border-bottom: 1px solid var(--linha);
+}
+
+.escopos-lista li::before {
+  top: 20px;
+  width: 12px;
+  height: 12px;
+}
+
+.escopos-lista h4 {
+  font-size: 1rem;
+}
+
+@media (min-width: 700px) {
+  .escopos-lista {
+    grid-template-columns: 1fr 1fr;
+    column-gap: 32px;
+  }
 }
 
 .nota-ia {
@@ -1558,6 +1586,131 @@ a.contato-item:hover span:last-child {
   margin-top: 0;
   max-width: 54ch;
   color: var(--preto);
+}
+
+.proposito-texto p + p {
+  margin-top: 16px;
+  color: var(--texto-apoio);
+  max-width: 58ch;
+}
+
+/* História do caminho: a rolagem da página move de etapa em etapa;
+   o JS ajusta --escala de cada bola conforme a página desce ou sobe */
+/* A seção gruda na tela enquanto o espaço abaixo dela é rolado;
+   o JS ajusta o "top" se ela for mais alta que a tela */
+.js .historia-secao {
+  position: sticky;
+  top: var(--altura-cabecalho);
+  display: flex;
+  align-items: center;
+  min-height: calc(100vh - var(--altura-cabecalho));
+}
+
+.historia-espaco {
+  display: none;
+}
+
+.js .historia-espaco {
+  display: block;
+  height: 120vh;
+}
+
+.historia-paineis {
+  display: grid;
+}
+
+.historia-painel {
+  grid-area: 1 / 1;
+  transition: opacity 0.5s, visibility 0s 0.5s;
+}
+
+.js .historia-painel:not(.ativo) {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.js .historia-painel.ativo {
+  transition-delay: 0s;
+}
+
+/* Sem JS (ou no modo ?estatico) as etapas aparecem uma embaixo da outra */
+html:not(.js) .historia-painel {
+  grid-area: auto;
+}
+
+html:not(.js) .historia-painel + .historia-painel {
+  margin-top: 24px;
+}
+
+.historia-linha {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 40px;
+  padding-bottom: 28px;
+  max-width: 420px;
+}
+
+/* Linha que liga o centro da primeira bola ao da última */
+.historia-linha::before {
+  content: "";
+  position: absolute;
+  top: 16.5px;
+  left: 18px;
+  right: 18px;
+  height: 3px;
+  background: var(--petroleo);
+}
+
+.historia-ponto {
+  position: relative;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+}
+
+.historia-bola {
+  display: block;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--petroleo);
+  transform: scale(var(--escala, 0.39));
+}
+
+.historia-ponto[aria-selected="true"] .historia-bola {
+  --escala: 1;
+}
+
+.historia-rotulo {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.875rem;
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--texto-apoio);
+  transition: color 0.3s;
+}
+
+.historia-ponto:first-child .historia-rotulo {
+  left: 0;
+  transform: none;
+}
+
+.historia-ponto:last-child .historia-rotulo {
+  left: auto;
+  right: 0;
+  transform: none;
+}
+
+.historia-ponto[aria-selected="true"] .historia-rotulo {
+  color: var(--petroleo);
 }
 
 /* Missão e visão: duas faixas de cor de ponta a ponta, texto alinhado ao container */
@@ -2041,9 +2194,8 @@ a.contato-item:hover span:last-child {
   }
 }
 
-.rodape-logo {
-  height: 48px;
-  width: auto;
+.logo-anim.rodape-logo {
+  font-size: 2.75rem;
 }
 
 .rodape-frase {

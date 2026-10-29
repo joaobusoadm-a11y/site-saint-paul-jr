@@ -66,34 +66,31 @@
   width: 0.3em;
   height: 0.3em;
   border-radius: 50%;
-  /* Metade petróleo claro, metade mostarda: ao deslizar, a cor troca */
-  background: linear-gradient(90deg, var(--petroleo-claro) 0 50%, var(--mostarda) 50% 100%);
+  /* O ponto do j nunca troca de cor (Brand Book, p. 9): petróleo claro na versão negativa */
+  background: var(--petroleo-claro);
   background-size: 200% 100%;
   background-position: 0 0;
   transition: background-position 0.6s cubic-bezier(0.22, 1, 0.36, 1), transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .logo:hover .logo-ext,
-.logo:focus-visible .logo-ext,
-.logo.aberto .logo-ext {
+.logo:focus-visible .logo-ext {
   grid-template-columns: 1fr;
 }
 
 .logo:hover .logo-ext > span,
-.logo:focus-visible .logo-ext > span,
-.logo.aberto .logo-ext > span {
+.logo:focus-visible .logo-ext > span {
   opacity: 1;
   transform: none;
 }
 
 .logo:hover .logo-ext + span + .logo-ext > span,
-.logo.aberto .logo-ext + span + .logo-ext > span {
+.logo:focus-visible .logo-ext + span + .logo-ext > span {
   transition-delay: 0.08s;
 }
 
 .logo:hover .logo-ponto,
-.logo:focus-visible .logo-ponto,
-.logo.aberto .logo-ponto {
+.logo:focus-visible .logo-ponto {
   background-position: 100% 0;
 }
 
@@ -256,14 +253,16 @@
     animation: spj-faixa 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
   }
 
-  .hero h1 {
+  .hero h1,
+  .hero h2 {
     animation: spj-subir 0.8s 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
   }
 
-  /* INOVAR: começa sem mostarda e a faixa mostarda desliza da
+  /* INOVAR: começa sem fundo e a faixa petróleo desliza da
      esquerda para a direita por trás da palavra até cobri-la */
-  .hero h1 .destaque {
-    background-image: linear-gradient(var(--mostarda), var(--mostarda));
+  .hero h1 .destaque,
+  .hero h2 .destaque {
+    background-image: linear-gradient(var(--petroleo), var(--petroleo));
     background-repeat: no-repeat;
     background-position: 0 0;
     background-size: 0% 100%;
@@ -304,8 +303,8 @@
   .js .revelar {
     opacity: 0;
     transform: translateY(32px);
-    transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
-    transition-delay: var(--atraso, 0s);
+    transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1) var(--atraso, 0s), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1) var(--atraso, 0s),
+      background-color 0.35s, color 0.35s;
   }
 
   .js .revelar.visivel {
@@ -343,6 +342,22 @@
 
   .js .metodo-etapa.visivel::after {
     transform: scaleX(1);
+  }
+
+  /* Passar o mouse numa etapa do quadro: o ponto cresce */
+  .metodo-entregas .metodo-etapa:hover .metodo-ponto::before,
+  .js .metodo-entregas .metodo-etapa.visivel:hover .metodo-ponto::before {
+    transform: scale(1.3);
+  }
+
+  /* NPS: o ponto corre do começo da escala até a nota */
+  .js .nps-grid > .revelar .nps-linha i {
+    left: 0;
+    transition: left 1.2s 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .js .nps-grid > .revelar.visivel .nps-linha i {
+    left: calc((var(--nps) + 100) / 200 * 100%);
   }
 
   /* ---------- Detalhes contínuos ---------- */
@@ -403,7 +418,7 @@
     right: 14px;
     bottom: 4px;
     height: 2px;
-    background: var(--mostarda);
+    background: var(--destaque);
     transform: scaleX(0);
     transform-origin: left;
     transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
@@ -432,16 +447,6 @@
     transform: scale(1.4);
   }
 
-  .valores li,
-  .mvv-card {
-    transition: transform 0.25s, box-shadow 0.25s;
-  }
-
-  .valores li:hover,
-  .mvv-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 14px 28px rgba(25, 24, 24, 0.12);
-  }
 }
 
 /* Modo estático (?estatico): tudo no estado final, sem movimento.
@@ -453,6 +458,7 @@
   transition: none !important;
 }
 
-.estatico .hero h1 .destaque {
+.estatico .hero h1 .destaque,
+.estatico .hero h2 .destaque {
   background-size: 100% 100%;
 }

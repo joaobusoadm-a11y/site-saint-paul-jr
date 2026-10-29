@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Serviços | Saint Paul Jr</title>
-  <meta name="description" content="Plano de negócios, análise mercadológica, consultoria operacional, consultoria financeira e consultoria de IA: os serviços da Saint Paul Jr, com escopo fechado e prazo por etapa.">
+  <meta name="description" content="Plano de negócios, análise mercadológica, marketing, consultoria operacional, consultoria financeira e consultoria de IA: os serviços da Saint Paul Jr, com escopo fechado e prazo por etapa.">
   <meta name="theme-color" content="#142627">
   <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -39,6 +39,7 @@
             <ul class="submenu" id="sub-servicos">
               <li><a href="#plano-de-negocios">Plano de negócios<small>Modelagem, pitch e valuation, viabilidade</small></a></li>
               <li><a href="#analise-mercadologica">Análise mercadológica<small>Mercado, concorrência e público-alvo</small></a></li>
+              <li><a href="#marketing">Marketing<small>Site, SEO e GEO</small></a></li>
               <li><a href="#consultoria-operacional">Consultoria operacional<small>Processos e ferramentas de gestão</small></a></li>
               <li><a href="#consultoria-financeira">Consultoria financeira<small>Diagnóstico financeiro e precificação</small></a></li>
               <li><a href="#consultoria-de-ia">Consultoria de IA<small>Oportunidades, automação e capacitação</small></a></li>
@@ -72,6 +73,7 @@
             <ul class="gaveta-sub">
               <li><a href="#plano-de-negocios">Plano de negócios</a></li>
               <li><a href="#analise-mercadologica">Análise mercadológica</a></li>
+              <li><a href="#marketing">Marketing</a></li>
               <li><a href="#consultoria-operacional">Consultoria operacional</a></li>
               <li><a href="#consultoria-financeira">Consultoria financeira</a></li>
               <li><a href="#consultoria-de-ia">Consultoria de IA</a></li>
@@ -83,34 +85,33 @@
         </ul>
       </nav>
       <a class="btn btn-mostarda" href="contato.html">Fale conosco</a>
-      <div class="gaveta-contato">
-        <p class="eyebrow">Contato</p>
-        <a class="contato-item" data-contato="email" href="#"><span class="icone" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3.5 6.5 12 13l8.5-6.5"/></svg></span><span data-rotulo>E-mail</span></a>
-      </div>
     </div>
   </div>
 
   <main id="conteudo">
     <!-- ===== Topo da página ===== -->
-    <section class="pagina-topo fundo-grade escuro" aria-labelledby="titulo-pagina">
+    <section class="pagina-topo fundo-grade fundo-rede escuro" aria-labelledby="titulo-pagina">
+      <canvas class="rede" aria-hidden="true" data-rede></canvas>
       <div class="container">
         <p class="eyebrow">Serviços</p>
-        <h1 class="titulo titulo-barra" id="titulo-pagina">Consultoria estratégica em cinco frentes.</h1>
+        <h1 class="titulo titulo-barra" id="titulo-pagina">Consultoria estratégica em seis frentes.</h1>
         <p class="lead">Cada frente tem escopos definidos, prazo por etapa e professor orientador. Escolha a que conversa com o seu desafio e veja exatamente o que entregamos.</p>
       </div>
     </section>
 
     <!-- ===== Frentes e escopos ===== -->
-    <section class="secao" id="solucoes" aria-labelledby="titulo-solucoes">
+    <section class="secao secao-textura" id="solucoes" aria-labelledby="titulo-solucoes">
+      <div class="ponto-cortado ponto-cortado-topo" aria-hidden="true"></div>
       <div class="container">
 
         <div class="abas" data-abas>
           <div class="abas-lista" role="tablist" aria-label="Frentes de consultoria">
             <button class="aba" type="button" role="tab" id="aba-plano-de-negocios" aria-controls="plano-de-negocios" aria-selected="true"><span class="aba-num">01</span>Plano de negócios</button>
             <button class="aba" type="button" role="tab" id="aba-analise-mercadologica" aria-controls="analise-mercadologica" aria-selected="false" tabindex="-1"><span class="aba-num">02</span>Análise mercadológica</button>
-            <button class="aba" type="button" role="tab" id="aba-consultoria-operacional" aria-controls="consultoria-operacional" aria-selected="false" tabindex="-1"><span class="aba-num">03</span>Consultoria operacional</button>
-            <button class="aba" type="button" role="tab" id="aba-consultoria-financeira" aria-controls="consultoria-financeira" aria-selected="false" tabindex="-1"><span class="aba-num">04</span>Consultoria financeira</button>
-            <button class="aba" type="button" role="tab" id="aba-consultoria-de-ia" aria-controls="consultoria-de-ia" aria-selected="false" tabindex="-1"><span class="aba-num">05</span>Consultoria de IA</button>
+            <button class="aba" type="button" role="tab" id="aba-marketing" aria-controls="marketing" aria-selected="false" tabindex="-1"><span class="aba-num">03</span>Marketing</button>
+            <button class="aba" type="button" role="tab" id="aba-consultoria-operacional" aria-controls="consultoria-operacional" aria-selected="false" tabindex="-1"><span class="aba-num">04</span>Consultoria operacional</button>
+            <button class="aba" type="button" role="tab" id="aba-consultoria-financeira" aria-controls="consultoria-financeira" aria-selected="false" tabindex="-1"><span class="aba-num">05</span>Consultoria financeira</button>
+            <button class="aba" type="button" role="tab" id="aba-consultoria-de-ia" aria-controls="consultoria-de-ia" aria-selected="false" tabindex="-1"><span class="aba-num">06</span>Consultoria de IA</button>
           </div>
 
           <div class="abas-paineis">
@@ -137,6 +138,20 @@
                 <li><h4>Definição de público-alvo</h4><p>Quem compra, por que compra e como chegar até essa pessoa.</p></li>
               </ul>
               <a class="btn btn-petroleo" href="contato.html?frente=An%C3%A1lise%20mercadol%C3%B3gica">Conversar sobre análise mercadológica
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+              </a>
+            </div>
+
+            <div class="painel" role="tabpanel" id="marketing" aria-labelledby="aba-marketing" tabindex="0" hidden>
+              <div class="painel-foto"><img src="assets/img/servico-marketing.jpg" alt="Convidado conversa com executivos e alunos num auditório em semicírculo da Saint Paul" width="1503" height="1002" loading="lazy" style="object-position:center"></div>
+              <h3 class="painel-titulo">Marketing</h3>
+              <p class="painel-desc">Para ser encontrado por quem já está procurando o que você vende.</p>
+              <ul class="escopos" role="list">
+                <li><h4>Reestruturação de site com SEO e GEO</h4><p>Páginas e conteúdo organizados para aparecer nas buscas do Google e nas respostas de ferramentas de IA, como o ChatGPT.</p></li>
+                <!-- Escopo a confirmar com a área de marketing: trocar o texto ou apagar o item -->
+                <li><h4><span class="preencher">Outro escopo de marketing</span></h4><p><span class="preencher">O que entregamos neste escopo, em uma frase.</span></p></li>
+              </ul>
+              <a class="btn btn-petroleo" href="contato.html?frente=Marketing">Conversar sobre marketing
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
               </a>
             </div>
@@ -168,7 +183,7 @@
             </div>
 
             <div class="painel" role="tabpanel" id="consultoria-de-ia" aria-labelledby="aba-consultoria-de-ia" tabindex="0" hidden>
-              <div class="painel-foto"><img src="assets/img/servico-ia.svg" alt="Ilustração de uma rede de conexões representando inteligência artificial" width="1600" height="900" loading="lazy" style="object-position:center"></div>
+              <div class="painel-foto"><img src="assets/img/servico-ia.jpg" alt="Turma reunida no auditório da Escola de Negócios Saint Paul durante apresentação" width="1599" height="1066" loading="lazy" style="object-position:center"></div>
               <h3 class="painel-titulo">Consultoria de IA</h3>
               <p class="painel-desc">Para usar inteligência artificial onde ela resolve um problema real, e não por modismo.</p>
               <ul class="escopos" role="list">
@@ -194,14 +209,16 @@
     </section>
 
     <!-- ===== Chamada final ===== -->
-    <section class="secao secao-escura cta-faixa" aria-labelledby="titulo-cta">
-      <div class="container">
-        <h2 class="titulo" id="titulo-cta">Não sabe por qual frente começar?</h2>
-        <div class="cta-acoes">
-          <a class="btn btn-mostarda btn-grande" href="contato.html">Conte o que está acontecendo</a>
-        </div>
-      </div>
+    <section class="secao cta-final cta-final-areia" aria-labelledby="titulo-cta">
       <div class="ponto-cortado" aria-hidden="true"></div>
+      <div class="ponto-cortado ponto-cortado-esquerda" aria-hidden="true"></div>
+      <div class="container cta-final-conteudo">
+        <div class="ponto-a-ponto cta-final-pontos" aria-hidden="true"><span></span><i></i><span></span><i></i><span></span></div>
+        <p class="eyebrow">Conversa de diagnóstico</p>
+        <h2 class="titulo" id="titulo-cta">Não sabe por qual frente começar?</h2>
+        <p class="lead">Conte o que está acontecendo na empresa. Na conversa de diagnóstico, mostramos qual frente faz sentido para o seu desafio.</p>
+        <a class="btn btn-mostarda btn-grande" href="contato.html">Agendar diagnóstico <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      </div>
     </section>
   </main>
 
@@ -218,6 +235,7 @@
         <ul role="list">
           <li><a href="#plano-de-negocios">Plano de negócios</a></li>
           <li><a href="#analise-mercadologica">Análise mercadológica</a></li>
+          <li><a href="#marketing">Marketing</a></li>
           <li><a href="#consultoria-operacional">Consultoria operacional</a></li>
           <li><a href="#consultoria-financeira">Consultoria financeira</a></li>
           <li><a href="#consultoria-de-ia">Consultoria de IA</a></li>

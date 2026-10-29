@@ -5,8 +5,10 @@ const fs = require('fs');
 const path = require('path');
 const [, , backup, site] = process.argv;
 
-const indexAntigo = fs.readFileSync(path.join(backup, 'index.html'), 'utf8');
-const sobreAntigo = fs.readFileSync(path.join(backup, 'sobre.html'), 'utf8');
+// Quebra de linha do Windows (CRLF) atrapalha as substituições abaixo
+const ler = (arquivo) => fs.readFileSync(path.join(backup, arquivo), 'utf8').replace(/\r\n/g, '\n');
+const indexAntigo = ler('index.html');
+const sobreAntigo = ler('sobre.html');
 
 // Trecho entre um comentário "<!-- ===== X ===== -->" e o próximo
 const secao = (html, nome) => {
@@ -21,6 +23,7 @@ const secao = (html, nome) => {
 const FRENTES = [
   ['plano-de-negocios', 'Plano de negócios', 'Modelagem, pitch e valuation, viabilidade'],
   ['analise-mercadologica', 'Análise mercadológica', 'Mercado, concorrência e público-alvo'],
+  ['marketing', 'Marketing', 'Site, SEO e GEO'],
   ['consultoria-operacional', 'Consultoria operacional', 'Processos e ferramentas de gestão'],
   ['consultoria-financeira', 'Consultoria financeira', 'Diagnóstico financeiro e precificação'],
   ['consultoria-de-ia', 'Consultoria de IA', 'Oportunidades, automação e capacitação'],
@@ -99,10 +102,6 @@ function cabecalho(atual) {
         </ul>
       </nav>
       <a class="btn btn-mostarda" href="contato.html">Fale conosco</a>
-      <div class="gaveta-contato">
-        <p class="eyebrow">Contato</p>
-        ${contatoItem('email', 'E-mail')}
-      </div>
     </div>
   </div>`;
 }
@@ -190,7 +189,8 @@ ${rodape(arquivo)}
 }
 
 const topo = (eyebrow, h1, lead, id) => `    <!-- ===== Topo da página ===== -->
-    <section class="pagina-topo fundo-grade escuro" aria-labelledby="${id}">
+    <section class="pagina-topo fundo-grade fundo-rede escuro" aria-labelledby="${id}">
+      <canvas class="rede" aria-hidden="true" data-rede></canvas>
       <div class="container">
         <p class="eyebrow">${eyebrow}</p>
         <h1 class="titulo titulo-barra" id="${id}">${h1}</h1>
@@ -198,15 +198,32 @@ const topo = (eyebrow, h1, lead, id) => `    <!-- ===== Topo da página ===== --
       </div>
     </section>`;
 
-const ctaFinal = (titulo, botao, href) => `    <!-- ===== Chamada final ===== -->
-    <section class="secao secao-escura cta-faixa" aria-labelledby="titulo-cta">
+// Topo claro, com textura de pontos e ponto cortado: para páginas cuja seção seguinte é escura
+const PONTO_TOPO = '<div class="ponto-cortado ponto-cortado-topo" aria-hidden="true"></div>';
+const topoClaro = (eyebrow, h1, lead, id) => `    <!-- ===== Topo da página ===== -->
+    <section class="pagina-topo pagina-topo-clara secao-textura" aria-labelledby="${id}">
+      ${PONTO_TOPO}
       <div class="container">
-        <h2 class="titulo" id="titulo-cta">${titulo}</h2>
-        <div class="cta-acoes">
-          <a class="btn btn-mostarda btn-grande" href="${href}">${botao}</a>
-        </div>
+        <p class="eyebrow">${eyebrow}</p>
+        <h1 class="titulo titulo-barra" id="${id}">${h1}</h1>
+        <p class="lead">${lead}</p>
       </div>
+    </section>`;
+
+// Chamada final: clara e centralizada, com o ponto a ponto da marca acima do título.
+// fundo: 'areia' (padrão) ou 'branco', para não emendar com uma seção areia logo antes.
+// Botão segue o tom de voz da Sprint 1 (item H: "Agendar diagnóstico").
+const ctaFinal = (titulo, texto, botao, href, fundo = 'areia') => `    <!-- ===== Chamada final ===== -->
+    <section class="secao cta-final cta-final-${fundo}" aria-labelledby="titulo-cta">
       <div class="ponto-cortado" aria-hidden="true"></div>
+      <div class="ponto-cortado ponto-cortado-esquerda" aria-hidden="true"></div>
+      <div class="container cta-final-conteudo">
+        <div class="ponto-a-ponto cta-final-pontos" aria-hidden="true"><span></span><i></i><span></span><i></i><span></span></div>
+        <p class="eyebrow">Conversa de diagnóstico</p>
+        <h2 class="titulo" id="titulo-cta">${titulo}</h2>
+        <p class="lead">${texto}</p>
+        <a class="btn btn-mostarda btn-grande" href="${href}">${botao} ${SETA}</a>
+      </div>
     </section>`;
 
 /* ================= Início ================= */
@@ -294,11 +311,11 @@ const sintomas = `<section class="secao secao-sintomas-foto escuro" id="para-que
         </div>
       </div>
     </section>`;
-const comoTrabalhamos = secao(indexAntigo, 'Como trabalhamos');
 
 const DESCRICOES = {
   'plano-de-negocios': ['Para tirar uma ideia do papel ou decidir uma expansão com número na mão.', ['Modelagem de negócio', 'Pitch e valuation', 'Viabilidade e business case']],
   'analise-mercadologica': ['Para saber onde você compete, contra quem e para quem vende.', ['Pesquisa de mercado e concorrência', 'Definição de público-alvo']],
+  'marketing': ['Para ser encontrado por quem já está procurando o que você vende.', ['Reestruturação de site com SEO e GEO']],
   'consultoria-operacional': ['Para a operação que cresceu mais rápido que os processos.', ['Mapeamento e redesenho de processos', 'Implementação de ferramentas de gestão']],
   'consultoria-financeira': ['Para saber para onde vai o dinheiro e quanto cobrar.', ['Diagnóstico financeiro', 'Precificação']],
   'consultoria-de-ia': ['Para usar inteligência artificial onde ela resolve um problema real.', ['Diagnóstico de oportunidades com IA', 'Automação de processos com IA', 'Capacitação da equipe']],
@@ -308,16 +325,19 @@ const DESCRICOES = {
 const FOTOS = {
   'plano-de-negocios': ['servico-plano.jpg', 'Apresentação para uma plateia na Escola de Negócios Saint Paul', 1600, 880, 'center 35%'],
   'analise-mercadologica': ['servico-mercado.jpg', 'Turma em sala de aula com painel do Valor Econômico ao fundo', 1931, 1287, 'center 40%'],
+  'marketing': ['servico-marketing.jpg', 'Convidado conversa com executivos e alunos num auditório em semicírculo da Saint Paul', 1503, 1002, 'center'],
   'consultoria-operacional': ['servico-operacional.webp', 'Professor conduz discussão sobre protagonismo e accountability com a turma', 2000, 1125, 'center 45%'],
   'consultoria-financeira': ['servico-financeira.jpg', 'Palestra em auditório da Saint Paul com gráfico na tela', 1280, 735, '70% center'],
-  'consultoria-de-ia': ['servico-ia.svg', 'Ilustração de uma rede de conexões representando inteligência artificial', 1600, 900, 'center'],
+  'consultoria-de-ia': ['servico-ia.jpg', 'Turma reunida no auditório da Escola de Negócios Saint Paul durante apresentação', 1599, 1066, 'center'],
 };
 
-const servicosResumo = `<section class="secao" id="servicos" aria-labelledby="titulo-servicos">
+// Textura de pontos e ponto cortado no canto (Brand Book, p. 12; anexo de textura em ferramentas/anexo-brand-book.md)
+const servicosResumo = `<section class="secao secao-textura" id="servicos" aria-labelledby="titulo-servicos">
+      <div class="ponto-cortado ponto-cortado-topo" aria-hidden="true"></div>
       <div class="container">
         <div class="secao-cabeca">
           <p class="eyebrow">Serviços</p>
-          <h2 class="titulo titulo-barra" id="titulo-servicos">Consultoria estratégica em cinco frentes.</h2>
+          <h2 class="titulo titulo-barra" id="titulo-servicos">Consultoria estratégica em seis frentes.</h2>
           <p class="lead">Cada frente tem escopos definidos. Escolha a que conversa com o seu desafio e veja exatamente o que entregamos.</p>
         </div>
         <div class="servicos-grid">
@@ -336,23 +356,113 @@ const servicosResumo = `<section class="secao" id="servicos" aria-labelledby="ti
       </div>
     </section>`;
 
-const sobreHeroAntigo = secao(sobreAntigo, 'Quem está por trás');
-const figura = sobreHeroAntigo.slice(sobreHeroAntigo.indexOf('<figure'), sobreHeroAntigo.indexOf('</figure>') + 9).replace('<img ', '<img loading="lazy" ');
-const listaCredenciais = sobreHeroAntigo.slice(sobreHeroAntigo.indexOf('<ul class="lista-pontos'), sobreHeroAntigo.indexOf('</ul>') + 5);
-
-const sobreNos = `<section class="secao fundo-grade escuro" id="sobre-nos" aria-labelledby="titulo-sobre">
-      <div class="container ecossistema-grid">
-        ${figura}
-        <div class="ecossistema-texto">
-          <p class="eyebrow">Sobre nós</p>
-          <h2 class="titulo titulo-barra" id="titulo-sobre">Quem está por trás</h2>
-          <p class="lead">Somos a consultoria estratégica da Escola de Negócios Saint Paul. Entramos na operação do cliente, mapeamos o que existe de fato e ficamos ao lado dele na implementação.</p>
-          ${listaCredenciais}
+// Sobre, método, compromissos e vínculos (Brand Book v1.0): o HTML é escrito aqui, não vem do backup.
+const spjSecoes = `<!-- ===== A. Sobre a Saint Paul Jr ===== -->
+    <section class="spj-secao spj-branca" id="sobre-nos" aria-labelledby="titulo-sobre">
+      <div class="spj-container sobre-grid">
+        <div>
+          <p class="spj-eyebrow">Sobre a Saint Paul Jr</p>
+          <h2 class="spj-h2" id="titulo-sobre">Antes da solução, a pergunta certa.</h2>
         </div>
+        <div class="sobre-texto">
+          <p class="spj-texto">A Saint Paul Jr é a consultoria estratégica da Escola de Negócios Saint Paul. Entramos na operação da sua empresa, mapeamos como ela funciona e acompanhamos a implementação do que precisa mudar.</p>
+          <p class="spj-texto">Atuamos em plano de negócios, análise mercadológica, consultoria operacional e consultoria financeira. Cada projeto tem escopo definido, etapas e acompanhamento de um professor orientador.</p>
+          <div class="sobre-acoes">
+            <a class="spj-botao spj-botao-primario" data-contato="whatsapp" href="contato.html">Converse sobre sua operação</a>
+            <a class="spj-botao spj-botao-secundario" href="#como-trabalhamos">Veja como trabalhamos</a>
+          </div>
+          <p class="sobre-nota">A Saint Paul Jr é uma associação sem fins lucrativos, formada e gerida por alunos da Escola de Negócios Saint Paul.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== B. Como trabalhamos ===== -->
+    <section class="spj-secao spj-areia" id="como-trabalhamos" aria-labelledby="titulo-metodo">
+      <div class="spj-container">
+        <div class="metodo-cabeca">
+          <p class="spj-eyebrow">Como trabalhamos</p>
+          <h2 class="spj-h2" id="titulo-metodo">Entender a operação. Definir o plano. Implementar.</h2>
+          <p class="spj-texto">Começamos pelo que acontece na prática. A partir do diagnóstico, definimos as ações e acompanhamos a implementação com a sua equipe.</p>
+        </div>
+        <div class="metodo-seletor" data-metodo>
+          <div class="metodo-trilho" role="tablist" aria-label="Etapas do trabalho">
+            <button class="etapa-aba" type="button" role="tab" id="aba-diagnostico" aria-controls="painel-diagnostico" aria-selected="true" tabindex="0">
+              <span class="etapa-grafismo" aria-hidden="true"><span class="etapa-ponto"></span><span class="etapa-traco"></span></span>
+              <span class="etapa-num">01</span>
+              <span class="etapa-nome">Diagnóstico</span>
+              <span class="etapa-previa">Mapear a operação e os pontos de atenção.</span>
+            </button>
+            <button class="etapa-aba" type="button" role="tab" id="aba-planejamento" aria-controls="painel-planejamento" aria-selected="false" tabindex="-1">
+              <span class="etapa-grafismo" aria-hidden="true"><span class="etapa-ponto"></span><span class="etapa-traco"></span></span>
+              <span class="etapa-num">02</span>
+              <span class="etapa-nome">Planejamento</span>
+              <span class="etapa-previa">Ações, entregas e prazos alinhados.</span>
+            </button>
+            <button class="etapa-aba" type="button" role="tab" id="aba-implementacao" aria-controls="painel-implementacao" aria-selected="false" tabindex="-1">
+              <span class="etapa-grafismo" aria-hidden="true"><span class="etapa-ponto"></span><span class="etapa-traco"></span></span>
+              <span class="etapa-num">03</span>
+              <span class="etapa-nome">Implementação</span>
+              <span class="etapa-previa">Aplicação com validações e ajustes.</span>
+            </button>
+          </div>
+          <div class="etapa-painel" role="tabpanel" id="painel-diagnostico" aria-labelledby="aba-diagnostico">
+            <div class="painel-grade">
+              <div>
+                <p class="painel-etapa">Etapa 01 de 03</p>
+                <h3 class="spj-h3">Primeiro, entender o que acontece.</h3>
+                <p class="spj-texto painel-descricao">Mapeamos a operação, ouvimos quem participa dela e identificamos os pontos que precisam de atenção.</p>
+              </div>
+              <ul class="painel-pontos spj-texto" role="list">
+                <li>Como o trabalho acontece hoje.</li>
+                <li>Onde estão os gargalos e o retrabalho.</li>
+                <li>Quais problemas entram no escopo do projeto.</li>
+              </ul>
+            </div>
+          </div>
+          <div class="etapa-painel" role="tabpanel" id="painel-planejamento" aria-labelledby="aba-planejamento" hidden>
+            <div class="painel-grade">
+              <div>
+                <p class="painel-etapa">Etapa 02 de 03</p>
+                <h3 class="spj-h3">Depois, definir o que precisa mudar.</h3>
+                <p class="spj-texto painel-descricao">Transformamos o diagnóstico em um plano de trabalho, com ações, entregas e prazos alinhados com a empresa.</p>
+              </div>
+              <ul class="painel-pontos spj-texto" role="list">
+                <li>Prioridades definidas a partir do diagnóstico.</li>
+                <li>Ações e entregas organizadas por etapa.</li>
+                <li>Prazos e critérios de validação acordados.</li>
+              </ul>
+            </div>
+          </div>
+          <div class="etapa-painel" role="tabpanel" id="painel-implementacao" aria-labelledby="aba-implementacao" hidden>
+            <div class="painel-grade">
+              <div>
+                <p class="painel-etapa">Etapa 03 de 03</p>
+                <h3 class="spj-h3">Colocar o plano na rotina.</h3>
+                <p class="spj-texto painel-descricao">Acompanhamos a aplicação das ações previstas no escopo, com validações ao longo do projeto e ajustes junto à equipe.</p>
+              </div>
+              <ul class="painel-pontos spj-texto" role="list">
+                <li>Aplicação das soluções acordadas.</li>
+                <li>Validação das entregas com a equipe.</li>
+                <li>Acompanhamento da implementação.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== C. Compromissos de trabalho ===== -->
+    <section class="spj-secao spj-preta" aria-label="Compromissos de trabalho">
+      <div class="spj-container">
+        <ul class="compromissos" role="list">
+          <li class="compromisso"><strong>Escopo fechado</strong><span>Você sabe o que recebe antes de começar.</span></li>
+          <li class="compromisso"><strong>Prazo por etapa</strong><span>Cada entrega tem data e validação.</span></li>
+          <li class="compromisso"><strong>Professor orientador</strong><span>Todo projeto tem acompanhamento de um professor.</span></li>
+        </ul>
       </div>
     </section>`;
 
-const proposito = secao(sobreAntigo, 'Propósito');
+// Propósito, missão, visão e valores numa seção só
 const mvv = secao(sobreAntigo, 'Missão, visão e valores');
 
 // Hero: abre com a foto do prédio (capa) e depois desliza uma foto por frente
@@ -374,11 +484,9 @@ pagina(
     '    <!-- ===== Hero (protótipo Figma: Início) ===== -->\n    ' + heroComFotos,
     '    <!-- ===== Para quem é ===== -->\n    ' + sintomas,
     '    <!-- ===== Serviços (resumo) ===== -->\n    ' + servicosResumo,
-    '    <!-- ===== Como trabalhamos ===== -->\n    ' + comoTrabalhamos,
-    '    <!-- ===== Sobre nós: quem está por trás (protótipo Figma: Página-2) ===== -->\n    ' + sobreNos,
-    '    <!-- ===== Sobre nós: propósito ===== -->\n    ' + proposito,
-    '    <!-- ===== Sobre nós: missão, visão e valores ===== -->\n    ' + mvv,
-    ctaFinal('O próximo passo é uma conversa.', 'Fale conosco', 'contato.html'),
+    '    ' + spjSecoes,
+    '    <!-- ===== Sobre nós: propósito, missão, visão e valores ===== -->\n    ' + mvv,
+    ctaFinal('O próximo passo é uma conversa.', 'Conte como sua operação funciona hoje. Na conversa de diagnóstico, mostramos por onde começar, com etapas e prazo.', 'Agendar diagnóstico', 'contato.html', 'branco'),
   ].join('\n\n')
 );
 
@@ -386,6 +494,8 @@ pagina(
 
 const solucoes = secao(indexAntigo, 'Nossas soluções')
   .replace(/\s*<div class="secao-cabeca">[\s\S]*?<\/div>\n/, '\n')
+  .replace('<section class="secao" id="solucoes"', '<section class="secao secao-textura" id="solucoes"')
+  .replace('<div class="container">', `${PONTO_TOPO}\n      <div class="container">`)
   .replace(/href="#contato" data-interesse="([^"]+)"/g, (_, frente) => `href="contato.html?frente=${encodeURIComponent(frente)}"`)
   // Foto da frente no topo de cada painel
   .replace(/(<div class="painel" role="tabpanel" id="([a-z-]+)"[^>]*>)/g, (abre, _, id) => {
@@ -397,45 +507,120 @@ const solucoes = secao(indexAntigo, 'Nossas soluções')
 pagina(
   'servicos.html',
   'Serviços | Saint Paul Jr',
-  'Plano de negócios, análise mercadológica, consultoria operacional, consultoria financeira e consultoria de IA: os serviços da Saint Paul Jr, com escopo fechado e prazo por etapa.',
+  'Plano de negócios, análise mercadológica, marketing, consultoria operacional, consultoria financeira e consultoria de IA: os serviços da Saint Paul Jr, com escopo fechado e prazo por etapa.',
   [
-    topo('Serviços', 'Consultoria estratégica em cinco frentes.', 'Cada frente tem escopos definidos, prazo por etapa e professor orientador. Escolha a que conversa com o seu desafio e veja exatamente o que entregamos.', 'titulo-pagina'),
+    topo('Serviços', 'Consultoria estratégica em seis frentes.', 'Cada frente tem escopos definidos, prazo por etapa e professor orientador. Escolha a que conversa com o seu desafio e veja exatamente o que entregamos.', 'titulo-pagina'),
     '    <!-- ===== Frentes e escopos ===== -->\n    ' + solucoes,
-    ctaFinal('Não sabe por qual frente começar?', 'Conte o que está acontecendo', 'contato.html'),
+    ctaFinal('Não sabe por qual frente começar?', 'Conte o que está acontecendo na empresa. Na conversa de diagnóstico, mostramos qual frente faz sentido para o seu desafio.', 'Agendar diagnóstico', 'contato.html'),
   ].join('\n\n')
 );
 
 /* ================= Resultados ================= */
 
-const cases = `<section class="secao" aria-labelledby="titulo-formato">
-      <div class="container">
-        <div class="secao-cabeca">
-          <p class="eyebrow">Como mostramos cada resultado</p>
-          <h2 class="titulo titulo-barra" id="titulo-formato">Do ponto de partida ao resultado.</h2>
-        </div>
-        <ol class="formato-case" role="list">
-          <li><span class="formato-num">01</span><h3>Ponto de partida</h3><p>Como a operação funcionava e o que custava ao negócio.</p></li>
-          <li><span class="formato-num">02</span><h3>O que fizemos</h3><p>Escopo, etapas e prazo de cada entrega.</p></li>
-          <li><span class="formato-num">03</span><h3>Resultado</h3><p>O indicador que mudou, com número.</p></li>
-          <li><span class="formato-num">04</span><h3>Antes e depois</h3><p>O processo de antes lado a lado com o que virou rotina.</p></li>
-        </ol>
+// Dado que ainda falta: aparece destacado na página até ser trocado pelo valor real.
+// Antes de publicar, nada marcado pode sobrar: grep -l 'class="preencher"' *.html na raiz
+// não pode listar arquivo nenhum (a aba Marketing, em base/index.html, também tem marcação).
+const preencher = (texto) => `<span class="preencher">${texto}</span>`;
 
-        <!--
-          Para publicar um resultado, copie o bloco abaixo para dentro de .lista-cases
-          e apague o aviso "case-vazio":
-          <article class="case-card">
-            <p class="eyebrow">Setor do cliente · Frente</p>
-            <h3>Título curto com o resultado</h3>
-            <p>Ponto de partida, o que fizemos e resultado em 2 ou 3 linhas.</p>
-            <dl class="case-numeros"><div><dt>Antes</dt><dd>9 etapas</dd></div><div><dt>Depois</dt><dd>4 etapas</dd></div></dl>
-          </article>
-        -->
-        <div class="lista-cases">
-          <div class="case-vazio">
-            <span class="ponto" aria-hidden="true"></span>
-            <h3>Os primeiros projetos estão em andamento.</h3>
-            <p>Cada um entra aqui quando o projeto termina e o cliente autoriza a publicação, com os números do antes e do depois.</p>
+// NPS: valor de -100 a 100. Enquanto for null, a seção do NPS não aparece na página.
+const NPS = {
+  valor: null,
+  respostas: preencher('N respostas'),
+  periodo: preencher('período da pesquisa'),
+};
+
+// Um item por projeto entregue, na ordem em que aparecem no carrossel.
+// imagem: [arquivo em assets/img, descrição, largura, altura]. null mostra um bloco
+// com o nome do cliente até a imagem chegar. logo, site e depoimento são opcionais.
+const PROJETOS = [
+  {
+    cliente: 'Bankers Academy',
+    frente: 'Site, SEO e GEO',
+    sobre: 'Academia de finanças aplicadas: modelagem financeira, investment banking, valuation, M&A e crédito.',
+    imagem: ['clientes/bankers-academy-site.webp', 'Página inicial do site da Bankers Academy', 1440, 900],
+    logo: ['clientes/bankers-academy-dark.png', 1920, 342],
+    site: 'https://www.bankersacademy.com.br/',
+    partida: preencher('Como estava o site antes do projeto.'),
+    chegada: preencher('Como ficou depois do projeto.'),
+    depoimento: { texto: preencher('Depoimento do cliente sobre o projeto.'), nome: preencher('Nome'), cargo: preencher('Cargo, Bankers Academy') },
+  },
+  {
+    cliente: 'Nutrupet',
+    frente: 'Plano de negócios',
+    sobre: preencher('O que a Nutrupet faz, em uma frase.'),
+    imagem: null,
+    logo: null,
+    site: null,
+    partida: preencher('O que a empresa precisava apresentar.'),
+    chegada: preencher('Como ficou o pitch de investimento.'),
+    depoimento: { texto: preencher('Depoimento do cliente sobre o projeto.'), nome: preencher('Nome'), cargo: preencher('Cargo, Nutrupet') },
+  },
+];
+
+const temValorNps = typeof NPS.valor === 'number';
+const nps = `<section class="secao" aria-labelledby="titulo-nps">
+      <div class="container nps-grid">
+        <div class="nps-numero">
+          <p class="nps-valor"${temValorNps ? '' : ' aria-label="NPS a definir"'}>${temValorNps ? NPS.valor : preencher('00')}</p>
+          <div class="nps-escala" aria-hidden="true"${temValorNps ? ` style="--nps:${NPS.valor}"` : ''}>
+            <span class="nps-linha">${temValorNps ? '<i></i>' : ''}</span>
+            <span>-100</span><span>0</span><span>100</span>
           </div>
+        </div>
+        <div class="nps-texto">
+          <h2 class="titulo titulo-barra" id="titulo-nps">Quanto os clientes nos recomendam.</h2>
+          <p class="lead">Cada cliente responde, de 0 a 10, se recomendaria a Saint Paul Jr a outro empresário. O NPS é a fatia de notas 9 e 10 menos a de notas de 0 a 6, e vai de -100 a 100.</p>
+          <p class="nps-base">NPS ${temValorNps ? NPS.valor : '—'} · ${NPS.respostas} · ${NPS.periodo}</p>
+        </div>
+      </div>
+    </section>`;
+
+const projeto = (p, i) => `<article class="projeto" aria-roledescription="slide" aria-label="${i + 1} de ${PROJETOS.length}: ${p.cliente}">
+            <figure class="projeto-imagem">${p.imagem
+              ? `<img src="assets/img/${p.imagem[0]}" alt="${p.imagem[1]}" width="${p.imagem[2]}" height="${p.imagem[3]}" loading="lazy">`
+              : `<span class="projeto-imagem-vazia" aria-hidden="true">${p.cliente}</span>${preencher('Imagem do projeto')}`}
+            </figure>
+            <div class="projeto-corpo">
+              <header class="projeto-cabeca">
+                <p class="eyebrow">${p.frente}</p>
+                <h3 class="projeto-cliente">${p.logo
+                  ? `<img src="assets/img/${p.logo[0]}" alt="${p.cliente}" width="${p.logo[1]}" height="${p.logo[2]}" loading="lazy">`
+                  : p.cliente}</h3>
+                <p class="projeto-sobre">${p.sobre}</p>
+              </header>
+              <dl class="projeto-trajeto">
+                <div class="projeto-etapa"><dt>De onde partimos</dt><dd>${p.partida}</dd></div>
+                <div class="projeto-etapa"><dt>Onde chegamos</dt><dd>${p.chegada}</dd></div>
+              </dl>${p.depoimento ? `
+              <blockquote class="projeto-depoimento">
+                <p>${p.depoimento.texto}</p>
+                <footer>${p.depoimento.nome} · ${p.depoimento.cargo}</footer>
+              </blockquote>` : ''}${p.site ? `
+              <a class="link-seta projeto-site" href="${p.site}" target="_blank" rel="noopener">Ver o site ${SETA}</a>` : ''}
+            </div>
+          </article>`;
+
+// Carrossel: os projetos ficam lado a lado e deslizam na horizontal (iniciarCarrossel em main.js)
+// Projetos sobre o fundo escuro com a rede de pontos: os cards brancos ganham contraste
+const projetos = `<section class="secao fundo-grade fundo-rede escuro" aria-labelledby="titulo-projetos">
+      <canvas class="rede" aria-hidden="true" data-rede></canvas>
+      <div class="container">
+        <div class="projetos-topo">
+          <div class="secao-cabeca">
+            <p class="eyebrow">Projetos entregues</p>
+            <h2 class="titulo titulo-barra" id="titulo-projetos">De onde partimos. Onde chegamos.</h2>
+          </div>
+          <div class="carrossel-botoes">
+            <button class="carrossel-botao" type="button" aria-controls="lista-projetos" aria-label="Projeto anterior" data-carrossel-voltar disabled>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+            </button>
+            <button class="carrossel-botao" type="button" aria-controls="lista-projetos" aria-label="Próximo projeto" data-carrossel-avancar>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="projetos" id="lista-projetos" role="region" aria-roledescription="carrossel" aria-label="Projetos entregues" tabindex="0" data-carrossel>
+          ${PROJETOS.map(projeto).join('\n          ')}
         </div>
       </div>
     </section>`;
@@ -443,39 +628,117 @@ const cases = `<section class="secao" aria-labelledby="titulo-formato">
 pagina(
   'resultados.html',
   'Resultados | Saint Paul Jr',
-  'Projetos da Saint Paul Jr com ponto de partida, o que foi feito e o resultado medido.',
+  `${temValorNps ? 'NPS da Saint Paul Jr e a evolução' : 'A evolução'} dos projetos entregues para Bankers Academy e Nutrupet.`,
   [
-    topo('Resultados', 'Resultado medido, com antes e depois.', 'Cada projeto mostra o problema, o que foi feito e o resultado com número. Prova vale mais que promessa.', 'titulo-pagina'),
-    '    <!-- ===== Formato dos resultados ===== -->\n    ' + cases,
-    ctaFinal('Quer ver como isso funciona na sua operação?', 'Fale conosco', 'contato.html'),
+    topoClaro('Resultados', 'O que mudou para cada cliente.', 'Veja o ponto de partida e onde cada projeto chegou.', 'titulo-pagina'),
+    ...(temValorNps ? ['    <!-- ===== NPS ===== -->\n    ' + nps] : []),
+    '    <!-- ===== Projetos ===== -->\n    ' + projetos,
+    ctaFinal('Quer ver isso na sua operação?', 'Conte como sua operação funciona hoje. Na conversa de diagnóstico, mostramos por onde começar.', 'Agendar diagnóstico', 'contato.html'),
   ].join('\n\n')
 );
 
 /* ================= Contato ================= */
 
-const contato = secao(indexAntigo, 'Contato')
-  .replace('<p class="eyebrow">Contato</p>\n', '')
-  .replace(/<h2 class="titulo titulo-barra" id="titulo-contato">[^<]*<\/h2>/, '<h2 class="subtitulo" id="titulo-contato">Canais de contato</h2>')
-  .replace(/\s*<p class="lead">Conte em poucas linhas[^<]*<\/p>/, '');
+// Foto de fundo da capa do Contato. Provisória: trocar por uma foto do time da Saint Paul Jr
+// (o formato da página foi pensado para uma foto de grupo, como a da Insper Jr).
+const FOTO_EQUIPE = ['servico-plano.jpg', 1600, 880, 'center 30%'];
+
+// Números ao lado do formulário. O NPS entra sozinho quando NPS.valor for preenchido.
+const NUMEROS_CONTATO = [
+  ...(temValorNps ? [[`NPS ${NPS.valor}`, 'satisfação dos clientes']] : []),
+  [`${FRENTES.length}`, 'frentes de consultoria'],
+  ['100%', 'dos projetos com professor orientador'],
+];
+
+// Ecossistema da escola, no lugar dos selos (Brand Book, p. 4: a credencial é o vínculo)
+const SELOS = [
+  ['escola-saint-paul.svg', 'Escola de Negócios Saint Paul', 328, 118],
+  ['exame.png', 'Exame', 462, 81],
+  ['btg-pactual.png', 'BTG Pactual', 415, 372],
+];
+
+const contatoBase = secao(indexAntigo, 'Contato');
+const trecho = (html, inicio, fim) => html.slice(html.indexOf(inicio), html.indexOf(fim, html.indexOf(inicio)) + fim.length);
+const formulario = trecho(contatoBase, '<form', '</form>');
+const canais = trecho(contatoBase, '<ul class="contato-lista"', '</ul>');
+const onde = trecho(contatoBase, '<div class="onde">', '</a>\n          </div>');
+
+const capaContato = `<section class="contato-capa escuro" aria-labelledby="titulo-pagina">
+      <img class="contato-capa-foto" src="assets/img/${FOTO_EQUIPE[0]}" alt="" width="${FOTO_EQUIPE[1]}" height="${FOTO_EQUIPE[2]}" style="object-position:${FOTO_EQUIPE[3]}" fetchpriority="high">
+      <div class="container contato-capa-grid">
+        <div class="contato-capa-texto">
+          <p class="eyebrow">Contato</p>
+          <h1 class="titulo titulo-barra" id="titulo-pagina">O próximo passo é uma conversa.</h1>
+          <p class="lead">Conte em poucas linhas o que está acontecendo na empresa. Na primeira reunião, mapeamos o cenário e mostramos qual escopo faz sentido, com etapas e prazo.</p>
+          <dl class="contato-numeros">
+            ${NUMEROS_CONTATO.map(([n, r]) => `<div><dt>${r}</dt><dd>${n}</dd></div>`).join('\n            ')}
+          </dl>
+          <ul class="contato-selos" role="list" aria-label="Ecossistema da Saint Paul Jr">
+            ${SELOS.map(([a, alt, w, h]) => `<li><img src="assets/img/${a}" alt="${alt}" width="${w}" height="${h}"></li>`).join('\n            ')}
+          </ul>
+        </div>
+        ${formulario}
+      </div>
+    </section>`;
+
+const canaisContato = `<section class="secao secao-textura" aria-labelledby="titulo-canais">
+      ${PONTO_TOPO}
+      <div class="container canais-grid">
+        <div>
+          <p class="eyebrow">Outros canais</p>
+          <h2 class="titulo titulo-barra" id="titulo-canais">Prefere falar direto?</h2>
+          ${canais}
+        </div>
+        ${onde}
+      </div>
+    </section>`;
 
 pagina(
   'contato.html',
   'Contato | Saint Paul Jr',
   'Fale com a Saint Paul Jr: formulário, e-mail, WhatsApp e endereço na Rua da Consolação, 1601, São Paulo.',
   [
-    topo('Contate-nos', 'O próximo passo é uma conversa.', 'Conte em poucas linhas o que está acontecendo na empresa. Na primeira reunião, mapeamos o cenário e mostramos qual escopo faz sentido, com etapas e prazo.', 'titulo-pagina'),
-    '    <!-- ===== Formulário e canais ===== -->\n    ' + contato,
+    '    <!-- ===== Capa com formulário ===== -->\n    ' + capaContato,
+    '    <!-- ===== Canais e endereço ===== -->\n    ' + canaisContato,
   ].join('\n\n')
 );
 
 /* ================= Páginas de cada dor ================= */
+
+// Chamada final de cada sintoma: o visitante marca os sinais que reconhece e o botão
+// leva esses sinais para a mensagem do WhatsApp (iniciarCtaDor em main.js).
+// Sem JavaScript, o botão continua levando para o contato com a frente escolhida.
+const ctaDor = (d, frenteNome) => `    <!-- ===== Chamada final: sinais que você reconhece ===== -->
+    <section class="secao secao-escura cta-dor" aria-labelledby="titulo-cta" data-cta-dor data-sintoma="${d.sintoma}" data-frente="${frenteNome}">
+      <div class="container cta-dor-grid">
+        <div class="cta-dor-texto">
+          <p class="eyebrow">Conversa de diagnóstico</p>
+          <h2 class="titulo titulo-barra" id="titulo-cta">Reconhece esse cenário na sua empresa?</h2>
+          <p class="lead">Marque os sinais que você vê hoje. Eles entram na mensagem, e a primeira conversa já começa pelo que importa para você.</p>
+        </div>
+        <div class="cta-dor-acao">
+          <a class="btn btn-mostarda btn-grande" href="contato.html?frente=${encodeURIComponent(frenteNome)}" data-cta-dor-botao>Conversar sobre isso ${SETA}</a>
+        </div>
+        <fieldset class="cta-dor-sinais">
+          <legend>Quais destes sinais aparecem na sua operação?</legend>
+          ${d.porque.map(([t, p]) => `<label class="sinal">
+            <input type="checkbox" name="sinal" value="${t}">
+            <span class="sinal-marca" aria-hidden="true"></span>
+            <span class="sinal-texto"><strong>${t}</strong>${p}</span>
+          </label>`).join('\n          ')}
+          <p class="cta-dor-contagem" aria-live="polite" data-cta-dor-contagem>Nenhum sinal marcado ainda.</p>
+        </fieldset>
+      </div>
+      <div class="ponto-cortado" aria-hidden="true"></div>
+    </section>`;
 
 for (const d of DORES) {
   const [frenteId, frenteNome] = d.frente;
   const outras = DORES.filter((o) => o !== d);
 
   const topoDor = `    <!-- ===== Sintoma ===== -->
-    <section class="pagina-topo fundo-grade escuro" aria-labelledby="titulo-pagina">
+    <section class="pagina-topo fundo-grade fundo-rede escuro" aria-labelledby="titulo-pagina">
+      <canvas class="rede" aria-hidden="true" data-rede></canvas>
       <div class="container">
         <a class="voltar" href="index.html#para-quem"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>Todos os sintomas</a>
         <p class="eyebrow">Sintoma ${d.num}</p>
@@ -485,7 +748,8 @@ for (const d of DORES) {
     </section>`;
 
   const problema = `    <!-- ===== Problema e por que acontece ===== -->
-    <section class="secao" aria-labelledby="titulo-problema">
+    <section class="secao secao-textura" aria-labelledby="titulo-problema">
+      ${PONTO_TOPO}
       <div class="container">
         <div class="dor-problema">
           <p class="eyebrow">O problema de fundo</p>
@@ -542,7 +806,7 @@ for (const d of DORES) {
       problema,
       solucao,
       outrosSintomas,
-      ctaFinal('Reconhece esse cenário na sua empresa?', 'Fale conosco', `contato.html?frente=${encodeURIComponent(frenteNome)}`),
+      ctaDor(d, frenteNome),
     ].join('\n\n')
   );
 }

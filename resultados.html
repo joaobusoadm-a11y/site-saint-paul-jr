@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Resultados | Saint Paul Jr</title>
-  <meta name="description" content="Projetos da Saint Paul Jr com ponto de partida, o que foi feito e o resultado medido.">
+  <meta name="description" content="A evolução dos projetos entregues para Bankers Academy e Nutrupet.">
   <meta name="theme-color" content="#142627">
   <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -39,6 +39,7 @@
             <ul class="submenu" id="sub-servicos">
               <li><a href="servicos.html#plano-de-negocios">Plano de negócios<small>Modelagem, pitch e valuation, viabilidade</small></a></li>
               <li><a href="servicos.html#analise-mercadologica">Análise mercadológica<small>Mercado, concorrência e público-alvo</small></a></li>
+              <li><a href="servicos.html#marketing">Marketing<small>Site, SEO e GEO</small></a></li>
               <li><a href="servicos.html#consultoria-operacional">Consultoria operacional<small>Processos e ferramentas de gestão</small></a></li>
               <li><a href="servicos.html#consultoria-financeira">Consultoria financeira<small>Diagnóstico financeiro e precificação</small></a></li>
               <li><a href="servicos.html#consultoria-de-ia">Consultoria de IA<small>Oportunidades, automação e capacitação</small></a></li>
@@ -72,6 +73,7 @@
             <ul class="gaveta-sub">
               <li><a href="servicos.html#plano-de-negocios">Plano de negócios</a></li>
               <li><a href="servicos.html#analise-mercadologica">Análise mercadológica</a></li>
+              <li><a href="servicos.html#marketing">Marketing</a></li>
               <li><a href="servicos.html#consultoria-operacional">Consultoria operacional</a></li>
               <li><a href="servicos.html#consultoria-financeira">Consultoria financeira</a></li>
               <li><a href="servicos.html#consultoria-de-ia">Consultoria de IA</a></li>
@@ -83,66 +85,93 @@
         </ul>
       </nav>
       <a class="btn btn-mostarda" href="contato.html">Fale conosco</a>
-      <div class="gaveta-contato">
-        <p class="eyebrow">Contato</p>
-        <a class="contato-item" data-contato="email" href="#"><span class="icone" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3.5 6.5 12 13l8.5-6.5"/></svg></span><span data-rotulo>E-mail</span></a>
-      </div>
     </div>
   </div>
 
   <main id="conteudo">
     <!-- ===== Topo da página ===== -->
-    <section class="pagina-topo fundo-grade escuro" aria-labelledby="titulo-pagina">
+    <section class="pagina-topo pagina-topo-clara secao-textura" aria-labelledby="titulo-pagina">
+      <div class="ponto-cortado ponto-cortado-topo" aria-hidden="true"></div>
       <div class="container">
         <p class="eyebrow">Resultados</p>
-        <h1 class="titulo titulo-barra" id="titulo-pagina">Resultado medido, com antes e depois.</h1>
-        <p class="lead">Cada projeto mostra o problema, o que foi feito e o resultado com número. Prova vale mais que promessa.</p>
+        <h1 class="titulo titulo-barra" id="titulo-pagina">O que mudou para cada cliente.</h1>
+        <p class="lead">Veja o ponto de partida e onde cada projeto chegou.</p>
       </div>
     </section>
 
-    <!-- ===== Formato dos resultados ===== -->
-    <section class="secao" aria-labelledby="titulo-formato">
+    <!-- ===== Projetos ===== -->
+    <section class="secao fundo-grade fundo-rede escuro" aria-labelledby="titulo-projetos">
+      <canvas class="rede" aria-hidden="true" data-rede></canvas>
       <div class="container">
-        <div class="secao-cabeca">
-          <p class="eyebrow">Como mostramos cada resultado</p>
-          <h2 class="titulo titulo-barra" id="titulo-formato">Do ponto de partida ao resultado.</h2>
-        </div>
-        <ol class="formato-case" role="list">
-          <li><span class="formato-num">01</span><h3>Ponto de partida</h3><p>Como a operação funcionava e o que custava ao negócio.</p></li>
-          <li><span class="formato-num">02</span><h3>O que fizemos</h3><p>Escopo, etapas e prazo de cada entrega.</p></li>
-          <li><span class="formato-num">03</span><h3>Resultado</h3><p>O indicador que mudou, com número.</p></li>
-          <li><span class="formato-num">04</span><h3>Antes e depois</h3><p>O processo de antes lado a lado com o que virou rotina.</p></li>
-        </ol>
-
-        <!--
-          Para publicar um resultado, copie o bloco abaixo para dentro de .lista-cases
-          e apague o aviso "case-vazio":
-          <article class="case-card">
-            <p class="eyebrow">Setor do cliente · Frente</p>
-            <h3>Título curto com o resultado</h3>
-            <p>Ponto de partida, o que fizemos e resultado em 2 ou 3 linhas.</p>
-            <dl class="case-numeros"><div><dt>Antes</dt><dd>9 etapas</dd></div><div><dt>Depois</dt><dd>4 etapas</dd></div></dl>
-          </article>
-        -->
-        <div class="lista-cases">
-          <div class="case-vazio">
-            <span class="ponto" aria-hidden="true"></span>
-            <h3>Os primeiros projetos estão em andamento.</h3>
-            <p>Cada um entra aqui quando o projeto termina e o cliente autoriza a publicação, com os números do antes e do depois.</p>
+        <div class="projetos-topo">
+          <div class="secao-cabeca">
+            <p class="eyebrow">Projetos entregues</p>
+            <h2 class="titulo titulo-barra" id="titulo-projetos">De onde partimos. Onde chegamos.</h2>
           </div>
+          <div class="carrossel-botoes">
+            <button class="carrossel-botao" type="button" aria-controls="lista-projetos" aria-label="Projeto anterior" data-carrossel-voltar disabled>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+            </button>
+            <button class="carrossel-botao" type="button" aria-controls="lista-projetos" aria-label="Próximo projeto" data-carrossel-avancar>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="projetos" id="lista-projetos" role="region" aria-roledescription="carrossel" aria-label="Projetos entregues" tabindex="0" data-carrossel>
+          <article class="projeto" aria-roledescription="slide" aria-label="1 de 2: Bankers Academy">
+            <figure class="projeto-imagem"><img src="assets/img/clientes/bankers-academy-site.webp" alt="Página inicial do site da Bankers Academy" width="1440" height="900" loading="lazy">
+            </figure>
+            <div class="projeto-corpo">
+              <header class="projeto-cabeca">
+                <p class="eyebrow">Site, SEO e GEO</p>
+                <h3 class="projeto-cliente"><img src="assets/img/clientes/bankers-academy-dark.png" alt="Bankers Academy" width="1920" height="342" loading="lazy"></h3>
+                <p class="projeto-sobre">Academia de finanças aplicadas: modelagem financeira, investment banking, valuation, M&A e crédito.</p>
+              </header>
+              <dl class="projeto-trajeto">
+                <div class="projeto-etapa"><dt>De onde partimos</dt><dd><span class="preencher">Como estava o site antes do projeto.</span></dd></div>
+                <div class="projeto-etapa"><dt>Onde chegamos</dt><dd><span class="preencher">Como ficou depois do projeto.</span></dd></div>
+              </dl>
+              <blockquote class="projeto-depoimento">
+                <p><span class="preencher">Depoimento do cliente sobre o projeto.</span></p>
+                <footer><span class="preencher">Nome</span> · <span class="preencher">Cargo, Bankers Academy</span></footer>
+              </blockquote>
+              <a class="link-seta projeto-site" href="https://www.bankersacademy.com.br/" target="_blank" rel="noopener">Ver o site <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+            </div>
+          </article>
+          <article class="projeto" aria-roledescription="slide" aria-label="2 de 2: Nutrupet">
+            <figure class="projeto-imagem"><span class="projeto-imagem-vazia" aria-hidden="true">Nutrupet</span><span class="preencher">Imagem do projeto</span>
+            </figure>
+            <div class="projeto-corpo">
+              <header class="projeto-cabeca">
+                <p class="eyebrow">Plano de negócios</p>
+                <h3 class="projeto-cliente">Nutrupet</h3>
+                <p class="projeto-sobre"><span class="preencher">O que a Nutrupet faz, em uma frase.</span></p>
+              </header>
+              <dl class="projeto-trajeto">
+                <div class="projeto-etapa"><dt>De onde partimos</dt><dd><span class="preencher">O que a empresa precisava apresentar.</span></dd></div>
+                <div class="projeto-etapa"><dt>Onde chegamos</dt><dd><span class="preencher">Como ficou o pitch de investimento.</span></dd></div>
+              </dl>
+              <blockquote class="projeto-depoimento">
+                <p><span class="preencher">Depoimento do cliente sobre o projeto.</span></p>
+                <footer><span class="preencher">Nome</span> · <span class="preencher">Cargo, Nutrupet</span></footer>
+              </blockquote>
+            </div>
+          </article>
         </div>
       </div>
     </section>
 
     <!-- ===== Chamada final ===== -->
-    <section class="secao secao-escura cta-faixa" aria-labelledby="titulo-cta">
-      <div class="container">
-        <h2 class="titulo" id="titulo-cta">Quer ver como isso funciona na sua operação?</h2>
-        <div class="cta-acoes">
-          <a class="btn btn-mostarda btn-grande" href="contato.html">Fale conosco</a>
-        </div>
-      </div>
+    <section class="secao cta-final cta-final-areia" aria-labelledby="titulo-cta">
       <div class="ponto-cortado" aria-hidden="true"></div>
+      <div class="ponto-cortado ponto-cortado-esquerda" aria-hidden="true"></div>
+      <div class="container cta-final-conteudo">
+        <div class="ponto-a-ponto cta-final-pontos" aria-hidden="true"><span></span><i></i><span></span><i></i><span></span></div>
+        <p class="eyebrow">Conversa de diagnóstico</p>
+        <h2 class="titulo" id="titulo-cta">Quer ver isso na sua operação?</h2>
+        <p class="lead">Conte como sua operação funciona hoje. Na conversa de diagnóstico, mostramos por onde começar.</p>
+        <a class="btn btn-mostarda btn-grande" href="contato.html">Agendar diagnóstico <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      </div>
     </section>
   </main>
 
@@ -159,6 +188,7 @@
         <ul role="list">
           <li><a href="servicos.html#plano-de-negocios">Plano de negócios</a></li>
           <li><a href="servicos.html#analise-mercadologica">Análise mercadológica</a></li>
+          <li><a href="servicos.html#marketing">Marketing</a></li>
           <li><a href="servicos.html#consultoria-operacional">Consultoria operacional</a></li>
           <li><a href="servicos.html#consultoria-financeira">Consultoria financeira</a></li>
           <li><a href="servicos.html#consultoria-de-ia">Consultoria de IA</a></li>

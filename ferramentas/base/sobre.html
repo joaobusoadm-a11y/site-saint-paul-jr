@@ -108,54 +108,84 @@
       </div>
     </section>
 
-    <!-- ===== Propósito ===== -->
-    <section class="secao" aria-labelledby="titulo-proposito">
-      <div class="container proposito-grid">
-        <div>
-          <p class="eyebrow">Nosso propósito</p>
-          <h2 class="titulo titulo-barra" id="titulo-proposito">Onde o potencial ganha direção.</h2>
-        </div>
-        <div class="proposito-texto">
-          <p class="lead">Estratégia é traçar um caminho de um ponto até um objetivo.</p>
-          <p>Para o cliente, é sair de onde a empresa está hoje e chegar aonde ela quer, com etapas, prazo e acompanhamento. Para quem faz parte da Saint Paul Jr, é descobrir do que gosta, do que não gosta e construir um propósito.</p>
-          <div class="ponto-a-ponto" aria-hidden="true"><span></span><i></i><span></span><i></i><span></span></div>
+    <!-- ===== Missão, visão e valores (com o propósito) ===== -->
+    <section class="secao secao-areia" id="proposito" aria-labelledby="titulo-mvv">
+      <div class="container">
+        <div class="proposito-grid">
+          <div>
+            <p class="eyebrow">Propósito, missão, visão e valores</p>
+            <h2 class="titulo titulo-barra" id="titulo-mvv">Onde o potencial ganha direção.</h2>
+          </div>
+          <p class="lead">Estratégia é traçar um caminho de um ponto até um objetivo. Para a empresa que nos contrata, é chegar aonde ela quer. Para quem trabalha aqui, é construir um propósito.</p>
         </div>
       </div>
-    </section>
 
-    <!-- ===== Missão, visão e valores ===== -->
-    <section class="secao secao-areia" aria-labelledby="titulo-mvv">
-      <div class="container">
-        <div class="secao-cabeca">
-          <p class="eyebrow">Missão, visão e valores</p>
-          <h2 class="titulo titulo-barra" id="titulo-mvv">O que move cada projeto.</h2>
-        </div>
-
-        <div class="mvv-grid">
-          <article class="mvv-card mvv-preto escuro">
-            <h3 class="eyebrow">Missão</h3>
+      <!-- Missão e visão: cada bloco abre o texto completo ao passar o cursor ou receber foco.
+           Em telas de toque (sem cursor) o texto já aparece inteiro. -->
+      <div class="mvv-faixa">
+        <article class="mvv-bloco mvv-preto escuro" tabindex="0">
+          <h3 class="eyebrow">Missão</h3>
+          <p class="mvv-resumo">Transformar potencial em impacto.</p>
+          <div class="mvv-corpo">
             <p class="mvv-texto">Transformar potencial em impacto, formando profissionais capazes de resolver problemas reais por meio da prática e da inovação, e entregando às empresas projetos de excelência.</p>
-          </article>
-          <article class="mvv-card mvv-petroleo escuro">
-            <h3 class="eyebrow">Visão</h3>
+          </div>
+          <span class="mvv-dica" aria-hidden="true">Ler a missão</span>
+        </article>
+        <article class="mvv-bloco mvv-petroleo escuro" tabindex="0">
+          <h3 class="eyebrow">Visão</h3>
+          <p class="mvv-resumo">Referência em consultoria e IA.</p>
+          <div class="mvv-corpo">
             <p class="mvv-texto">Ser uma EJ referência em consultoria e IA e na criação de líderes, que incentive a iniciativa empreendedora e a busca por inovação.</p>
-          </article>
+          </div>
+          <span class="mvv-dica" aria-hidden="true">Ler a visão</span>
+        </article>
+      </div>
+
+      <!-- Valores como pontos de um caminho: escolher um ponto abre o valor (iniciarValores em main.js).
+           Sem JavaScript, todos os valores aparecem abertos, um embaixo do outro.
+           Os quatro que o cliente sente no projeto. Meritocracia e espírito empreendedor
+           seguem como valores internos (planilha M.V.V.), fora desta lista. -->
+      <div class="container">
+        <div class="valores-grid">
+          <div class="valores-intro">
+            <h3 class="subtitulo valores-titulo">Valores, na prática</h3>
+            <p>Escolha um ponto do caminho para ver como cada valor aparece no projeto.</p>
+            <blockquote class="crenca">
+              <cite>No que acreditamos</cite>
+              <p>Sempre existe um jeito melhor, ou diferente, de fazer o que é feito há anos. Perguntamos “por quê” antes de aceitar o “como”.</p>
+            </blockquote>
+          </div>
+
+          <div class="valores-explorar" data-valores>
+            <div class="valores-trilha" role="tablist" aria-label="Valores">
+              <button class="valor-aba" type="button" role="tab" id="aba-curiosidade" aria-controls="valor-curiosidade" aria-selected="true"><span class="valor-ponto" aria-hidden="true"></span><span class="valor-nome">Curiosidade</span></button>
+              <button class="valor-aba" type="button" role="tab" id="aba-dono" aria-controls="valor-dono" aria-selected="false" tabindex="-1"><span class="valor-ponto" aria-hidden="true"></span><span class="valor-nome">Sentimento de dono</span></button>
+              <button class="valor-aba" type="button" role="tab" id="aba-proatividade" aria-controls="valor-proatividade" aria-selected="false" tabindex="-1"><span class="valor-ponto" aria-hidden="true"></span><span class="valor-nome">Proatividade</span></button>
+              <button class="valor-aba" type="button" role="tab" id="aba-cooperacao" aria-controls="valor-cooperacao" aria-selected="false" tabindex="-1"><span class="valor-ponto" aria-hidden="true"></span><span class="valor-nome">Cooperação</span></button>
+            </div>
+
+            <div class="valor-painel" role="tabpanel" id="valor-curiosidade" aria-labelledby="aba-curiosidade" tabindex="0">
+              <p class="valor-grande">Curiosidade</p>
+              <p class="valor-texto">Vamos ver a operação com os próprios olhos antes de opinar.</p>
+              <p class="valor-pratica"><strong>Na prática</strong> Pedimos para o gestor desenhar o processo. Ele desenhou quatro passos. Acompanhamos um de verdade: eram nove.</p>
+            </div>
+            <div class="valor-painel" role="tabpanel" id="valor-dono" aria-labelledby="aba-dono" tabindex="0">
+              <p class="valor-grande">Sentimento de dono</p>
+              <p class="valor-texto">Assumimos o problema do cliente como nosso e entregamos no prazo prometido.</p>
+              <p class="valor-pratica"><strong>Na prática</strong> Escopo fechado, prazo por etapa e um professor orientador acompanhando. No fim, o indicador que estava no papel está rodando na rotina.</p>
+            </div>
+            <div class="valor-painel" role="tabpanel" id="valor-proatividade" aria-labelledby="aba-proatividade" tabindex="0">
+              <p class="valor-grande">Proatividade</p>
+              <p class="valor-texto">Não paramos no que foi pedido: questionamos o processo e propomos o que pode melhorar.</p>
+              <p class="valor-pratica"><strong>Na prática</strong> Cada projeto deixa estruturas, processos e rotinas melhores do que encontrou.</p>
+            </div>
+            <div class="valor-painel" role="tabpanel" id="valor-cooperacao" aria-labelledby="aba-cooperacao" tabindex="0">
+              <p class="valor-grande">Cooperação</p>
+              <p class="valor-texto">Construímos a solução junto com a sua equipe, e não só para ela.</p>
+              <p class="valor-pratica"><strong>Na prática</strong> O cliente recebe o processo redesenhado, testado com a equipe dele e ajustado antes de virar rotina.</p>
+            </div>
+          </div>
         </div>
-
-        <blockquote class="crenca">
-          <cite>No que acreditamos</cite>
-          <p>Sempre existe um jeito melhor, ou diferente, de fazer o que é feito há anos. Perguntamos “por quê” antes de aceitar o “como”.</p>
-        </blockquote>
-
-        <h3 class="subtitulo valores-titulo">Valores</h3>
-        <ul class="valores" role="list">
-          <li>Curiosidade</li>
-          <li>Meritocracia</li>
-          <li>Proatividade</li>
-          <li>Sentimento de dono</li>
-          <li>Espírito empreendedor</li>
-          <li>Cooperação</li>
-        </ul>
       </div>
     </section>
 

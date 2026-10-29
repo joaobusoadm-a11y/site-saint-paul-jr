@@ -12,8 +12,8 @@ Publicado pelo GitHub Pages a partir da branch `main`: toda alteração salva aq
 | O que mudar | Arquivo |
 |---|---|
 | Textos e seções da página inicial | `index.html` |
-| Frentes e escopos | `servicos.html` |
-| Resultados | `resultados.html` |
+| Frentes e escopos | lista `FRENTES` em `ferramentas/gerar.js` e as abas em `ferramentas/base/index.html` |
+| Resultados (NPS e projetos) | `NPS` e `PROJETOS` em `ferramentas/gerar.js` |
 | Contato e formulário | `contato.html` |
 | Páginas dos 3 sintomas | `dor-caixa.html`, `dor-inovacao.html`, `dor-recorrencia.html` |
 | Cores, fontes, espaçamentos | `css/style.css` e `css/paginas.css` |
@@ -22,6 +22,10 @@ Publicado pelo GitHub Pages a partir da branch `main`: toda alteração salva aq
 | Imagens | pasta `assets/img/` |
 
 **Atenção:** as páginas foram montadas pelo gerador em `ferramentas/gerar.js`.
+Depois de editar o gerador ou `ferramentas/base/`, rode `node ferramentas/gerar.js ferramentas/base .` na raiz.
+
+**Antes de publicar:** `grep -l 'class="preencher"' *.html` não pode listar nenhum arquivo.
+Trechos com essa classe são dados que ainda faltam e aparecem destacados na página.
 Se alguém rodar o gerador de novo, as edições feitas direto nos `.html` são substituídas.
 Combine com o time antes de rodar (veja `ferramentas/LEIA-ME.md`).
 

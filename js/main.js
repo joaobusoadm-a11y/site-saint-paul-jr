@@ -28,6 +28,8 @@ const MENSAGENS_WHATSAPP = {
     'Olá, Saint Paul Jr! Vim pelo site e tenho interesse em um plano de negócios (modelagem de negócio, pitch e valuation ou viabilidade). Podemos conversar?',
   'Análise mercadológica':
     'Olá, Saint Paul Jr! Vim pelo site e tenho interesse em uma análise mercadológica (pesquisa de mercado e concorrência ou definição de público-alvo). Podemos conversar?',
+  Marketing:
+    'Olá, Saint Paul Jr! Vim pelo site e tenho interesse em marketing (reestruturação de site com SEO e GEO). Podemos conversar?',
   'Consultoria operacional':
     'Olá, Saint Paul Jr! Vim pelo site e tenho interesse em consultoria operacional (mapeamento de processos ou ferramentas de gestão). Podemos conversar?',
   'Consultoria financeira':
@@ -45,9 +47,13 @@ document.addEventListener('DOMContentLoaded', () => {
   iniciarGaveta();
   iniciarSubmenus();
   iniciarAbas();
+  iniciarCarrossel();
+  iniciarCtaDor();
+  iniciarRede();
+  iniciarValores();
+  iniciarMetodo();
   iniciarHeroSlides();
   iniciarFormulario();
-  inlinearSvgs();
   iniciarAnimacoes();
   document.querySelectorAll('[data-ano]').forEach((el) => {
     el.textContent = new Date().getFullYear();
@@ -322,14 +328,6 @@ function iniciarAnimacoes() {
   if (document.documentElement.classList.contains('estatico')) return;
   const semMovimento = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // Na página inicial o logo mostra "Saint Paul jr" uma vez ao abrir
-  const logo = document.querySelector('[data-logo]');
-  const telaLarga = window.matchMedia('(min-width: 600px)').matches;
-  if (logo && !semMovimento && telaLarga && document.querySelector('.hero')) {
-    setTimeout(() => logo.classList.add('aberto'), 900);
-    setTimeout(() => logo.classList.remove('aberto'), 3200);
-  }
-
 
   // Blocos que aparecem ao rolar; irmãos entram um pouco depois do outro
   const grupos = [
@@ -339,22 +337,20 @@ function iniciarAnimacoes() {
     '.abas',
     '.nota-ia',
     '.metodo-etapa',
-    '.pilares > li',
-    '.ecossistema-figura',
-    '.ecossistema-texto',
-    '.contato-info',
-    '.form-contato',
+    '.garantias > div',
+    '.metodo-orientador',
+    '.canais-grid > *',
     '.proposito-grid > *',
-    '.mvv-card',
-    '.crenca',
-    '.valores-titulo',
-    '.valores > li',
+    '.valores-intro',
+    '.valores-explorar',
     '.politicas > *',
-    '.cta-faixa .container',
+    '.cta-final-conteudo > *',
+    '.cta-dor-grid > *',
     '.rodape-grid > *',
     '.servico-card',
-    '.formato-case > li',
-    '.case-vazio',
+    '.nps-grid > *',
+    '.projetos-topo > *',
+    '.projeto',
     '.sintoma-card',
     '.dor-problema',
     '.dor-porques > li',
@@ -418,24 +414,312 @@ function iniciarHeroSlides() {
   mostrar(0);
 }
 
-/* ---------- SVGs com texto: insere no HTML para usar as fontes do site ---------- */
+/* ---------- Carrossel de projetos (Resultados) ---------- */
 
-function inlinearSvgs() {
-  document.querySelectorAll('img[data-svg-inline]').forEach(async (img) => {
-    try {
-      const resposta = await fetch(img.src);
-      if (!resposta.ok) return;
-      const modelo = document.createElement('template');
-      modelo.innerHTML = await resposta.text();
-      const svg = modelo.content.querySelector('svg');
-      if (!svg) return;
-      svg.removeAttribute('width');
-      svg.removeAttribute('height');
-      svg.setAttribute('role', 'img');
-      svg.setAttribute('aria-label', img.alt);
-      img.replaceWith(svg);
-    } catch {
-      // Aberto direto do disco (file://): a imagem continua como <img>
+function iniciarCarrossel() {
+  const trilho = document.querySelector('[data-carrossel]');
+  if (!trilho) return;
+  const voltar = document.querySelector('[data-carrossel-voltar]');
+  const avancar = document.querySelector('[data-carrossel-avancar]');
+  const semMovimento = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Um passo = largura de um card mais o espaço entre eles
+  const passo = () => {
+    const card = trilho.firstElementChild;
+    return card ? card.getBoundingClientRect().width + parseFloat(getComputedStyle(trilho).columnGap || 0) : trilho.clientWidth;
+  };
+  const mover = (direcao) => trilho.scrollBy({ left: direcao * passo(), behavior: semMovimento ? 'auto' : 'smooth' });
+
+  const atualizar = () => {
+    const fim = trilho.scrollWidth - trilho.clientWidth;
+    voltar.disabled = trilho.scrollLeft <= 4;
+    avancar.disabled = trilho.scrollLeft >= fim - 4;
+    // Todos os projetos cabem na tela: as setas não têm o que fazer
+    voltar.parentElement.hidden = fim <= 4;
+  };
+
+  voltar.addEventListener('click', () => mover(-1));
+  avancar.addEventListener('click', () => mover(1));
+  trilho.addEventListener('scroll', atualizar, { passive: true });
+  window.addEventListener('resize', atualizar);
+  atualizar();
+}
+
+/* ---------- Chamada final dos sintomas: sinais marcados vão para a mensagem ---------- */
+
+function iniciarCtaDor() {
+  const caixa = document.querySelector('[data-cta-dor]');
+  if (!caixa) return;
+  const marcas = [...caixa.querySelectorAll('input[name="sinal"]')];
+  const contagem = caixa.querySelector('[data-cta-dor-contagem]');
+  const botao = caixa.querySelector('[data-cta-dor-botao]');
+  const { sintoma, frente } = caixa.dataset;
+
+  const atualizar = () => {
+    const marcados = marcas.filter((m) => m.checked).map((m) => m.value);
+    contagem.textContent = marcados.length
+      ? `${marcados.length} de ${marcas.length} sinais marcados. Eles vão na sua mensagem.`
+      : 'Nenhum sinal marcado ainda.';
+    if (!CONTATO.whatsapp) return;
+    const mensagem = marcados.length
+      ? `Olá, Saint Paul Jr! Vim pela página "${sintoma.replace(/\.$/, '')}" e reconheço na minha empresa: ${marcados.join('; ').toLowerCase()}. Podemos conversar?`
+      : MENSAGENS_WHATSAPP[frente] || MENSAGENS_WHATSAPP.geral;
+    botao.href = linkWhatsapp(mensagem);
+    botao.target = '_blank';
+    botao.rel = 'noopener';
+  };
+
+  marcas.forEach((m) => m.addEventListener('change', atualizar));
+  atualizar();
+}
+
+/* ---------- Rede de pontos que reage ao cursor ---------- */
+
+// Uma rede em cada fundo marcado com data-rede: Sobre nós e o topo das páginas internas
+function iniciarRede() {
+  document.querySelectorAll('[data-rede]').forEach(montarRede);
+}
+
+function montarRede(canvas) {
+  if (!canvas.getContext) return;
+  const secao = canvas.parentElement;
+  const ctx = canvas.getContext('2d');
+  const semMovimento = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const estatico = document.documentElement.classList.contains('estatico');
+
+  const COR = '159, 211, 203'; // petróleo claro
+  const LIGA = 130; // distância máxima para ligar dois pontos
+  const ALCANCE_CURSOR = 190; // distância em que o cursor puxa as linhas
+  const larguraCelular = () => window.matchMedia('(max-width: 640px)').matches;
+  let pontos = [];
+  let largura = 0;
+  let altura = 0;
+  let cursor = null;
+  let intersectando = false;
+  let visivel = false;
+  let quadro = null;
+
+  const montar = () => {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    largura = secao.clientWidth;
+    altura = secao.clientHeight;
+    canvas.width = largura * dpr;
+    canvas.height = altura * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    // Densidade pela área: telas grandes ganham mais pontos, com teto para não pesar
+    const celular = larguraCelular();
+    const total = Math.min(celular ? 38 : 90, Math.round((largura * altura) / (celular ? 28000 : 15000)));
+    pontos = Array.from({ length: total }, () => ({
+      x: Math.random() * largura,
+      y: Math.random() * altura,
+      vx: (Math.random() - 0.5) * 0.35,
+      vy: (Math.random() - 0.5) * 0.35,
+      r: 1.2 + Math.random() * 1.6,
+    }));
+  };
+
+  const desenhar = () => {
+    ctx.clearRect(0, 0, largura, altura);
+
+    // Brilho suave que acompanha o cursor
+    if (cursor) {
+      const brilho = ctx.createRadialGradient(cursor.x, cursor.y, 0, cursor.x, cursor.y, 260);
+      brilho.addColorStop(0, 'rgba(24, 72, 72, 0.55)');
+      brilho.addColorStop(1, 'rgba(24, 72, 72, 0)');
+      ctx.fillStyle = brilho;
+      ctx.fillRect(0, 0, largura, altura);
     }
+
+    for (let i = 0; i < pontos.length; i++) {
+      const a = pontos[i];
+      for (let j = i + 1; j < pontos.length; j++) {
+        const b = pontos[j];
+        const d = Math.hypot(a.x - b.x, a.y - b.y);
+        if (d < LIGA) {
+          ctx.strokeStyle = `rgba(${COR}, ${(1 - d / LIGA) * 0.28})`;
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.moveTo(a.x, a.y);
+          ctx.lineTo(b.x, b.y);
+          ctx.stroke();
+        }
+      }
+      if (cursor) {
+        const d = Math.hypot(a.x - cursor.x, a.y - cursor.y);
+        if (d < ALCANCE_CURSOR) {
+          ctx.strokeStyle = `rgba(${COR}, ${(1 - d / ALCANCE_CURSOR) * 0.6})`;
+          ctx.lineWidth = 1.2;
+          ctx.beginPath();
+          ctx.moveTo(a.x, a.y);
+          ctx.lineTo(cursor.x, cursor.y);
+          ctx.stroke();
+        }
+      }
+    }
+
+    ctx.fillStyle = `rgb(${COR})`;
+    for (const p of pontos) {
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  };
+
+  const mover = () => {
+    for (const p of pontos) {
+      // Perto do cursor, o ponto é empurrado de leve para fora
+      if (cursor) {
+        const dx = p.x - cursor.x;
+        const dy = p.y - cursor.y;
+        const d = Math.hypot(dx, dy);
+        if (d < 120 && d > 0.1) {
+          p.vx += (dx / d) * 0.06;
+          p.vy += (dy / d) * 0.06;
+        }
+      }
+      // Atrito leve para a velocidade voltar ao ritmo calmo
+      p.vx *= 0.985;
+      p.vy *= 0.985;
+      if (Math.hypot(p.vx, p.vy) < 0.12) {
+        p.vx += (Math.random() - 0.5) * 0.05;
+        p.vy += (Math.random() - 0.5) * 0.05;
+      }
+      p.x += p.vx;
+      p.y += p.vy;
+      if (p.x < 0 || p.x > largura) p.vx *= -1;
+      if (p.y < 0 || p.y > altura) p.vy *= -1;
+      p.x = Math.max(0, Math.min(largura, p.x));
+      p.y = Math.max(0, Math.min(altura, p.y));
+    }
+  };
+
+  const ciclo = () => {
+    mover();
+    desenhar();
+    quadro = visivel ? requestAnimationFrame(ciclo) : null;
+  };
+
+  const atualizarAnimacao = () => {
+    visivel = intersectando && document.visibilityState === 'visible';
+    if (visivel && !quadro) quadro = requestAnimationFrame(ciclo);
+    else if (!visivel && quadro) {
+      cancelAnimationFrame(quadro);
+      quadro = null;
+    }
+  };
+
+  montar();
+  desenhar();
+  if (semMovimento || estatico) {
+    window.addEventListener('resize', () => { montar(); desenhar(); });
+    return;
+  }
+
+  secao.addEventListener('pointermove', (e) => {
+    const caixa = secao.getBoundingClientRect();
+    cursor = { x: e.clientX - caixa.left, y: e.clientY - caixa.top };
   });
+  secao.addEventListener('pointerleave', () => { cursor = null; });
+  window.addEventListener('resize', () => { montar(); desenhar(); });
+  document.addEventListener('visibilitychange', atualizarAnimacao);
+
+  // Anima apenas enquanto a seção está visível e a aba do navegador está ativa.
+  new IntersectionObserver(([entrada]) => {
+    intersectando = entrada.isIntersecting;
+    atualizarAnimacao();
+  }).observe(secao);
+}
+
+/* ---------- Valores: escolher um ponto do caminho abre o valor ---------- */
+
+function iniciarValores() {
+  const caixa = document.querySelector('[data-valores]');
+  if (!caixa) return;
+  const abas = [...caixa.querySelectorAll('[role="tab"]')];
+  const paineis = abas.map((aba) => document.getElementById(aba.getAttribute('aria-controls')));
+  caixa.classList.add('ativo');
+
+  const abrir = (indice, focar) => {
+    abas.forEach((aba, i) => {
+      const atual = i === indice;
+      aba.setAttribute('aria-selected', String(atual));
+      aba.tabIndex = atual ? 0 : -1;
+      paineis[i].hidden = !atual;
+    });
+    // Até onde o caminho chegou: o traço se preenche até o ponto escolhido
+    caixa.style.setProperty('--progresso', abas.length > 1 ? indice / (abas.length - 1) : 0);
+    if (focar) abas[indice].focus();
+  };
+
+  abas.forEach((aba, i) => {
+    aba.addEventListener('click', () => abrir(i));
+    aba.addEventListener('keydown', (e) => {
+      const ultimo = abas.length - 1;
+      const destino = { ArrowRight: i === ultimo ? 0 : i + 1, ArrowLeft: i === 0 ? ultimo : i - 1, Home: 0, End: ultimo }[e.key];
+      if (destino === undefined) return;
+      e.preventDefault();
+      abrir(destino, true);
+    });
+  });
+
+  abrir(Math.max(0, abas.findIndex((aba) => aba.getAttribute('aria-selected') === 'true')));
+}
+
+/* ---------- Como trabalhamos: seletor de etapas acessível ---------- */
+
+function iniciarMetodo() {
+  const caixa = document.querySelector('[data-metodo]');
+  if (!caixa) return;
+  const trilho = caixa.querySelector('.metodo-trilho');
+  const abas = [...trilho.querySelectorAll('.etapa-aba')];
+  const paineis = abas.map((aba) => document.getElementById(aba.getAttribute('aria-controls')));
+  let atual = Math.max(0, abas.findIndex((aba) => aba.getAttribute('aria-selected') === 'true'));
+
+  const mostrar = (indice, focar) => {
+    atual = indice;
+    abas.forEach((aba, i) => {
+      const selecionada = i === indice;
+      aba.setAttribute('aria-selected', String(selecionada));
+      aba.tabIndex = selecionada ? 0 : -1;
+      paineis[i].hidden = !selecionada;
+    });
+    if (focar) abas[indice].focus();
+  };
+
+  abas.forEach((aba, i) => {
+    aba.addEventListener('click', () => mostrar(i));
+    aba.addEventListener('keydown', (e) => {
+      const ultimo = abas.length - 1;
+      const destino = { ArrowRight: i === ultimo ? 0 : i + 1, ArrowLeft: i === 0 ? ultimo : i - 1, Home: 0, End: ultimo }[e.key];
+      if (destino === undefined) return;
+      e.preventDefault();
+      mostrar(destino, true);
+    });
+  });
+
+  mostrar(atual);
+
+  const flutuante = document.querySelector('[data-whatsapp-flutuante]');
+  const secoesDeAbertura = [...document.querySelectorAll('.sobre-secao, .metodo-secao, .ej-secao')];
+  if (flutuante && secoesDeAbertura.length) {
+    const atualizarVisibilidade = () => {
+      const celularOuTablet = window.matchMedia('(max-width: 899px)').matches;
+      const secaoVisivel = secoesDeAbertura.some((secao) => {
+        const limites = secao.getBoundingClientRect();
+        return limites.bottom > 80 && limites.top < window.innerHeight - 80;
+      });
+      flutuante.classList.toggle('conteudo-em-tela', celularOuTablet && secaoVisivel);
+    };
+
+    if ('IntersectionObserver' in window) {
+      const observadorDeSecoes = new IntersectionObserver(atualizarVisibilidade, {
+        rootMargin: '-80px 0px -80px 0px',
+      });
+      secoesDeAbertura.forEach((secao) => observadorDeSecoes.observe(secao));
+    } else {
+      window.addEventListener('scroll', atualizarVisibilidade, { passive: true });
+    }
+    window.addEventListener('resize', atualizarVisibilidade);
+    atualizarVisibilidade();
+  }
 }

@@ -11,14 +11,15 @@
   --petroleo: #184848;
   --petroleo-escuro: #193b3d;
   --petroleo-claro: #9fd3cb;
-  --areia: #f8f5e6;
-  --branco: #ffffff;
+  --areia: #f1eee5;
+  --branco: #fbfaf6;
 
-  /* Destaque usado no protótipo do Figma */
-  --mostarda: #b38201;
-  /* Um tom abaixo, só para botões: texto branco fica acima de 4,5:1 */
-  --mostarda-botao: #976e00;
-  --mostarda-botao-hover: #7d5a00;
+  /* Destaque: verde-petróleo sobre fundo claro, petróleo claro sobre fundo escuro.
+     O Brand Book (p. 9 e 12) reserva a mostarda para o Daily e pede o botão principal em petróleo. */
+  --destaque: var(--petroleo);
+  --destaque-botao: var(--petroleo);
+  --destaque-botao-hover: #0f3333;
+  --destaque-botao-texto: var(--branco);
 
   --cabecalho: #142627;
   --texto-apoio: #3d3d3d;
@@ -32,6 +33,28 @@
   --margem: clamp(16px, 4vw, 40px);
   --altura-cabecalho: 80px;
   --raio: 4px;
+
+  /* Superfícies escuras aprovadas para a nova abertura da página inicial */
+  --spj-page: #082226;
+  --spj-surface: #0d2d31;
+  --spj-text-secondary: #c8d8d7;
+  --spj-logo-surface: #f7f6f1;
+  --spj-black: #082226;
+  --spj-petroleum: #184848;
+  --spj-white: #ffffff;
+  --spj-sand: #0d2d31;
+  --spj-dark-petroleum: #193b3d;
+  --spj-light-petroleum: #9fd3cb; /* só sobre fundo escuro */
+}
+
+/* Em fundo escuro o destaque vira petróleo claro, com texto petróleo escuro no botão */
+.escuro,
+.secao-escura,
+.secao-preta {
+  --destaque: var(--petroleo-claro);
+  --destaque-botao: var(--petroleo-claro);
+  --destaque-botao-hover: #c4e6e0;
+  --destaque-botao-texto: var(--petroleo-escuro);
 }
 
 /* ---------- Base ---------- */
@@ -185,14 +208,14 @@ blockquote {
   text-wrap: balance;
 }
 
-/* Barra curta em mostarda abaixo do título (protótipo, Página-2) */
+/* Barra curta abaixo do título (protótipo, Página-2), na cor de destaque */
 .titulo-barra::after {
   content: "";
   display: block;
   width: 72px;
   height: 6px;
   margin-top: 20px;
-  background: var(--mostarda);
+  background: var(--destaque);
 }
 
 .subtitulo {
@@ -248,13 +271,14 @@ blockquote {
   font-weight: 700;
 }
 
+/* Botão principal (o nome da classe vem do protótipo; a cor segue o Brand Book) */
 .btn-mostarda {
-  background: var(--mostarda-botao);
-  color: var(--branco);
+  background: var(--destaque-botao);
+  color: var(--destaque-botao-texto);
 }
 
 .btn-mostarda:hover {
-  background: var(--mostarda-botao-hover);
+  background: var(--destaque-botao-hover);
 }
 
 .btn-petroleo {
@@ -282,7 +306,7 @@ blockquote {
   margin-top: 28px;
   font-weight: 600;
   text-decoration: none;
-  border-bottom: 2px solid var(--mostarda);
+  border-bottom: 2px solid var(--destaque);
   padding-bottom: 4px;
 }
 
@@ -331,6 +355,17 @@ blockquote {
   border: 0;
   background: transparent;
   cursor: pointer;
+}
+
+.logo {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+}
+
+.logo img {
+  width: auto;
+  height: 36px;
 }
 
 .menu-toggle span {
@@ -466,7 +501,7 @@ blockquote {
   white-space: nowrap;
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 840px) {
   .nav-principal {
     display: block;
   }
@@ -479,6 +514,25 @@ blockquote {
 
   .logo img {
     height: 44px;
+  }
+}
+
+@media (min-width: 840px) and (max-width: 1023px) {
+  .cabecalho-inner {
+    gap: 8px;
+  }
+
+  .nav-link {
+    gap: 4px;
+    padding-right: 8px;
+    padding-left: 8px;
+    font-size: 0.875rem;
+  }
+
+  .btn-cabecalho {
+    padding-right: 14px;
+    padding-left: 14px;
+    font-size: 0.875rem;
   }
 }
 
@@ -607,14 +661,11 @@ blockquote {
   color: var(--petroleo-claro);
 }
 
+/* Botão principal na largura do menu */
 .gaveta .btn {
-  align-self: flex-start;
-}
-
-.gaveta-contato {
-  margin-top: auto;
-  padding-top: 24px;
-  border-top: 1px solid var(--linha-escura);
+  align-self: stretch;
+  padding-block: 18px;
+  font-size: 1.0625rem;
 }
 
 /* ---------- Seções ---------- */
@@ -713,7 +764,7 @@ blockquote {
   display: grid;
   grid-template-rows: 1fr auto;
   color: var(--branco);
-  background: var(--preto);
+  background: linear-gradient(120deg, rgba(13, 17, 17, 0.82) 0%, rgba(20, 33, 33, 0.62) 34%, rgba(23, 21, 19, 0.78) 100%);
 }
 
 /* Uma foto por frente; a ativa desliza para dentro a cada 8 s (main.js) */
@@ -733,6 +784,7 @@ blockquote {
   object-position: center 35%;
   translate: 100% 0;
   will-change: translate, transform;
+  filter: saturate(0.82) contrast(1.08) brightness(0.9);
 }
 
 /* A foto que entra passa por cima; a que sai recua devagar por baixo */
@@ -750,7 +802,8 @@ blockquote {
   position: absolute;
   inset: 0;
   z-index: -1;
-  background: linear-gradient(180deg, rgba(25, 24, 24, 0.35) 0%, rgba(25, 24, 24, 0.1) 45%, rgba(25, 24, 24, 0.6) 100%);
+  background: linear-gradient(90deg, rgba(8, 12, 12, 0.82) 0%, rgba(8, 12, 12, 0.56) 30%, rgba(8, 12, 12, 0.18) 100%),
+    linear-gradient(180deg, rgba(16, 28, 28, 0.34) 0%, rgba(18, 18, 18, 0.08) 46%, rgba(9, 12, 12, 0.7) 100%);
 }
 
 /* Faixa escura atrás do texto, como no protótipo */
@@ -758,21 +811,28 @@ blockquote {
   align-self: center;
   margin-top: var(--altura-cabecalho);
   padding-block: clamp(28px, 4vw, 48px);
-  background: rgba(25, 24, 24, 0.6);
+  background: linear-gradient(90deg, rgba(8, 12, 12, 0.7) 0%, rgba(8, 12, 12, 0.3) 50%, rgba(8, 12, 12, 0.12) 100%);
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(2px);
 }
 
-.hero h1 {
+.hero h1,
+.hero h2 {
   font-family: var(--fonte-titulo);
   font-weight: 800;
   font-size: clamp(2rem, 1.1rem + 3.1vw, 3.75rem);
   line-height: 1.06;
   letter-spacing: -0.02em;
   text-transform: uppercase;
+  text-shadow: 0 12px 28px rgba(0, 0, 0, 0.25);
 }
 
-.hero h1 mark {
+/* INOVAR: bloco verde-petróleo com texto branco */
+.hero h1 mark,
+.hero h2 mark {
   padding: 0 0.12em;
-  background: var(--mostarda);
+  background: var(--petroleo);
   color: var(--branco);
   -webkit-box-decoration-break: clone;
   box-decoration-break: clone;
@@ -799,14 +859,14 @@ blockquote {
 
 .hero-frentes ul {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(6, 1fr);
   gap: 20px;
 }
 
 .hero-frentes a {
   display: block;
   padding-top: 14px;
-  border-top: 2px solid rgba(255, 255, 255, 0.45);
+  border-top: 2px solid rgba(255, 255, 255, 0.38);
   font-size: 0.8125rem;
   font-weight: 600;
   letter-spacing: 0.12em;
@@ -817,7 +877,7 @@ blockquote {
 }
 
 .hero-frentes a:hover {
-  border-color: var(--mostarda);
+  border-color: rgba(197, 214, 208, 0.9);
   color: var(--branco);
 }
 
@@ -833,7 +893,7 @@ blockquote {
   left: 0;
   width: 100%;
   height: 2px;
-  background: var(--mostarda);
+  background: linear-gradient(90deg, rgba(233, 209, 167, 0.95) 0%, rgba(160, 183, 177, 0.9) 100%);
   transform: scaleX(0);
   transform-origin: left;
 }
@@ -849,6 +909,13 @@ blockquote {
 @keyframes spj-progresso {
   to {
     transform: scaleX(1);
+  }
+}
+
+@media (max-width: 900px) {
+  .hero-frentes ul {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
   }
 }
 
@@ -915,7 +982,12 @@ blockquote {
 .aba-num {
   font-size: 0.8125rem;
   font-weight: 600;
-  color: var(--mostarda-botao);
+  color: var(--destaque-botao);
+}
+
+/* Aba aberta no celular tem fundo petróleo: o número vai em petróleo claro */
+.aba[aria-selected="true"] .aba-num {
+  color: var(--petroleo-claro);
 }
 
 .aba[aria-selected="true"] {
@@ -968,7 +1040,7 @@ blockquote {
   }
 
   .aba[aria-selected="true"] .aba-num {
-    color: var(--mostarda-botao);
+    color: var(--destaque-botao);
   }
 
   .aba[aria-selected="true"]::after {
@@ -1087,6 +1159,7 @@ blockquote {
 
 .metodo-ponto {
   position: absolute;
+  z-index: 1;
   left: 0;
   top: 0;
   display: grid;
@@ -1144,97 +1217,156 @@ blockquote {
   }
 
   /* Traço reto e horizontal ligando um ponto ao próximo */
+  /* Traço contínuo do centro de um ponto ao centro do próximo, por trás dos pontos */
   .metodo-etapa:not(:last-child)::after {
     content: "";
     position: absolute;
     top: 15px;
-    left: calc(16px + var(--tamanho) / 2 + 12px);
-    right: -20px;
+    left: 16px;
+    right: -48px;
     height: 3px;
     background: var(--petroleo);
   }
 }
 
-.pilares {
+/* Título à esquerda, as duas garantias à direita */
+.metodo-topo {
+  display: grid;
+  gap: 40px;
+  margin-bottom: clamp(48px, 6vw, 80px);
+}
+
+.metodo-topo .secao-cabeca {
+  margin-bottom: 0;
+}
+
+@media (min-width: 960px) {
+  .metodo-topo {
+    grid-template-columns: 7fr 5fr;
+    align-items: end;
+    column-gap: clamp(48px, 7vw, 112px);
+  }
+}
+
+.garantias {
   display: grid;
   gap: 28px;
-  margin-top: clamp(56px, 7vw, 88px);
-  padding: clamp(28px, 4vw, 48px);
+}
+
+.garantias div {
+  padding-left: 22px;
+  border-left: 6px solid var(--petroleo);
+}
+
+.garantias dt {
+  font-family: var(--fonte-titulo);
+  font-size: clamp(1.25rem, 1.1rem + 0.5vw, 1.5rem);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--preto);
+}
+
+.garantias dd {
+  margin: 6px 0 0;
+  max-width: 40ch;
+}
+
+/* O método num quadro verde-petróleo (Brand Book, p. 12: fundo petróleo com texto branco),
+   fechado pela faixa do professor orientador */
+.metodo-quadro {
+  --respiro: clamp(28px, 4.5vw, 64px);
+  overflow: hidden;
+  padding: var(--respiro) var(--respiro) 0;
   border-radius: 6px;
-  background: var(--preto);
+  background: var(--petroleo);
   color: var(--branco);
 }
 
-.pilares li {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 14px;
+.metodo-quadro .metodo-ponto::before,
+.metodo-quadro .metodo-etapa::after {
+  background: var(--petroleo-claro);
 }
 
-.pilares .ponto {
-  width: 14px;
-  height: 14px;
-  margin-top: 5px;
-  border-radius: 50%;
-  background: var(--petroleo);
-  box-shadow: 0 0 0 1px rgba(159, 211, 203, 0.35);
+.metodo-quadro .metodo h3 {
+  font-size: clamp(1.5rem, 1.25rem + 0.9vw, 2rem);
 }
 
-.pilares h3 {
-  font-size: 1.0625rem;
+.metodo-quadro .metodo p {
+  color: rgba(255, 255, 255, 0.84);
+}
+
+.metodo-entregas .metodo-etapa {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Caixas da mesma altura nas três etapas: a caixa cresce até a reunião */
+.metodo-entregas .metodo-recebe {
+  flex: 1;
+  max-width: none;
+  margin-top: 24px;
+  padding: 20px 22px;
+  border-radius: 4px;
+  background: #113939;
+  color: var(--branco);
+  transition: background-color 0.35s, color 0.35s;
+}
+
+.metodo-recebe strong {
+  display: block;
+  margin-bottom: 6px;
   font-weight: 600;
+  color: var(--petroleo-claro);
 }
 
-.pilares p {
-  margin-top: 4px;
-  font-size: 0.9375rem;
-  color: rgba(255, 255, 255, 0.78);
-}
-
-@media (min-width: 640px) {
-  .pilares {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (min-width: 1024px) {
-  .pilares {
-    grid-template-columns: repeat(4, 1fr);
-  }
-}
-
-/* ---------- Quem está por trás (Página-2 do protótipo) ---------- */
-
-.ecossistema-grid {
-  display: grid;
-  gap: 48px;
+/* Cada etapa fecha com uma reunião: o ponto pequeno marca a parada */
+.metodo-quadro .metodo-entregas .metodo-reuniao {
+  display: flex;
   align-items: center;
+  gap: 10px;
+  margin-top: 0;
+  padding-top: 20px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--petroleo-claro);
 }
 
-.ecossistema-figura {
-  width: min(100%, 560px);
-  margin-inline: auto;
+.metodo-reuniao::before {
+  content: "";
+  flex: none;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--petroleo-claro);
 }
 
-.ecossistema-figura img,
-.ecossistema-figura svg {
-  width: 100%;
-  height: auto;
+/* Passar o mouse numa etapa: a caixa do que você recebe acende em petróleo claro */
+.metodo-entregas .metodo-etapa:hover .metodo-recebe {
+  background: var(--petroleo-claro);
+  color: var(--petroleo-escuro);
 }
 
-@media (min-width: 900px) {
-  .ecossistema-grid {
-    grid-template-columns: 1.05fr 1fr;
-    gap: clamp(48px, 6vw, 96px);
-  }
-
-  .ecossistema-figura {
-    margin-inline: 0;
-  }
+.metodo-entregas .metodo-etapa:hover .metodo-recebe strong {
+  color: var(--petroleo);
 }
 
-.ecossistema-texto .lista-pontos {
-  margin-top: 32px;
+.metodo-orientador {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 16px;
+  margin: var(--respiro) calc(-1 * var(--respiro)) 0;
+  padding: 26px var(--respiro);
+  background: var(--petroleo-escuro);
+  color: var(--branco);
+}
+
+.metodo-orientador strong {
+  font-family: var(--fonte-titulo);
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
 }
 
 /* ---------- Contato ---------- */
@@ -1395,116 +1527,257 @@ a.contato-item:hover span:last-child {
   font-size: clamp(2.5rem, 1.5rem + 3.2vw, 4.25rem);
 }
 
+/* Propósito: título e frase lado a lado */
 .proposito-grid {
   display: grid;
-  gap: 32px;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 24px;
+}
+
+.proposito-grid > * {
+  min-width: 0;
 }
 
 @media (min-width: 900px) {
   .proposito-grid {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: center;
     gap: clamp(48px, 7vw, 104px);
   }
 }
 
-.proposito-texto .lead {
+.secao#proposito {
+  padding-block: clamp(64px, 7vw, 96px);
+}
+
+.proposito-grid .titulo {
+  max-width: 13ch;
+}
+
+.proposito-grid .lead {
   margin-top: 0;
+  max-width: 54ch;
   color: var(--preto);
-  font-weight: 500;
 }
 
-.proposito-texto p + p {
-  margin-top: 16px;
-  color: var(--texto-apoio);
-  max-width: 58ch;
-}
-
-/* Sequência ponto a ponto decorativa */
-.ponto-a-ponto {
-  display: flex;
-  align-items: center;
-  margin-top: 40px;
-  max-width: 420px;
-}
-
-.ponto-a-ponto span {
-  flex: none;
-  border-radius: 50%;
-  background: var(--petroleo);
-}
-
-.ponto-a-ponto span:nth-of-type(1) {
-  width: 14px;
-  height: 14px;
-}
-
-.ponto-a-ponto span:nth-of-type(2) {
-  width: 22px;
-  height: 22px;
-}
-
-.ponto-a-ponto span:nth-of-type(3) {
-  width: 36px;
-  height: 36px;
-}
-
-.ponto-a-ponto i {
-  flex: 1;
-  height: 3px;
-  background: var(--petroleo);
-}
-
-.mvv-grid {
+/* Missão e visão: duas faixas de cor de ponta a ponta, texto alinhado ao container */
+.mvv-faixa {
   display: grid;
-  gap: 20px;
+  margin-block: clamp(8px, 2vw, 24px) clamp(64px, 8vw, 112px);
 }
 
-@media (min-width: 860px) {
-  .mvv-grid {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-.mvv-card {
-  padding: clamp(24px, 3.5vw, 40px);
-  border-radius: 6px;
+.mvv-bloco {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding: clamp(40px, 6vw, 88px) var(--margem);
   color: var(--branco);
 }
 
-.mvv-card .eyebrow {
-  color: var(--petroleo-claro);
+.mvv-bloco:focus-visible {
+  outline: 3px solid var(--petroleo-claro);
+  outline-offset: -10px;
+}
+
+/* Ponto cortado no canto (Brand Book, p. 12); cresce quando o bloco abre */
+.mvv-bloco::after {
+  content: "";
+  position: absolute;
+  right: clamp(24px, 4vw, 56px);
+  bottom: -88px;
+  z-index: -1;
+  width: clamp(160px, 17vw, 220px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  transform: scale(0.45);
+  opacity: 0.3;
+  transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .mvv-preto {
   background: var(--preto);
 }
 
+.mvv-preto::after {
+  background: var(--petroleo);
+}
+
 .mvv-petroleo {
   background: var(--petroleo);
 }
 
+.mvv-petroleo::after {
+  background: var(--preto);
+}
+
+.mvv-bloco .eyebrow {
+  color: var(--petroleo-claro);
+}
+
+.mvv-resumo {
+  max-width: 16ch;
+  font-family: var(--fonte-titulo);
+  font-size: clamp(1.75rem, 1.2rem + 2vw, 2.75rem);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+  transition: opacity 0.4s;
+}
+
+.mvv-corpo {
+  margin-top: 20px;
+}
+
 .mvv-texto {
-  font-size: clamp(1.125rem, 1rem + 0.5vw, 1.375rem);
+  max-width: 44ch;
+  font-size: clamp(1.0625rem, 1rem + 0.35vw, 1.25rem);
   font-weight: 500;
-  line-height: 1.45;
+  line-height: 1.5;
+}
+
+.mvv-dica {
+  display: none;
+}
+
+@media (min-width: 860px) {
+  .mvv-faixa {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .mvv-bloco {
+    --borda-meia: max(var(--margem), calc((100vw - var(--largura)) / 2));
+  }
+
+  .mvv-bloco:first-child {
+    padding-left: var(--borda-meia);
+    padding-right: clamp(32px, 4vw, 64px);
+  }
+
+  .mvv-bloco:last-child {
+    padding-left: clamp(32px, 4vw, 64px);
+    padding-right: var(--borda-meia);
+  }
+}
+
+/* Com cursor: o bloco abre ao passar o mouse (ou ao receber foco pelo teclado) */
+@media (hover: hover) and (min-width: 860px) {
+  .js .mvv-faixa {
+    display: flex;
+  }
+
+  .js .mvv-bloco {
+    flex: 1 1 0;
+    min-height: clamp(360px, 30vw, 420px);
+    transition: flex-grow 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .js .mvv-bloco:hover,
+  .js .mvv-bloco:focus-within {
+    flex-grow: 1.6;
+  }
+
+  .js .mvv-bloco:hover::after,
+  .js .mvv-bloco:focus-within::after {
+    transform: scale(1);
+  }
+
+  .js .mvv-faixa:hover .mvv-bloco:not(:hover) .mvv-resumo {
+    opacity: 0.6;
+  }
+
+  /* O texto completo desdobra a partir de altura zero */
+  .js .mvv-corpo {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .js .mvv-corpo > p {
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 0.4s, transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .js .mvv-bloco:hover .mvv-corpo,
+  .js .mvv-bloco:focus-within .mvv-corpo {
+    grid-template-rows: 1fr;
+  }
+
+  .js .mvv-bloco:hover .mvv-corpo > p,
+  .js .mvv-bloco:focus-within .mvv-corpo > p {
+    opacity: 1;
+    transform: none;
+    transition-delay: 0.12s;
+  }
+
+  .js .mvv-dica {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 28px;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--petroleo-claro);
+    transition: opacity 0.3s;
+  }
+
+  .js .mvv-dica::before {
+    content: "";
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--petroleo-claro);
+  }
+
+  .js .mvv-bloco:hover .mvv-dica,
+  .js .mvv-bloco:focus-within .mvv-dica {
+    opacity: 0;
+  }
+}
+
+/* Valores: introdução e crença à esquerda, caminho de valores à direita */
+.valores-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: clamp(40px, 5vw, 64px);
+}
+
+.valores-grid > * {
+  min-width: 0;
+}
+
+@media (min-width: 960px) {
+  .valores-grid {
+    grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+    align-items: start;
+    gap: clamp(48px, 6vw, 96px);
+  }
+}
+
+.valores-intro > p {
+  margin-top: 12px;
+  max-width: 34ch;
+  color: var(--petroleo-escuro);
 }
 
 .crenca {
   display: grid;
-  gap: 10px;
-  margin-top: clamp(40px, 5vw, 56px);
-  padding: 4px 0 4px 24px;
+  gap: 12px;
+  margin-top: clamp(32px, 4vw, 48px);
+  padding: 4px 0 4px 20px;
   border-left: 6px solid var(--petroleo);
 }
 
 .crenca p {
+  max-width: min(26ch, 100%);
   font-family: var(--fonte-titulo);
+  font-size: clamp(1.25rem, 1.05rem + 0.8vw, 1.75rem);
   font-weight: 800;
-  font-size: clamp(1.375rem, 1.1rem + 1vw, 2rem);
   line-height: 1.15;
   letter-spacing: -0.025em;
   color: var(--preto);
-  max-width: 34ch;
+  text-wrap: balance;
 }
 
 .crenca cite {
@@ -1516,38 +1789,183 @@ a.contato-item:hover span:last-child {
   color: var(--petroleo);
 }
 
-.valores-titulo {
-  margin-top: clamp(48px, 6vw, 72px);
-}
-
-.valores {
+/* Caminho de valores: cada valor é um ponto; o escolhido cresce e o traço se preenche até ele */
+.valores-trilha {
+  position: relative;
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.valores-trilha::before,
+.valores-trilha::after {
+  content: "";
+  position: absolute;
+  top: 22px;
+  left: 12.5%;
+  height: 3px;
+  transform: translateY(-50%);
+}
+
+.valores-trilha::before {
+  right: 12.5%;
+  background: #d9d2b5;
+}
+
+.valores-trilha::after {
+  width: calc(75% * var(--progresso, 0));
+  background: var(--petroleo);
+  transition: width 0.55s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.valor-aba {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  align-items: center;
   gap: 12px;
-  margin-top: 20px;
+  padding: 0 4px;
+  border: 0;
+  background: none;
+  font: 600 0.9375rem/1.25 var(--fonte-texto);
+  color: var(--petroleo-escuro);
+  text-align: center;
+  cursor: pointer;
 }
 
-@media (min-width: 700px) {
-  .valores {
-    grid-template-columns: repeat(3, 1fr);
-  }
+.valor-nome {
+  display: flex;
+  min-height: 2.5em;
+  align-items: flex-start;
+  justify-content: center;
+  text-wrap: balance;
 }
 
-@media (min-width: 1080px) {
-  .valores {
-    grid-template-columns: repeat(6, 1fr);
-  }
+.valor-ponto {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
 }
 
-.valores li {
-  padding: 18px 16px 22px;
-  border: 1px solid #dcd6bd;
-  border-top: 4px solid var(--petroleo);
-  border-radius: 4px;
-  background: var(--branco);
-  font-weight: 600;
+.valor-ponto::before {
+  content: "";
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--petroleo);
+  transition: width 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), height 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.valor-aba:hover .valor-ponto::before {
+  width: 24px;
+  height: 24px;
+}
+
+.valor-aba[aria-selected="true"] .valor-ponto::before {
+  width: 44px;
+  height: 44px;
+}
+
+.valor-aba[aria-selected="true"] .valor-nome {
+  font-family: var(--fonte-titulo);
+  font-weight: 800;
   color: var(--preto);
-  line-height: 1.3;
+}
+
+.valor-aba:focus-visible {
+  outline: 3px solid var(--petroleo);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+/* Painel do valor aberto, com o ponto cortado no canto */
+.valor-painel {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  margin-top: 28px;
+  padding: clamp(28px, 4vw, 48px);
+  padding-right: clamp(28px, 12vw, 160px);
+  border-radius: 6px;
+  background: var(--branco);
+}
+
+.valor-painel::after {
+  content: "";
+  position: absolute;
+  right: -60px;
+  bottom: -60px;
+  z-index: -1;
+  width: 160px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--petroleo);
+}
+
+.valor-painel + .valor-painel {
+  margin-top: 16px;
+}
+
+.valor-painel:focus-visible {
+  outline: 3px solid var(--petroleo);
+  outline-offset: 3px;
+}
+
+.valor-grande {
+  font-family: var(--fonte-titulo);
+  font-size: clamp(2.25rem, 1.5rem + 2.4vw, 3.5rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: var(--petroleo);
+}
+
+.valor-texto {
+  margin-top: 16px;
+  max-width: 38ch;
+  font-size: clamp(1.125rem, 1rem + 0.4vw, 1.375rem);
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--preto);
+}
+
+.valor-pratica {
+  margin-top: 24px;
+  max-width: 52ch;
+  padding-left: 18px;
+  border-left: 4px solid var(--petroleo);
+  color: var(--texto-apoio);
+}
+
+.valor-pratica strong {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--petroleo);
+}
+
+/* Sem JavaScript: sem o caminho, todos os valores aparecem abertos */
+.valores-explorar:not(.ativo) .valores-trilha {
+  display: none;
+}
+
+@media (max-width: 600px) {
+  .valor-aba {
+    font-size: 0.75rem;
+  }
+
+  .valor-nome {
+    width: 100%;
+    min-height: 3.75em;
+  }
+
+  .valor-painel {
+    padding-right: clamp(28px, 4vw, 48px);
+    padding-bottom: 72px;
+  }
 }
 
 .politicas {
@@ -1718,8 +2136,15 @@ a.contato-item:hover span:last-child {
   transition: opacity 0.4s, translate 0.4s cubic-bezier(0.22, 1, 0.36, 1), visibility 0.4s;
 }
 
-/* Escondido enquanto a primeira seção (capa) está na tela (main.js) */
+/* Escondido enquanto a capa ocupa a tela (main.js) */
 .whatsapp-flutuante.escondido {
+  opacity: 0;
+  translate: 0 24px;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.whatsapp-flutuante.conteudo-em-tela {
   opacity: 0;
   translate: 0 24px;
   visibility: hidden;
@@ -1772,5 +2197,188 @@ a.contato-item:hover span:last-child {
 
   .whatsapp-flutuante .rotulo {
     display: none;
+  }
+}
+
+/* ---------- Textura de pontos (anexo ao Brand Book: ferramentas/anexo-brand-book.md) ---------- */
+
+/* Campo de pontos petróleo, sólidos, no canto superior direito da seção.
+   É o ponto do j repetido em escala pequena: mesma forma, cor sólida, sem transparência. */
+.secao-textura {
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.secao-textura::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: -1;
+  width: min(34%, 480px);
+  height: clamp(260px, 26vw, 380px);
+  background-image: radial-gradient(circle, var(--petroleo) 1.2px, transparent 1.5px);
+  background-size: 26px 26px;
+  background-position: right top;
+  pointer-events: none;
+}
+
+.secao-textura > .container {
+  position: relative;
+  z-index: 1;
+}
+
+/* Ponto cortado no canto de cima, por cima do campo de pontos */
+.ponto-cortado-topo {
+  top: 0;
+  bottom: auto;
+  z-index: 0;
+  width: clamp(200px, 26vw, 380px);
+  transform: translate(42%, -42%);
+}
+
+@media (max-width: 700px) {
+  .secao-textura::before {
+    width: 45%;
+    height: 110px;
+  }
+
+  .ponto-cortado-topo {
+    width: 180px;
+  }
+}
+
+/* Topo claro das páginas internas: textura e ponto cortado começam abaixo do cabeçalho fixo */
+.pagina-topo-clara {
+  position: relative;
+  background: var(--branco);
+  color: var(--preto);
+}
+
+.pagina-topo-clara .lead {
+  color: var(--texto-apoio);
+}
+
+.pagina-topo-clara.secao-textura::before {
+  top: var(--altura-cabecalho);
+}
+
+.pagina-topo-clara .ponto-cortado-topo {
+  top: var(--altura-cabecalho);
+}
+
+/* Contato: o endereço ocupa a coluna da direita, então a textura fica só no canto */
+@media (min-width: 701px) {
+  .secao-textura:has(.canais-grid)::before {
+    width: min(14%, 200px);
+  }
+}
+
+/* ---------- Chamada final: clara, centralizada, com o ponto a ponto da marca ---------- */
+
+.cta-final {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding-block: clamp(88px, 11vw, 152px);
+  text-align: center;
+  color: var(--preto);
+}
+
+.cta-final-areia {
+  background: var(--areia);
+}
+
+.cta-final-branco {
+  background: var(--branco);
+}
+
+.cta-final-conteudo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Três pontos crescendo, ligados pelo traço, como abertura da chamada */
+.cta-final-pontos {
+  width: min(240px, 60%);
+  margin: 0 0 28px;
+}
+
+.cta-final .titulo {
+  max-width: 18ch;
+  font-size: clamp(2.25rem, 1.4rem + 3vw, 4rem);
+}
+
+.cta-final .lead {
+  max-width: 50ch;
+  margin-inline: auto;
+  color: var(--texto-apoio);
+}
+
+.cta-final .btn {
+  margin-top: 36px;
+}
+
+/* Pontos cortados em cantos opostos */
+.cta-final .ponto-cortado {
+  z-index: -1;
+  width: clamp(200px, 26vw, 380px);
+  background: var(--petroleo);
+  transform: translate(38%, 42%);
+}
+
+.cta-final .ponto-cortado-esquerda {
+  right: auto;
+  bottom: auto;
+  left: 0;
+  top: 0;
+  width: clamp(110px, 13vw, 190px);
+  transform: translate(-42%, -42%);
+}
+
+/* Ponto a ponto decorativo (Brand Book, p. 12): pontos crescendo, ligados por traço reto */
+.ponto-a-ponto {
+  display: flex;
+  align-items: center;
+}
+
+.ponto-a-ponto span {
+  flex: none;
+  border-radius: 50%;
+  background: var(--petroleo);
+}
+
+.ponto-a-ponto span:nth-of-type(1) {
+  width: 12px;
+  height: 12px;
+}
+
+.ponto-a-ponto span:nth-of-type(2) {
+  width: 18px;
+  height: 18px;
+}
+
+.ponto-a-ponto span:nth-of-type(3) {
+  width: 28px;
+  height: 28px;
+}
+
+.ponto-a-ponto i {
+  flex: 1;
+  height: 3px;
+  background: var(--petroleo);
+}
+
+/* Celular: pontos cortados menores, longe do botão */
+@media (max-width: 600px) {
+  .cta-final .ponto-cortado {
+    width: 140px;
+    transform: translate(48%, 52%);
+  }
+
+  .cta-final .ponto-cortado-esquerda {
+    width: 90px;
+    transform: translate(-50%, -50%);
   }
 }

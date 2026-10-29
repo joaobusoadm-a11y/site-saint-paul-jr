@@ -39,6 +39,7 @@
             <ul class="submenu" id="sub-servicos">
               <li><a href="servicos.html#plano-de-negocios">Plano de negócios<small>Modelagem, pitch e valuation, viabilidade</small></a></li>
               <li><a href="servicos.html#analise-mercadologica">Análise mercadológica<small>Mercado, concorrência e público-alvo</small></a></li>
+              <li><a href="servicos.html#marketing">Marketing<small>Site, SEO e GEO</small></a></li>
               <li><a href="servicos.html#consultoria-operacional">Consultoria operacional<small>Processos e ferramentas de gestão</small></a></li>
               <li><a href="servicos.html#consultoria-financeira">Consultoria financeira<small>Diagnóstico financeiro e precificação</small></a></li>
               <li><a href="servicos.html#consultoria-de-ia">Consultoria de IA<small>Oportunidades, automação e capacitação</small></a></li>
@@ -72,6 +73,7 @@
             <ul class="gaveta-sub">
               <li><a href="servicos.html#plano-de-negocios">Plano de negócios</a></li>
               <li><a href="servicos.html#analise-mercadologica">Análise mercadológica</a></li>
+              <li><a href="servicos.html#marketing">Marketing</a></li>
               <li><a href="servicos.html#consultoria-operacional">Consultoria operacional</a></li>
               <li><a href="servicos.html#consultoria-financeira">Consultoria financeira</a></li>
               <li><a href="servicos.html#consultoria-de-ia">Consultoria de IA</a></li>
@@ -83,16 +85,13 @@
         </ul>
       </nav>
       <a class="btn btn-mostarda" href="contato.html">Fale conosco</a>
-      <div class="gaveta-contato">
-        <p class="eyebrow">Contato</p>
-        <a class="contato-item" data-contato="email" href="#"><span class="icone" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3.5 6.5 12 13l8.5-6.5"/></svg></span><span data-rotulo>E-mail</span></a>
-      </div>
     </div>
   </div>
 
   <main id="conteudo">
     <!-- ===== Sintoma ===== -->
-    <section class="pagina-topo fundo-grade escuro" aria-labelledby="titulo-pagina">
+    <section class="pagina-topo fundo-grade fundo-rede escuro" aria-labelledby="titulo-pagina">
+      <canvas class="rede" aria-hidden="true" data-rede></canvas>
       <div class="container">
         <a class="voltar" href="index.html#para-quem"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>Todos os sintomas</a>
         <p class="eyebrow">Sintoma 01</p>
@@ -102,7 +101,8 @@
     </section>
 
     <!-- ===== Problema e por que acontece ===== -->
-    <section class="secao" aria-labelledby="titulo-problema">
+    <section class="secao secao-textura" aria-labelledby="titulo-problema">
+      <div class="ponto-cortado ponto-cortado-topo" aria-hidden="true"></div>
       <div class="container">
         <div class="dor-problema">
           <p class="eyebrow">O problema de fundo</p>
@@ -172,13 +172,41 @@
       </div>
     </section>
 
-    <!-- ===== Chamada final ===== -->
-    <section class="secao secao-escura cta-faixa" aria-labelledby="titulo-cta">
-      <div class="container">
-        <h2 class="titulo" id="titulo-cta">Reconhece esse cenário na sua empresa?</h2>
-        <div class="cta-acoes">
-          <a class="btn btn-mostarda btn-grande" href="contato.html?frente=Consultoria%20financeira">Fale conosco</a>
+    <!-- ===== Chamada final: sinais que você reconhece ===== -->
+    <section class="secao secao-escura cta-dor" aria-labelledby="titulo-cta" data-cta-dor data-sintoma="Sua empresa gera lucro, mas o caixa não acompanha." data-frente="Consultoria financeira">
+      <div class="container cta-dor-grid">
+        <div class="cta-dor-texto">
+          <p class="eyebrow">Conversa de diagnóstico</p>
+          <h2 class="titulo titulo-barra" id="titulo-cta">Reconhece esse cenário na sua empresa?</h2>
+          <p class="lead">Marque os sinais que você vê hoje. Eles entram na mensagem, e a primeira conversa já começa pelo que importa para você.</p>
         </div>
+        <div class="cta-dor-acao">
+          <a class="btn btn-mostarda btn-grande" href="contato.html?frente=Consultoria%20financeira" data-cta-dor-botao>Conversar sobre isso <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        </div>
+        <fieldset class="cta-dor-sinais">
+          <legend>Quais destes sinais aparecem na sua operação?</legend>
+          <label class="sinal">
+            <input type="checkbox" name="sinal" value="Prazos desencontrados">
+            <span class="sinal-marca" aria-hidden="true"></span>
+            <span class="sinal-texto"><strong>Prazos desencontrados</strong>O cliente paga em 60 dias e o fornecedor cobra em 30. A diferença sai do caixa.</span>
+          </label>
+          <label class="sinal">
+            <input type="checkbox" name="sinal" value="Dinheiro parado">
+            <span class="sinal-marca" aria-hidden="true"></span>
+            <span class="sinal-texto"><strong>Dinheiro parado</strong>Estoque alto e contas a receber atrasadas prendem o dinheiro que já é seu.</span>
+          </label>
+          <label class="sinal">
+            <input type="checkbox" name="sinal" value="Preço que não cobre o custo real">
+            <span class="sinal-marca" aria-hidden="true"></span>
+            <span class="sinal-texto"><strong>Preço que não cobre o custo real</strong>Custos que crescem com a operação e não entram na conta do preço comem a margem.</span>
+          </label>
+          <label class="sinal">
+            <input type="checkbox" name="sinal" value="Decisão sem número">
+            <span class="sinal-marca" aria-hidden="true"></span>
+            <span class="sinal-texto"><strong>Decisão sem número</strong>Sem fluxo de caixa projetado, o aperto só aparece quando já chegou.</span>
+          </label>
+          <p class="cta-dor-contagem" aria-live="polite" data-cta-dor-contagem>Nenhum sinal marcado ainda.</p>
+        </fieldset>
       </div>
       <div class="ponto-cortado" aria-hidden="true"></div>
     </section>
@@ -197,6 +225,7 @@
         <ul role="list">
           <li><a href="servicos.html#plano-de-negocios">Plano de negócios</a></li>
           <li><a href="servicos.html#analise-mercadologica">Análise mercadológica</a></li>
+          <li><a href="servicos.html#marketing">Marketing</a></li>
           <li><a href="servicos.html#consultoria-operacional">Consultoria operacional</a></li>
           <li><a href="servicos.html#consultoria-financeira">Consultoria financeira</a></li>
           <li><a href="servicos.html#consultoria-de-ia">Consultoria de IA</a></li>

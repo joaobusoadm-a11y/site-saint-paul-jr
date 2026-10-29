@@ -21,12 +21,13 @@ const secao = (html, nome) => {
 };
 
 const FRENTES = [
-  ['plano-de-negocios', 'Plano de negócios', 'Modelagem, pitch e valuation, viabilidade'],
-  ['analise-mercadologica', 'Análise mercadológica', 'Mercado, concorrência e público-alvo'],
-  ['marketing', 'Marketing', 'Site, SEO e GEO'],
-  ['consultoria-operacional', 'Consultoria operacional', 'Processos e ferramentas de gestão'],
-  ['consultoria-financeira', 'Consultoria financeira', 'Diagnóstico financeiro e precificação'],
-  ['consultoria-de-ia', 'Consultoria de IA', 'Oportunidades, automação e capacitação'],
+  ['plano-de-negocios', 'Plano de negócios', 'GTM, OKRs, expansão e pitch'],
+  ['analise-mercadologica', 'Análise mercadológica', 'Mercado, concorrentes, PESTEL e SWOT'],
+  ['analise-do-consumidor', 'Análise do consumidor', 'Perfil, NPS, jornada e fidelização'],
+  ['marketing', 'Marketing', 'Marca, redes sociais, tráfego e vendas'],
+  ['financeiro', 'Financeiro', 'Valuation, KPIs, fluxo de caixa e custos'],
+  ['operacoes', 'Operações', 'Processos, POPs, gestão ágil e cargos'],
+  ['ia', 'IA', 'Agentes, automação, sites e treinamento'],
 ];
 
 const SETA = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
@@ -82,7 +83,7 @@ function cabecalho(atual) {
     <div class="gaveta-fundo" data-fechar-gaveta></div>
     <div class="gaveta-painel" role="dialog" aria-modal="true" aria-label="Menu">
       <div class="gaveta-topo">
-        <img class="gaveta-logo" src="assets/img/spjr-logo-negativo.png" alt="Saint Paul Jr" width="780" height="412">
+        <span class="logo-anim logo-fixo gaveta-logo" role="img" aria-label="Saint Paul Jr"><span>S</span><span>P</span><span class="logo-j">ȷ<i class="logo-ponto"></i></span><span>r</span></span>
         <button class="gaveta-fechar" type="button" aria-label="Fechar menu" data-fechar-gaveta>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
         </button>
@@ -111,7 +112,7 @@ function rodape(atual) {
   <footer class="rodape escuro">
     <div class="container rodape-grid">
       <div>
-        <img class="rodape-logo" src="assets/img/spjr-logo-negativo.png" alt="Saint Paul Jr" width="780" height="412" loading="lazy">
+        <span class="logo-anim logo-fixo rodape-logo" role="img" aria-label="Saint Paul Jr"><span>S</span><span>P</span><span class="logo-j">ȷ<i class="logo-ponto"></i></span><span>r</span></span>
         <p class="rodape-frase">Onde o potencial ganha direção.</p>
         <p class="rodape-desc">Consultoria estratégica dos alunos da Escola de Negócios Saint Paul.</p>
       </div>
@@ -246,7 +247,10 @@ const DORES = [
       ['Preço que não cobre o custo real', 'Custos que crescem com a operação e não entram na conta do preço comem a margem.'],
       ['Decisão sem número', 'Sem fluxo de caixa projetado, o aperto só aparece quando já chegou.'],
     ],
-    frente: ['consultoria-financeira', 'Consultoria financeira'],
+    frente: ['financeiro', 'Financeiro'],
+    // Título da seção "Como resolvemos" e texto do link para a frente
+    titulo: 'Consultoria financeira',
+    link: 'Ver os escopos de consultoria financeira',
     etapas: [
       ['Diagnóstico', 'Mapeamos o ciclo de caixa: prazos de recebimento, de pagamento e de estoque, e onde a margem se perde.'],
       ['Redesenho', 'Ajustamos prazos, política de cobrança e preço a partir do custo real.'],
@@ -265,7 +269,9 @@ const DORES = [
       ['Decisão concentrada', 'Tudo sobe para a mesma pessoa, que vira o gargalo da empresa.'],
       ['Processo feito para repetir', 'A rotina foi desenhada para executar o de sempre, não para testar o novo.'],
     ],
-    frente: ['consultoria-operacional', 'Consultoria operacional'],
+    frente: ['operacoes', 'Operações'],
+    titulo: 'Consultoria operacional',
+    link: 'Ver os serviços de operações',
     etapas: [
       ['Diagnóstico', 'Acompanhamos o caminho real de uma iniciativa, da ideia à execução, e marcamos onde ela para.'],
       ['Redesenho', 'Redesenhamos o fluxo de decisão com a sua equipe: menos aprovações e um dono por etapa.'],
@@ -313,22 +319,24 @@ const sintomas = `<section class="secao secao-sintomas-foto escuro" id="para-que
     </section>`;
 
 const DESCRICOES = {
-  'plano-de-negocios': ['Para tirar uma ideia do papel ou decidir uma expansão com número na mão.', ['Modelagem de negócio', 'Pitch e valuation', 'Viabilidade e business case']],
-  'analise-mercadologica': ['Para saber onde você compete, contra quem e para quem vende.', ['Pesquisa de mercado e concorrência', 'Definição de público-alvo']],
-  'marketing': ['Para ser encontrado por quem já está procurando o que você vende.', ['Reestruturação de site com SEO e GEO']],
-  'consultoria-operacional': ['Para a operação que cresceu mais rápido que os processos.', ['Mapeamento e redesenho de processos', 'Implementação de ferramentas de gestão']],
-  'consultoria-financeira': ['Para saber para onde vai o dinheiro e quanto cobrar.', ['Diagnóstico financeiro', 'Precificação']],
-  'consultoria-de-ia': ['Para usar inteligência artificial onde ela resolve um problema real.', ['Diagnóstico de oportunidades com IA', 'Automação de processos com IA', 'Capacitação da equipe']],
+  'plano-de-negocios': ['Para tirar uma ideia do papel ou decidir uma expansão com número na mão.'],
+  'analise-mercadologica': ['Para saber onde você compete, contra quem e para quem vende.'],
+  'analise-do-consumidor': ['Para entender quem compra de você, por que compra e por que deixa de comprar.'],
+  'marketing': ['Para fortalecer o posicionamento da marca e transformar visibilidade em vendas.'],
+  'financeiro': ['Para saber para onde vai o dinheiro e quanto cobrar.'],
+  'operacoes': ['Para a operação que cresceu mais rápido que os processos.'],
+  'ia': ['Para usar inteligência artificial onde ela resolve um problema real.'],
 };
 
 // Foto de cada frente (em preto e branco via CSS) e o enquadramento
 const FOTOS = {
   'plano-de-negocios': ['servico-plano.jpg', 'Apresentação para uma plateia na Escola de Negócios Saint Paul', 1600, 880, 'center 35%'],
   'analise-mercadologica': ['servico-mercado.jpg', 'Turma em sala de aula com painel do Valor Econômico ao fundo', 1931, 1287, 'center 40%'],
-  'marketing': ['servico-marketing.jpg', 'Convidado conversa com executivos e alunos num auditório em semicírculo da Saint Paul', 1503, 1002, 'center'],
-  'consultoria-operacional': ['servico-operacional.webp', 'Professor conduz discussão sobre protagonismo e accountability com a turma', 2000, 1125, 'center 45%'],
-  'consultoria-financeira': ['servico-financeira.jpg', 'Palestra em auditório da Saint Paul com gráfico na tela', 1280, 735, '70% center'],
-  'consultoria-de-ia': ['servico-ia.jpg', 'Turma reunida no auditório da Escola de Negócios Saint Paul durante apresentação', 1599, 1066, 'center'],
+  'analise-do-consumidor': ['servico-consumidor.jpg', 'Professor conversa com alunos em sala de aula', 1200, 900, 'center 35%'],
+  'marketing': ['servico-marketing.jpg', 'Alunos da Saint Paul Jr apresentam um projeto para uma banca na Escola de Negócios Saint Paul', 2080, 1235, 'center 40%'],
+  'financeiro': ['servico-financeira.jpg', 'Palestra em auditório da Saint Paul com gráfico na tela', 1280, 735, '70% center'],
+  'operacoes': ['servico-operacional.webp', 'Professor conduz discussão sobre protagonismo e accountability com a turma', 2000, 1125, 'center 45%'],
+  'ia': ['servico-ia.jpg', 'Turma reunida no auditório da Escola de Negócios Saint Paul durante apresentação', 1599, 1066, 'center'],
 };
 
 // Textura de pontos e ponto cortado no canto (Brand Book, p. 12; anexo de textura em ferramentas/anexo-brand-book.md)
@@ -337,7 +345,7 @@ const servicosResumo = `<section class="secao secao-textura" id="servicos" aria-
       <div class="container">
         <div class="secao-cabeca">
           <p class="eyebrow">Serviços</p>
-          <h2 class="titulo titulo-barra" id="titulo-servicos">Consultoria estratégica em seis frentes.</h2>
+          <h2 class="titulo titulo-barra" id="titulo-servicos">Consultoria estratégica em sete frentes.</h2>
           <p class="lead">Cada frente tem escopos definidos. Escolha a que conversa com o seu desafio e veja exatamente o que entregamos.</p>
         </div>
         <div class="servicos-grid">
@@ -349,7 +357,7 @@ const servicosResumo = `<section class="secao secao-textura" id="servicos" aria-
             <span class="servico-num">0${i + 1}</span>
             <h3>${nome}</h3>
             <p>${desc}</p>
-            <span class="servico-link">Ver escopos ${SETA}</span>
+            <span class="servico-link">Ver serviços ${SETA}</span>
           </a>`;
           }).join('\n          ')}
         </div>
@@ -507,9 +515,9 @@ const solucoes = secao(indexAntigo, 'Nossas soluções')
 pagina(
   'servicos.html',
   'Serviços | Saint Paul Jr',
-  'Plano de negócios, análise mercadológica, marketing, consultoria operacional, consultoria financeira e consultoria de IA: os serviços da Saint Paul Jr, com escopo fechado e prazo por etapa.',
+  'Plano de negócios, análise mercadológica, análise do consumidor, marketing, financeiro, operações e IA: os serviços da Saint Paul Jr, com escopo fechado e prazo por etapa.',
   [
-    topo('Serviços', 'Consultoria estratégica em seis frentes.', 'Cada frente tem escopos definidos, prazo por etapa e professor orientador. Escolha a que conversa com o seu desafio e veja exatamente o que entregamos.', 'titulo-pagina'),
+    topo('Serviços', 'Consultoria estratégica em sete frentes.', 'Cada frente tem escopos definidos, prazo por etapa e professor orientador. Escolha a que conversa com o seu desafio e veja exatamente o que entregamos.', 'titulo-pagina'),
     '    <!-- ===== Frentes e escopos ===== -->\n    ' + solucoes,
     ctaFinal('Não sabe por qual frente começar?', 'Conte o que está acontecendo na empresa. Na conversa de diagnóstico, mostramos qual frente faz sentido para o seu desafio.', 'Agendar diagnóstico', 'contato.html'),
   ].join('\n\n')
@@ -770,7 +778,7 @@ for (const d of DORES) {
       <div class="container">
         <div class="secao-cabeca">
           <p class="eyebrow">Como resolvemos</p>
-          <h2 class="titulo titulo-barra" id="titulo-solucao">${frenteNome}, etapa por etapa.</h2>
+          <h2 class="titulo titulo-barra" id="titulo-solucao">${d.titulo ?? frenteNome}, etapa por etapa.</h2>
           <p class="lead">Escopo fechado, prazo por etapa e um professor orientador acompanhando o projeto.</p>
         </div>
         <ol class="metodo" role="list">
@@ -780,7 +788,7 @@ for (const d of DORES) {
             <p>${p}</p>
           </li>`).join('\n          ')}
         </ol>
-        <a class="link-seta" href="servicos.html#${frenteId}">Ver os escopos de ${frenteNome.toLowerCase()} ${SETA}</a>
+        <a class="link-seta" href="servicos.html#${frenteId}">${d.link ?? `Ver os escopos de ${frenteNome.toLowerCase()}`} ${SETA}</a>
       </div>
     </section>`;
 

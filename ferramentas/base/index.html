@@ -55,7 +55,7 @@
     <div class="gaveta-fundo" data-fechar-gaveta></div>
     <div class="gaveta-painel" role="dialog" aria-modal="true" aria-label="Menu">
       <div class="gaveta-topo">
-        <img class="gaveta-logo" src="assets/img/spjr-logo-negativo.png" alt="Saint Paul Jr" width="780" height="412">
+        <span class="logo-anim logo-fixo gaveta-logo" role="img" aria-label="Saint Paul Jr"><span>S</span><span>P</span><span class="logo-j">ȷ<i class="logo-ponto"></i></span><span>r</span></span>
         <button class="gaveta-fechar" type="button" aria-label="Fechar menu" data-fechar-gaveta>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
         </button>
@@ -141,28 +141,33 @@
       <div class="container">
         <div class="secao-cabeca">
           <p class="eyebrow">Nossas soluções</p>
-          <h2 class="titulo titulo-barra" id="titulo-solucoes">Consultoria estratégica em seis frentes.</h2>
+          <h2 class="titulo titulo-barra" id="titulo-solucoes">Consultoria estratégica em sete frentes.</h2>
           <p class="lead">Cada frente tem escopos definidos. Escolha a que conversa com o seu desafio e veja exatamente o que entregamos.</p>
         </div>
 
         <div class="abas" data-abas>
-          <div class="abas-lista" role="tablist" aria-label="Frentes de consultoria">
+          <div class="abas-lista" role="tablist" aria-label="Áreas de consultoria">
             <button class="aba" type="button" role="tab" id="aba-plano-de-negocios" aria-controls="plano-de-negocios" aria-selected="true"><span class="aba-num">01</span>Plano de negócios</button>
             <button class="aba" type="button" role="tab" id="aba-analise-mercadologica" aria-controls="analise-mercadologica" aria-selected="false" tabindex="-1"><span class="aba-num">02</span>Análise mercadológica</button>
-            <button class="aba" type="button" role="tab" id="aba-marketing" aria-controls="marketing" aria-selected="false" tabindex="-1"><span class="aba-num">03</span>Marketing</button>
-            <button class="aba" type="button" role="tab" id="aba-consultoria-operacional" aria-controls="consultoria-operacional" aria-selected="false" tabindex="-1"><span class="aba-num">04</span>Consultoria operacional</button>
-            <button class="aba" type="button" role="tab" id="aba-consultoria-financeira" aria-controls="consultoria-financeira" aria-selected="false" tabindex="-1"><span class="aba-num">05</span>Consultoria financeira</button>
-            <button class="aba" type="button" role="tab" id="aba-consultoria-de-ia" aria-controls="consultoria-de-ia" aria-selected="false" tabindex="-1"><span class="aba-num">06</span>Consultoria de IA</button>
+            <button class="aba" type="button" role="tab" id="aba-analise-do-consumidor" aria-controls="analise-do-consumidor" aria-selected="false" tabindex="-1"><span class="aba-num">03</span>Análise do consumidor</button>
+            <button class="aba" type="button" role="tab" id="aba-marketing" aria-controls="marketing" aria-selected="false" tabindex="-1"><span class="aba-num">04</span>Marketing</button>
+            <button class="aba" type="button" role="tab" id="aba-financeiro" aria-controls="financeiro" aria-selected="false" tabindex="-1"><span class="aba-num">05</span>Financeiro</button>
+            <button class="aba" type="button" role="tab" id="aba-operacoes" aria-controls="operacoes" aria-selected="false" tabindex="-1"><span class="aba-num">06</span>Operações</button>
+            <button class="aba" type="button" role="tab" id="aba-ia" aria-controls="ia" aria-selected="false" tabindex="-1"><span class="aba-num">07</span>IA</button>
           </div>
 
           <div class="abas-paineis">
             <div class="painel" role="tabpanel" id="plano-de-negocios" aria-labelledby="aba-plano-de-negocios" tabindex="0">
               <h3 class="painel-titulo">Plano de negócios</h3>
               <p class="painel-desc">Para tirar uma ideia do papel ou decidir uma expansão com número na mão.</p>
-              <ul class="escopos" role="list">
-                <li><h4>Modelagem de negócio</h4><p>Proposta de valor, público, canais e receita organizados em um modelo que dá para testar.</p></li>
-                <li><h4>Pitch e valuation</h4><p>Quanto a empresa vale e como apresentar isso para sócio ou investidor.</p></li>
-                <li><h4>Viabilidade e business case</h4><p>Projeção de receita, custo e retorno para decidir se vale seguir, e como.</p></li>
+              <ul class="escopos escopos-lista" role="list">
+                <li><h4>Plano de negócios completo</h4></li>
+                <li><h4>Validação da dor e do modelo de negócio</h4></li>
+                <li><h4>Plano GTM (ICP, posicionamento e canais)</h4></li>
+                <li><h4>Planejamento estratégico e OKRs</h4></li>
+                <li><h4>Plano de expansão</h4></li>
+                <li><h4>Pitch de vendas</h4></li>
+                <li><h4>Pitch de investimento</h4></li>
               </ul>
               <a class="btn btn-petroleo" href="#contato" data-interesse="Plano de negócios">Conversar sobre plano de negócios
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
@@ -172,61 +177,100 @@
             <div class="painel" role="tabpanel" id="analise-mercadologica" aria-labelledby="aba-analise-mercadologica" tabindex="0" hidden>
               <h3 class="painel-titulo">Análise mercadológica</h3>
               <p class="painel-desc">Para saber onde você compete, contra quem e para quem vende.</p>
-              <ul class="escopos" role="list">
-                <li><h4>Pesquisa de mercado e concorrência</h4><p>Tamanho do mercado, tendências e quem disputa o mesmo cliente, com fonte e método.</p></li>
-                <li><h4>Definição de público-alvo</h4><p>Quem compra, por que compra e como chegar até essa pessoa.</p></li>
+              <ul class="escopos escopos-lista" role="list">
+                <li><h4>Dimensionamento de mercado (TAM/SAM/SOM)</h4></li>
+                <li><h4>Pesquisa secundária (desk research)</h4></li>
+                <li><h4>Análise PESTEL</h4></li>
+                <li><h4>Análise das 5 Forças de Porter</h4></li>
+                <li><h4>Análise SWOT</h4></li>
+                <li><h4>Mapeamento e benchmarking de concorrentes</h4></li>
+                <li><h4>Estudo de localização (ponto comercial)</h4></li>
               </ul>
               <a class="btn btn-petroleo" href="#contato" data-interesse="Análise mercadológica">Conversar sobre análise mercadológica
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
               </a>
             </div>
 
+            <div class="painel" role="tabpanel" id="analise-do-consumidor" aria-labelledby="aba-analise-do-consumidor" tabindex="0" hidden>
+              <h3 class="painel-titulo">Análise do consumidor</h3>
+              <p class="painel-desc">Para entender quem compra de você, por que compra e por que deixa de comprar.</p>
+              <ul class="escopos escopos-lista" role="list">
+                <li><h4>Pesquisa de perfil e comportamento do consumidor</h4></li>
+                <li><h4>Pesquisa de satisfação e NPS</h4></li>
+                <li><h4>Jornada do cliente e pontos de atrito</h4></li>
+                <li><h4>Cliente oculto</h4></li>
+                <li><h4>Estratégia de fidelização e retenção</h4></li>
+              </ul>
+              <a class="btn btn-petroleo" href="#contato" data-interesse="Análise do consumidor">Conversar sobre análise do consumidor
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+              </a>
+            </div>
+
             <div class="painel" role="tabpanel" id="marketing" aria-labelledby="aba-marketing" tabindex="0" hidden>
               <h3 class="painel-titulo">Marketing</h3>
-              <p class="painel-desc">Para ser encontrado por quem já está procurando o que você vende.</p>
-              <ul class="escopos" role="list">
-                <li><h4>Reestruturação de site com SEO e GEO</h4><p>Páginas e conteúdo organizados para aparecer nas buscas do Google e nas respostas de ferramentas de IA, como o ChatGPT.</p></li>
-                <!-- Escopo a confirmar com a área de marketing: trocar o texto ou apagar o item -->
-                <li><h4><span class="preencher">Outro escopo de marketing</span></h4><p><span class="preencher">O que entregamos neste escopo, em uma frase.</span></p></li>
+              <p class="painel-desc">Para fortalecer o posicionamento da marca e transformar visibilidade em vendas.</p>
+              <ul class="escopos escopos-lista" role="list">
+                <li><h4>Avaliação de imagem e reputação da marca</h4></li>
+                <li><h4>Branding e identidade de marca</h4></li>
+                <li><h4>Plano de marketing (objetivos, ações e orçamento)</h4></li>
+                <li><h4>Estratégia de redes sociais e conteúdo</h4></li>
+                <li><h4>Marketing digital e tráfego pago</h4></li>
+                <li><h4>Funil de vendas e estruturação comercial</h4></li>
+                <li><h4>Análise de portfólio (Matriz BCG)</h4></li>
+                <li><h4>KPIs de marketing</h4></li>
               </ul>
               <a class="btn btn-petroleo" href="#contato" data-interesse="Marketing">Conversar sobre marketing
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
               </a>
             </div>
 
-            <div class="painel" role="tabpanel" id="consultoria-operacional" aria-labelledby="aba-consultoria-operacional" tabindex="0" hidden>
-              <h3 class="painel-titulo">Consultoria operacional</h3>
-              <p class="painel-desc">Para a operação que cresceu mais rápido que os processos.</p>
-              <ul class="escopos" role="list">
-                <li><h4>Mapeamento e redesenho de processos</h4><p>Acompanhamos o processo real, etapa por etapa, e redesenhamos com a sua equipe.</p></li>
-                <li><h4>Implementação de ferramentas de gestão</h4><p>Indicadores, rotinas e procedimentos funcionando no dia a dia, não só no papel.</p></li>
-              </ul>
-              <a class="btn btn-petroleo" href="#contato" data-interesse="Consultoria operacional">Conversar sobre consultoria operacional
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-              </a>
-            </div>
-
-            <div class="painel" role="tabpanel" id="consultoria-financeira" aria-labelledby="aba-consultoria-financeira" tabindex="0" hidden>
-              <h3 class="painel-titulo">Consultoria financeira</h3>
+            <div class="painel" role="tabpanel" id="financeiro" aria-labelledby="aba-financeiro" tabindex="0" hidden>
+              <h3 class="painel-titulo">Financeiro</h3>
               <p class="painel-desc">Para saber para onde vai o dinheiro e quanto cobrar.</p>
-              <ul class="escopos" role="list">
-                <li><h4>Diagnóstico financeiro</h4><p>Onde a margem se perde, o que pesa no custo e o que o caixa está mostrando.</p></li>
-                <li><h4>Precificação</h4><p>Preço definido a partir de custo, margem e mercado.</p></li>
+              <ul class="escopos escopos-lista" role="list">
+                <li><h4>Valuation</h4></li>
+                <li><h4>Análise de viabilidade de projetos</h4></li>
+                <li><h4>Análise de balanço e DRE</h4></li>
+                <li><h4>KPIs financeiros</h4></li>
+                <li><h4>Precificação de produtos e serviços</h4></li>
+                <li><h4>Fluxo de caixa e capital de giro</h4></li>
+                <li><h4>Planejamento orçamentário</h4></li>
+                <li><h4>Análise e redução de custos</h4></li>
               </ul>
-              <a class="btn btn-petroleo" href="#contato" data-interesse="Consultoria financeira">Conversar sobre consultoria financeira
+              <a class="btn btn-petroleo" href="#contato" data-interesse="Financeiro">Conversar sobre finanças
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
               </a>
             </div>
 
-            <div class="painel" role="tabpanel" id="consultoria-de-ia" aria-labelledby="aba-consultoria-de-ia" tabindex="0" hidden>
-              <h3 class="painel-titulo">Consultoria de IA</h3>
-              <p class="painel-desc">Para usar inteligência artificial onde ela resolve um problema real, e não por modismo.</p>
-              <ul class="escopos" role="list">
-                <li><h4>Diagnóstico de oportunidades com IA</h4><p>Mapeamos processos e rotinas e apontamos onde a IA economiza tempo ou melhora decisões, com prioridade e custo.</p></li>
-                <li><h4>Automação de processos com IA</h4><p>Tarefas repetitivas, como atendimento, relatórios e documentos, automatizadas com apoio de professor ou parceiro técnico.</p></li>
-                <li><h4>Capacitação da equipe</h4><p>Treinamento prático para o time usar IA no dia a dia, com segurança e critério.</p></li>
+            <div class="painel" role="tabpanel" id="operacoes" aria-labelledby="aba-operacoes" tabindex="0" hidden>
+              <h3 class="painel-titulo">Operações</h3>
+              <p class="painel-desc">Para a operação que cresceu mais rápido que os processos.</p>
+              <ul class="escopos escopos-lista" role="list">
+                <li><h4>Mapeamento de processos e análise de gargalos</h4></li>
+                <li><h4>Padronização de processos (POPs e manuais)</h4></li>
+                <li><h4>Implementação de gestão ágil</h4></li>
+                <li><h4>KPIs operacionais</h4></li>
+                <li><h4>Estrutura organizacional e cargos</h4></li>
               </ul>
-              <a class="btn btn-petroleo" href="#contato" data-interesse="Consultoria de IA">Conversar sobre consultoria de IA
+              <a class="btn btn-petroleo" href="#contato" data-interesse="Operações">Conversar sobre operações
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+              </a>
+            </div>
+
+            <div class="painel" role="tabpanel" id="ia" aria-labelledby="aba-ia" tabindex="0" hidden>
+              <h3 class="painel-titulo">IA</h3>
+              <p class="painel-desc">Para usar inteligência artificial onde ela resolve um problema real, e não por modismo.</p>
+              <ul class="escopos escopos-lista" role="list">
+                <li><h4>Diagnóstico de oportunidades de IA</h4></li>
+                <li><h4>Criação de assistentes virtuais (chatbots)</h4></li>
+                <li><h4>Criação de agentes de IA</h4></li>
+                <li><h4>Criação de skills</h4></li>
+                <li><h4>Automação de workflows</h4></li>
+                <li><h4>Criação de sites e landing pages</h4></li>
+                <li><h4>Dashboards e relatórios automatizados</h4></li>
+                <li><h4>Treinamento de equipes em IA</h4></li>
+              </ul>
+              <a class="btn btn-petroleo" href="#contato" data-interesse="IA">Conversar sobre IA
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
               </a>
             </div>
@@ -378,10 +422,11 @@
               <option>Ainda não sei</option>
               <option>Plano de negócios</option>
               <option>Análise mercadológica</option>
+              <option>Análise do consumidor</option>
               <option>Marketing</option>
-              <option>Consultoria operacional</option>
-              <option>Consultoria financeira</option>
-              <option>Consultoria de IA</option>
+              <option>Financeiro</option>
+              <option>Operações</option>
+              <option>IA</option>
             </select>
           </div>
           <div class="campo">
@@ -399,7 +444,7 @@
   <footer class="rodape escuro">
     <div class="container rodape-grid">
       <div>
-        <img class="rodape-logo" src="assets/img/spjr-logo-negativo.png" alt="Saint Paul Jr" width="780" height="412" loading="lazy">
+        <span class="logo-anim logo-fixo rodape-logo" role="img" aria-label="Saint Paul Jr"><span>S</span><span>P</span><span class="logo-j">ȷ<i class="logo-ponto"></i></span><span>r</span></span>
         <p class="rodape-frase">Onde o potencial ganha direção.</p>
         <p class="rodape-desc">Consultoria estratégica da Escola de Negócios Saint Paul.</p>
       </div>

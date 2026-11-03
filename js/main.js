@@ -49,10 +49,16 @@ document.addEventListener('DOMContentLoaded', () => {
   iniciarGaveta();
   iniciarSubmenus();
   iniciarAbas();
+  iniciarDicasEscopos();
+  iniciarCases();
+  iniciarCtaDor();
+  iniciarRede();
+  montarPontosEcossistema();
+  iniciarAcordeoes();
+  iniciarMetodo();
   iniciarHeroSlides();
   iniciarHistoria();
   iniciarFormulario();
-  inlinearSvgs();
   iniciarAnimacoes();
   document.querySelectorAll('[data-ano]').forEach((el) => {
     el.textContent = new Date().getFullYear();
@@ -273,6 +279,123 @@ function iniciarAbas() {
   }
 }
 
+/* ---------- Serviços: um quadro explica cada escopo ao passar o mouse ---------- */
+
+function iniciarDicasEscopos() {
+  const itens = [...document.querySelectorAll('.escopos-lista li')].filter((li) => li.querySelector('.escopo-explica'));
+  if (!itens.length) return;
+  document.documentElement.classList.add('com-dicas');
+  const comMouse = window.matchMedia('(hover: hover) and (pointer: fine)');
+
+  const quadro = document.createElement('div');
+  quadro.className = 'escopo-quadro';
+  quadro.hidden = true;
+  quadro.innerHTML = '<strong></strong><p></p>';
+  document.body.appendChild(quadro);
+  let aberto = null;
+  let espera = null;
+
+  const posicionar = (li) => {
+    const MARGEM = 16;
+    const linha = li.getBoundingClientRect();
+    const ponto = li.querySelector('.escopo-ponto').getBoundingClientRect();
+    const larguraTela = document.documentElement.clientWidth;
+    const { offsetWidth: largura, offsetHeight: altura } = quadro;
+    const esquerda = Math.min(Math.max(ponto.left - 12, MARGEM), larguraTela - largura - MARGEM);
+    const cabeBaixo = linha.bottom + altura + MARGEM < window.innerHeight;
+    quadro.style.left = `${esquerda}px`;
+    quadro.style.top = `${cabeBaixo ? linha.bottom + 8 : linha.top - altura - 8}px`;
+    quadro.classList.toggle('acima', !cabeBaixo);
+    quadro.style.setProperty('--seta', `${ponto.left + ponto.width / 2 - esquerda}px`);
+  };
+
+  const abrir = (li) => {
+    clearTimeout(espera);
+    if (aberto === li) return;
+    if (aberto) aberto.classList.remove('dica-aberta');
+    aberto = li;
+    li.classList.add('dica-aberta');
+    li.querySelector('.escopo-ponto').setAttribute('aria-expanded', 'true');
+    quadro.querySelector('strong').textContent = li.querySelector('h4').textContent;
+    quadro.querySelector('p').textContent = li.querySelector('.escopo-explica').textContent;
+    quadro.hidden = false;
+    posicionar(li);
+  };
+
+  const fechar = () => {
+    clearTimeout(espera);
+    if (!aberto) return;
+    aberto.classList.remove('dica-aberta');
+    aberto.querySelector('.escopo-ponto').setAttribute('aria-expanded', 'false');
+    aberto = null;
+    quadro.hidden = true;
+  };
+
+  // Com um quadro já aberto a troca é imediata; o atraso só evita abrir ao atravessar a lista
+  const pedirAbrir = (li) => {
+    clearTimeout(espera);
+    if (aberto) abrir(li);
+    else espera = setTimeout(() => abrir(li), 120);
+  };
+  const pedirFechar = () => {
+    clearTimeout(espera);
+    espera = setTimeout(fechar, 140);
+  };
+
+  itens.forEach((li, i) => {
+    const titulo = li.querySelector('h4').textContent;
+    const explica = li.querySelector('.escopo-explica');
+    explica.id = `escopo-explica-${i}`;
+    const ponto = document.createElement('button');
+    ponto.type = 'button';
+    ponto.className = 'escopo-ponto';
+    ponto.textContent = 'i';
+    ponto.setAttribute('aria-label', `O que é: ${titulo}`);
+    ponto.setAttribute('aria-describedby', explica.id);
+    ponto.setAttribute('aria-expanded', 'false');
+    li.prepend(ponto);
+
+    li.addEventListener('pointerenter', () => {
+      if (comMouse.matches) pedirAbrir(li);
+    });
+    li.addEventListener('pointerleave', () => {
+      if (comMouse.matches) pedirFechar();
+    });
+    ponto.addEventListener('focus', () => {
+      if (ponto.matches(':focus-visible')) abrir(li);
+    });
+    ponto.addEventListener('blur', fechar);
+    // Toque: a linha inteira abre e fecha o quadro
+    li.addEventListener('click', () => {
+      if (comMouse.matches) return;
+      if (aberto === li) fechar();
+      else abrir(li);
+    });
+  });
+
+  // O quadro continua aberto enquanto o mouse estiver sobre ele
+  quadro.addEventListener('pointerenter', () => clearTimeout(espera));
+  quadro.addEventListener('pointerleave', pedirFechar);
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') fechar();
+  });
+  document.addEventListener('click', (e) => {
+    if (aberto && !aberto.contains(e.target) && !quadro.contains(e.target)) fechar();
+  });
+  window.addEventListener('scroll', fechar, { passive: true });
+  window.addEventListener('resize', fechar);
+
+  // Aviso discreto no início de cada lista
+  document.querySelectorAll('.escopos-lista').forEach((lista) => {
+    const aviso = document.createElement('p');
+    aviso.className = 'escopos-aviso';
+    aviso.textContent = comMouse.matches
+      ? 'Passe o mouse em um item para entender o que ele é.'
+      : 'Toque em um item para entender o que ele é.';
+    lista.before(aviso);
+  });
+}
+
 /* ---------- Formulário de contato ---------- */
 
 function iniciarFormulario() {
@@ -327,14 +450,6 @@ function iniciarAnimacoes() {
   if (document.documentElement.classList.contains('estatico')) return;
   const semMovimento = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // Na página inicial o logo mostra "Saint Paul jr" uma vez ao abrir
-  const logo = document.querySelector('[data-logo]');
-  const telaLarga = window.matchMedia('(min-width: 600px)').matches;
-  if (logo && !semMovimento && telaLarga && document.querySelector('.hero')) {
-    setTimeout(() => logo.classList.add('aberto'), 900);
-    setTimeout(() => logo.classList.remove('aberto'), 3200);
-  }
-
 
   // Blocos que aparecem ao rolar; irmãos entram um pouco depois do outro
   const grupos = [
@@ -344,22 +459,19 @@ function iniciarAnimacoes() {
     '.abas',
     '.nota-ia',
     '.metodo-etapa',
-    '.pilares > li',
-    '.ecossistema-figura',
-    '.ecossistema-texto',
-    '.contato-info',
-    '.form-contato',
+    '.garantias > div',
+    '.metodo-orientador',
+    '.canais-grid > *',
     '.proposito-grid > *',
-    '.mvv-card',
-    '.crenca',
-    '.valores-titulo',
-    '.valores > li',
+    '.valores-intro',
+    '.acordeao',
     '.politicas > *',
-    '.cta-faixa .container',
+    '.cta-final-conteudo > *',
+    '.cta-dor-grid > *',
     '.rodape-grid > *',
     '.servico-card',
-    '.formato-case > li',
-    '.case-vazio',
+    '.nps-grid > *',
+    '.case-logo',
     '.sintoma-card',
     '.dor-problema',
     '.dor-porques > li',
@@ -463,11 +575,21 @@ function iniciarHistoria() {
 function iniciarHeroSlides() {
   const caixa = document.querySelector('[data-hero-slides]');
   if (!caixa) return;
-  const fotos = [...caixa.querySelectorAll('.hero-foto')];
+  // Foto que não carrega sai da rotação, para não abrir um vão escuro no hero
+  const fotos = [...caixa.querySelectorAll('.hero-foto')].filter((f) => !(f.complete && f.naturalWidth === 0));
   const frentes = [...document.querySelectorAll('.hero-frentes li')];
   const DURACAO = 8000;
   let atual = 0;
   let timer = null;
+
+  fotos.forEach((f) =>
+    f.addEventListener('error', () => {
+      const i = fotos.indexOf(f);
+      if (i < 0 || f.classList.contains('ativo')) return;
+      fotos.splice(i, 1);
+      if (i < atual) atual--;
+    })
+  );
 
   const mostrar = (indice) => {
     if (indice !== atual) {
@@ -495,24 +617,566 @@ function iniciarHeroSlides() {
   mostrar(0);
 }
 
-/* ---------- SVGs com texto: insere no HTML para usar as fontes do site ---------- */
+/* ---------- Cases: clicar no logo abre o detalhe ---------- */
 
-function inlinearSvgs() {
-  document.querySelectorAll('img[data-svg-inline]').forEach(async (img) => {
-    try {
-      const resposta = await fetch(img.src);
-      if (!resposta.ok) return;
-      const modelo = document.createElement('template');
-      modelo.innerHTML = await resposta.text();
-      const svg = modelo.content.querySelector('svg');
-      if (!svg) return;
-      svg.removeAttribute('width');
-      svg.removeAttribute('height');
-      svg.setAttribute('role', 'img');
-      svg.setAttribute('aria-label', img.alt);
-      img.replaceWith(svg);
-    } catch {
-      // Aberto direto do disco (file://): a imagem continua como <img>
-    }
+function iniciarCases() {
+  document.querySelectorAll('[data-abrir-case]').forEach((botao) => {
+    const janela = document.getElementById(botao.dataset.abrirCase);
+    if (!janela) return;
+    botao.addEventListener('click', () => {
+      janela.showModal();
+      janela.scrollTop = 0;
+      document.body.classList.add('travado');
+    });
+    // Fecha pelo X, pelo Esc (nativo do dialog) ou clicando fora da janela
+    janela.querySelector('[data-fechar-case]').addEventListener('click', () => janela.close());
+    janela.addEventListener('click', (e) => {
+      if (e.target === janela) janela.close();
+    });
+    janela.addEventListener('close', () => document.body.classList.remove('travado'));
   });
+}
+
+/* ---------- Chamada final dos sintomas: sinais marcados vão para a mensagem ---------- */
+
+function iniciarCtaDor() {
+  const caixa = document.querySelector('[data-cta-dor]');
+  if (!caixa) return;
+  const marcas = [...caixa.querySelectorAll('input[name="sinal"]')];
+  const contagem = caixa.querySelector('[data-cta-dor-contagem]');
+  const botao = caixa.querySelector('[data-cta-dor-botao]');
+  const { sintoma, frente } = caixa.dataset;
+
+  const atualizar = () => {
+    const marcados = marcas.filter((m) => m.checked).map((m) => m.value);
+    contagem.textContent = marcados.length
+      ? `${marcados.length} de ${marcas.length} sinais marcados. Eles vão na sua mensagem.`
+      : 'Nenhum sinal marcado ainda.';
+    if (!CONTATO.whatsapp) return;
+    const mensagem = marcados.length
+      ? `Olá, Saint Paul Jr! Vim pela página "${sintoma.replace(/\.$/, '')}" e reconheço na minha empresa: ${marcados.join('; ').toLowerCase()}. Podemos conversar?`
+      : MENSAGENS_WHATSAPP[frente] || MENSAGENS_WHATSAPP.geral;
+    botao.href = linkWhatsapp(mensagem);
+    botao.target = '_blank';
+    botao.rel = 'noopener';
+  };
+
+  marcas.forEach((m) => m.addEventListener('change', atualizar));
+  atualizar();
+}
+
+/* ---------- Malha de quadrados que reage ao cursor ---------- */
+
+// Uma malha em cada fundo marcado com data-rede: Sobre nós e o topo das páginas internas
+function iniciarRede() {
+  document.querySelectorAll('[data-rede]').forEach(montarRede);
+}
+
+function montarRede(canvas) {
+  if (!canvas.getContext) return;
+  const secao = canvas.parentElement;
+  const ctx = canvas.getContext('2d');
+  const semMovimento = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const estatico = document.documentElement.classList.contains('estatico');
+
+  // Sobre fundo claro (data-rede="claro") a malha é neutra e parada, sem brilho nem cor
+  const claro = canvas.dataset.rede === 'claro';
+  const COR = claro ? '25, 24, 24' : '159, 211, 203'; // preto da marca, ou o petróleo claro da grade do hero
+  const LINHA_BASE = claro ? 0.06 : 0.13;
+  const LINHA_CURSOR = claro ? 0.16 : 0.42;
+  const ALCANCE = 200; // distância em que o cursor deforma a malha
+  const EMPURRAO = 16; // quanto um vértice colado no cursor se desloca
+  const VELOCIDADE_ONDA = 9; // px por quadro da onda do clique
+  let celula = 56;
+  let colunas = 0;
+  let linhas = 0;
+  let vertices = [];
+  let ondas = [];
+  let largura = 0;
+  let altura = 0;
+  let cursor = null;
+  let intersectando = false;
+  let visivel = false;
+  let quadro = null;
+
+  const montar = () => {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    largura = secao.clientWidth;
+    altura = secao.clientHeight;
+    canvas.width = largura * dpr;
+    canvas.height = altura * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    // Células miúdas, um pouco menores no celular
+    celula = window.matchMedia('(max-width: 640px)').matches ? 44 : 56;
+    // Ancorada à direita e ao topo, como a grade do hero
+    const inicioX = (largura % celula) - celula;
+    colunas = Math.ceil(largura / celula) + 2;
+    linhas = Math.ceil(altura / celula) + 2;
+    vertices = [];
+    for (let l = 0; l < linhas; l++) {
+      for (let c = 0; c < colunas; c++) {
+        const bx = inicioX + c * celula;
+        const by = (l - 1) * celula;
+        vertices.push({ bx, by, x: bx, y: by, vx: 0, vy: 0 });
+      }
+    }
+  };
+
+  const vertice = (c, l) => vertices[l * colunas + c];
+
+  // 0 longe do cursor, 1 em cima dele
+  const proximidade = (x, y) => {
+    if (!cursor) return 0;
+    const d = Math.hypot(x - cursor.x, y - cursor.y);
+    return d < ALCANCE ? 1 - d / ALCANCE : 0;
+  };
+
+  const desenhar = () => {
+    ctx.clearRect(0, 0, largura, altura);
+
+    // Brilho suave que acompanha o cursor
+    if (cursor && !claro) {
+      const brilho = ctx.createRadialGradient(cursor.x, cursor.y, 0, cursor.x, cursor.y, 280);
+      brilho.addColorStop(0, 'rgba(24, 72, 72, 0.55)');
+      brilho.addColorStop(1, 'rgba(24, 72, 72, 0)');
+      ctx.fillStyle = brilho;
+      ctx.fillRect(0, 0, largura, altura);
+    }
+
+    // Quadrados perto do cursor acendem de leve
+    for (let l = 0; l < linhas - 1; l++) {
+      for (let c = 0; c < colunas - 1; c++) {
+        const a = vertice(c, l);
+        const b = vertice(c + 1, l);
+        const d = vertice(c + 1, l + 1);
+        const e = vertice(c, l + 1);
+        const p = claro ? 0 : proximidade((a.x + d.x) / 2, (a.y + d.y) / 2);
+        if (p <= 0) continue;
+        ctx.fillStyle = `rgba(${COR}, ${p * p * 0.09})`;
+        ctx.beginPath();
+        ctx.moveTo(a.x, a.y);
+        ctx.lineTo(b.x, b.y);
+        ctx.lineTo(d.x, d.y);
+        ctx.lineTo(e.x, e.y);
+        ctx.closePath();
+        ctx.fill();
+      }
+    }
+
+    // Linhas: o tom da grade em CSS, mais claras perto do cursor
+    const traco = (a, b) => {
+      const p = proximidade((a.x + b.x) / 2, (a.y + b.y) / 2);
+      ctx.strokeStyle = `rgba(${COR}, ${LINHA_BASE + p * LINHA_CURSOR})`;
+      ctx.beginPath();
+      ctx.moveTo(a.x, a.y);
+      ctx.lineTo(b.x, b.y);
+      ctx.stroke();
+    };
+    ctx.lineWidth = 1;
+    for (let l = 0; l < linhas; l++) {
+      for (let c = 0; c < colunas; c++) {
+        const v = vertice(c, l);
+        if (c < colunas - 1) traco(v, vertice(c + 1, l));
+        if (l < linhas - 1) traco(v, vertice(c, l + 1));
+      }
+    }
+
+    // Vértices perto do cursor ganham um ponto
+    if (cursor && !claro) {
+      for (const v of vertices) {
+        const p = proximidade(v.x, v.y);
+        if (p <= 0) continue;
+        ctx.fillStyle = `rgba(${COR}, ${p * 0.9})`;
+        ctx.beginPath();
+        ctx.arc(v.x, v.y, 1 + p * 1.6, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+  };
+
+  const mover = () => {
+    ondas = ondas.filter((o) => (o.raio += VELOCIDADE_ONDA) < Math.hypot(largura, altura));
+    for (const v of vertices) {
+      // O alvo é a posição de repouso, empurrada para fora pelo cursor
+      let alvoX = v.bx;
+      let alvoY = v.by;
+      if (cursor) {
+        const dx = v.bx - cursor.x;
+        const dy = v.by - cursor.y;
+        const d = Math.hypot(dx, dy);
+        if (d < ALCANCE && d > 0.1) {
+          const forca = (1 - d / ALCANCE) ** 2 * EMPURRAO;
+          alvoX += (dx / d) * forca;
+          alvoY += (dy / d) * forca;
+        }
+      }
+      // A onda do clique dá um tranco nos vértices por onde passa
+      for (const o of ondas) {
+        const dx = v.x - o.x;
+        const dy = v.y - o.y;
+        const d = Math.hypot(dx, dy);
+        const faixa = Math.abs(d - o.raio);
+        if (faixa < 40 && d > 0.1) {
+          const forca = (1 - faixa / 40) * 0.7 * Math.max(0, 1 - o.raio / 700);
+          v.vx += (dx / d) * forca;
+          v.vy += (dy / d) * forca;
+        }
+      }
+      // Mola firme e bem amortecida: o vértice volta ao lugar sem balançar
+      v.vx = (v.vx + (alvoX - v.x) * 0.22) * 0.6;
+      v.vy = (v.vy + (alvoY - v.y) * 0.22) * 0.6;
+      v.x += v.vx;
+      v.y += v.vy;
+    }
+  };
+
+  const ciclo = () => {
+    mover();
+    desenhar();
+    quadro = visivel ? requestAnimationFrame(ciclo) : null;
+  };
+
+  const atualizarAnimacao = () => {
+    visivel = intersectando && document.visibilityState === 'visible';
+    if (visivel && !quadro) quadro = requestAnimationFrame(ciclo);
+    else if (!visivel && quadro) {
+      cancelAnimationFrame(quadro);
+      quadro = null;
+    }
+  };
+
+  montar();
+  desenhar();
+  // A altura da seção muda depois de montada (fontes, fotos, abas): sem medir de novo,
+  // o desenho fica esticado e a malha reage longe do cursor
+  const remontar = () => {
+    if (canvas.width === Math.round(secao.clientWidth * Math.min(window.devicePixelRatio || 1, 2)) &&
+        canvas.height === Math.round(secao.clientHeight * Math.min(window.devicePixelRatio || 1, 2))) return;
+    montar();
+    desenhar();
+  };
+  if ('ResizeObserver' in window) new ResizeObserver(remontar).observe(secao);
+  else window.addEventListener('resize', remontar);
+  // A malha sobre fundo claro fica parada: só as seções escuras reagem ao cursor
+  if (semMovimento || estatico || claro) return;
+
+  const posicao = (e) => {
+    const caixa = secao.getBoundingClientRect();
+    return { x: e.clientX - caixa.left, y: e.clientY - caixa.top };
+  };
+  secao.addEventListener('pointermove', (e) => { cursor = posicao(e); });
+  secao.addEventListener('pointerleave', () => { cursor = null; });
+  secao.addEventListener('pointerdown', (e) => {
+    ondas.push({ ...posicao(e), raio: 0 });
+  });
+  document.addEventListener('visibilitychange', atualizarAnimacao);
+
+  // Anima apenas enquanto a seção está visível e a aba do navegador está ativa.
+  new IntersectionObserver(([entrada]) => {
+    intersectando = entrada.isIntersecting;
+    atualizarAnimacao();
+  }).observe(secao);
+}
+
+/* ---------- Bolinhas do esquema do ecossistema: mesma reação da malha ---------- */
+
+function montarPontosEcossistema() {
+  const dados = window.PONTOS_ECOSSISTEMA;
+  const img = document.querySelector('.sobre-figura img');
+  if (!dados || !img) return;
+  const figura = img.parentElement;
+  const secao = figura.closest('section');
+  const canvas = document.createElement('canvas');
+  canvas.className = 'eco-pontos';
+  canvas.setAttribute('aria-hidden', 'true');
+  figura.prepend(canvas);
+  const ctx = canvas.getContext('2d');
+  const parado =
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
+    document.documentElement.classList.contains('estatico');
+
+  const LADO_ARTE = 690; // as coordenadas dos dados são da arte, em 690 x 690
+  const SOBRA = 48; // margem do canvas, para a bolinha empurrada não ser cortada
+  const ALCANCE = 150; // distância em que o cursor empurra as bolinhas
+  const EMPURRAO = 16; // quanto uma bolinha colada no cursor se desloca, como na malha
+  const VELOCIDADE_ONDA = 9;
+  const OPACIDADE = 0.7;
+  let pontos = [];
+  let ondas = [];
+  let cursor = null;
+  let escala = 1;
+  let largura = 0;
+  let altura = 0;
+  let intersectando = false;
+  let quadro = null;
+
+  const montar = () => {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    escala = img.offsetWidth / LADO_ARTE;
+    largura = img.offsetWidth + SOBRA * 2;
+    altura = img.offsetHeight + SOBRA * 2;
+    canvas.style.left = `${img.offsetLeft - SOBRA}px`;
+    canvas.style.top = `${img.offsetTop - SOBRA}px`;
+    canvas.style.width = `${largura}px`;
+    canvas.style.height = `${altura}px`;
+    canvas.width = largura * dpr;
+    canvas.height = altura * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    pontos = [];
+    for (let i = 0; i < dados.length; i += 3) {
+      const bx = dados[i] * escala + SOBRA;
+      const by = dados[i + 1] * escala + SOBRA;
+      pontos.push({ bx, by, x: bx, y: by, vx: 0, vy: 0, r: dados[i + 2] * escala });
+    }
+  };
+
+  // 0 longe do cursor, 1 em cima dele
+  const proximidade = (x, y) => {
+    if (!cursor) return 0;
+    const d = Math.hypot(x - cursor.x, y - cursor.y);
+    return d < ALCANCE ? 1 - d / ALCANCE : 0;
+  };
+
+  const desenhar = () => {
+    ctx.clearRect(0, 0, largura, altura);
+    ctx.fillStyle = `rgba(179, 130, 1, ${OPACIDADE})`;
+    ctx.beginPath();
+    const perto = [];
+    for (const p of pontos) {
+      const f = proximidade(p.x, p.y);
+      if (f > 0) {
+        perto.push([p, f]);
+        continue;
+      }
+      ctx.moveTo(p.x + p.r, p.y);
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+    }
+    ctx.fill();
+    // Perto do cursor, a bolinha cresce e fica mais viva, como as linhas da malha
+    for (const [p, f] of perto) {
+      ctx.fillStyle = `rgba(179, 130, 1, ${OPACIDADE + f * (1 - OPACIDADE)})`;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r * (1 + f * 0.6), 0, Math.PI * 2);
+      ctx.fill();
+    }
+  };
+
+  // Mesma mola da malha; devolve se ainda há bolinha em movimento
+  const mover = () => {
+    ondas = ondas.filter((o) => (o.raio += VELOCIDADE_ONDA) < largura * 1.5);
+    let movendo = ondas.length > 0;
+    for (const p of pontos) {
+      let alvoX = p.bx;
+      let alvoY = p.by;
+      if (cursor) {
+        const dx = p.bx - cursor.x;
+        const dy = p.by - cursor.y;
+        const d = Math.hypot(dx, dy);
+        if (d < ALCANCE && d > 0.1) {
+          const forca = (1 - d / ALCANCE) ** 2 * EMPURRAO;
+          alvoX += (dx / d) * forca;
+          alvoY += (dy / d) * forca;
+        }
+      }
+      for (const o of ondas) {
+        const dx = p.x - o.x;
+        const dy = p.y - o.y;
+        const d = Math.hypot(dx, dy);
+        const faixa = Math.abs(d - o.raio);
+        if (faixa < 40 && d > 0.1) {
+          const forca = (1 - faixa / 40) * 0.7 * Math.max(0, 1 - o.raio / 700);
+          p.vx += (dx / d) * forca;
+          p.vy += (dy / d) * forca;
+        }
+      }
+      p.vx = (p.vx + (alvoX - p.x) * 0.22) * 0.6;
+      p.vy = (p.vy + (alvoY - p.y) * 0.22) * 0.6;
+      p.x += p.vx;
+      p.y += p.vy;
+      if (Math.abs(p.vx) + Math.abs(p.vy) > 0.02) movendo = true;
+    }
+    return movendo;
+  };
+
+  // Só anima enquanto há o que mexer: parada, a arte não gasta processamento
+  const ciclo = () => {
+    const movendo = mover();
+    desenhar();
+    quadro = movendo && intersectando ? requestAnimationFrame(ciclo) : null;
+  };
+
+  const acordar = () => {
+    if (!quadro && intersectando && document.visibilityState === 'visible') quadro = requestAnimationFrame(ciclo);
+  };
+
+  const refazer = () => {
+    montar();
+    desenhar();
+  };
+
+  refazer();
+  if ('ResizeObserver' in window) new ResizeObserver(refazer).observe(img);
+  else window.addEventListener('resize', refazer);
+  if (parado) return;
+
+  const posicao = (e) => {
+    const caixa = canvas.getBoundingClientRect();
+    return { x: e.clientX - caixa.left, y: e.clientY - caixa.top };
+  };
+  secao.addEventListener('pointermove', (e) => {
+    cursor = posicao(e);
+    acordar();
+  });
+  secao.addEventListener('pointerleave', () => {
+    cursor = null;
+    acordar();
+  });
+  secao.addEventListener('pointerdown', (e) => {
+    ondas.push({ ...posicao(e), raio: 0 });
+    acordar();
+  });
+  document.addEventListener('visibilitychange', acordar);
+  new IntersectionObserver(([entrada]) => {
+    intersectando = entrada.isIntersecting;
+    acordar();
+  }).observe(canvas);
+}
+
+/* ---------- Listas abríveis (valores) ---------- */
+
+function iniciarAcordeoes() {
+  document.querySelectorAll('[data-acordeao]').forEach((caixa) => {
+    const itens = [...caixa.querySelectorAll('.acordeao-item')];
+    caixa.classList.add('ativo');
+
+    // Um item aberto por vez; clicar no aberto o fecha
+    itens.forEach((item) => {
+      item.querySelector('.acordeao-botao').addEventListener('click', () => {
+        const abrir = !item.classList.contains('aberto');
+        itens.forEach((outro) => {
+          const aberto = abrir && outro === item;
+          outro.classList.toggle('aberto', aberto);
+          outro.querySelector('.acordeao-botao').setAttribute('aria-expanded', String(aberto));
+        });
+      });
+    });
+  });
+}
+
+function iniciarMetodo() {
+  const caixa = document.querySelector('[data-metodo]');
+  if (!caixa) return;
+  const trilho = caixa.querySelector('.metodo-trilho');
+  const abas = [...trilho.querySelectorAll('.etapa-aba')];
+  const paineis = abas.map((aba) => document.getElementById(aba.getAttribute('aria-controls')));
+  const secao = caixa.closest('.metodo-secao');
+  const rolagem = caixa.closest('[data-metodo-rolagem]');
+  const palco = rolagem.querySelector('.metodo-palco');
+  const espaco = rolagem.querySelector('.metodo-espaco');
+  const ultimo = abas.length - 1;
+  const podeRolar =
+    !document.documentElement.classList.contains('estatico') &&
+    !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let atual = Math.max(0, abas.findIndex((aba) => aba.getAttribute('aria-selected') === 'true'));
+  let comRolagem = false;
+  let topoFixo = 0;
+  let pedido = false;
+
+  const mostrar = (indice, focar) => {
+    atual = indice;
+    abas.forEach((aba, i) => {
+      const selecionada = i === indice;
+      aba.setAttribute('aria-selected', String(selecionada));
+      aba.tabIndex = selecionada ? 0 : -1;
+      aba.classList.toggle('feita', i < indice);
+      // Os painéis ficam empilhados: o palco não muda de altura ao trocar de etapa
+      paineis[i].removeAttribute('hidden');
+      paineis[i].classList.toggle('fora', !selecionada);
+    });
+    if (!comRolagem) caixa.style.setProperty('--progresso', indice / ultimo);
+    if (focar) abas[indice].focus();
+  };
+
+  // 0 quando o palco acabou de grudar, 1 quando todo o espaço abaixo dele foi rolado
+  const atualizar = () => {
+    pedido = false;
+    if (!comRolagem) return;
+    const p = Math.min(Math.max((topoFixo - rolagem.getBoundingClientRect().top) / espaco.offsetHeight, 0), 1);
+    caixa.style.setProperty('--progresso', p.toFixed(4));
+    const indice = Math.round(p * ultimo);
+    if (indice !== atual) mostrar(indice);
+  };
+
+  const agendar = () => {
+    if (pedido) return;
+    pedido = true;
+    requestAnimationFrame(atualizar);
+  };
+
+  // Só gruda se as etapas couberem na tela; senão elas ficariam escondidas e valem os cliques
+  const medir = () => {
+    if (!podeRolar) return;
+    const cabecalho = document.querySelector('[data-cabecalho]')?.offsetHeight || 0;
+    secao.classList.add('com-rolagem');
+    topoFixo = Math.min(cabecalho, window.innerHeight - palco.offsetHeight);
+    const folgaEtapas = trilho.getBoundingClientRect().top - palco.getBoundingClientRect().top;
+    comRolagem = topoFixo + folgaEtapas >= cabecalho;
+    secao.classList.toggle('com-rolagem', comRolagem);
+    palco.style.top = comRolagem ? `${topoFixo}px` : '';
+    if (comRolagem) atualizar();
+    else mostrar(atual);
+  };
+
+  const irPara = (indice, focar) => {
+    if (!comRolagem) {
+      mostrar(indice, focar);
+      return;
+    }
+    // Com a rolagem ligada, a etapa acompanha a página: basta levar a página até ela
+    const alvo = topoFixo - (indice / ultimo) * espaco.offsetHeight;
+    window.scrollBy({ top: rolagem.getBoundingClientRect().top - alvo + 1, behavior: 'smooth' });
+    if (focar) abas[indice].focus({ preventScroll: true });
+  };
+
+  abas.forEach((aba, i) => {
+    aba.addEventListener('click', () => irPara(i));
+    aba.addEventListener('keydown', (e) => {
+      const destino = { ArrowRight: i === ultimo ? 0 : i + 1, ArrowLeft: i === 0 ? ultimo : i - 1, Home: 0, End: ultimo }[e.key];
+      if (destino === undefined) return;
+      e.preventDefault();
+      irPara(destino, true);
+    });
+  });
+
+  mostrar(atual);
+  medir();
+  if (podeRolar) {
+    window.addEventListener('scroll', agendar, { passive: true });
+    window.addEventListener('resize', medir);
+    window.addEventListener('load', medir);
+  }
+
+  const flutuante = document.querySelector('[data-whatsapp-flutuante]');
+  const secoesDeAbertura = [...document.querySelectorAll('.sobre-secao, .metodo-secao')];
+  if (flutuante && secoesDeAbertura.length) {
+    const atualizarVisibilidade = () => {
+      const celularOuTablet = window.matchMedia('(max-width: 899px)').matches;
+      const secaoVisivel = secoesDeAbertura.some((secao) => {
+        const limites = secao.getBoundingClientRect();
+        return limites.bottom > 80 && limites.top < window.innerHeight - 80;
+      });
+      flutuante.classList.toggle('conteudo-em-tela', celularOuTablet && secaoVisivel);
+    };
+
+    if ('IntersectionObserver' in window) {
+      const observadorDeSecoes = new IntersectionObserver(atualizarVisibilidade, {
+        rootMargin: '-80px 0px -80px 0px',
+      });
+      secoesDeAbertura.forEach((secao) => observadorDeSecoes.observe(secao));
+    } else {
+      window.addEventListener('scroll', atualizarVisibilidade, { passive: true });
+    }
+    window.addEventListener('resize', atualizarVisibilidade);
+    atualizarVisibilidade();
+  }
 }

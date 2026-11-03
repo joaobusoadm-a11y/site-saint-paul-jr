@@ -18,8 +18,8 @@ const negativo = fs.readFileSync(logoNegativo).toString('base64');
 
 const logo = (markup, cx, cy, escala) =>
   `<g filter="url(#eco-claro)"><g transform="scale(${escala}) translate(${-cx} ${-cy})">${markup}</g></g>`;
-const titulo = 'font-family:&quot;Inter Tight&quot;,Inter,Arial,sans-serif;font-weight:800;letter-spacing:-.03em';
-const apoio = 'font-family:Inter,Arial,sans-serif;font-weight:600;letter-spacing:-.01em';
+const titulo = 'font-family:Inter,Arial,sans-serif;font-weight:400;letter-spacing:0';
+const apoio = 'font-family:Inter,Arial,sans-serif;font-weight:400;letter-spacing:0';
 const palavra = (txt, tam, cor, estilo) =>
   `<text x="0" y="0" text-anchor="middle" dominant-baseline="central" font-size="${tam}" fill="${cor}" style="${estilo}">${txt}</text>`;
 

@@ -7,7 +7,7 @@ de qualquer página, edite o `gerar.js` (ou os trechos em `base/`) e rode, na ra
 
 Editar só o `.html` da raiz funciona, mas a mudança some na próxima vez que o gerador rodar.
 
-- `gerar.js`: monta Início, Serviços, Cases, Contato e as 3 páginas de sintoma.
+- `gerar.js`: monta Início, Serviços, Resultados, Contato e as 3 páginas de sintoma.
 - `base/`: versão anterior do Início e do Sobre, de onde o gerador copia seções.
 - `orbita.js`: monta a arte do ecossistema em órbita (`assets/img/ecossistema-escuro.svg`).
   Uso: `node ferramentas/orbita.js ferramentas/base/ecossistema-original.svg assets/img/spjr-logo-negativo.png assets/img/ecossistema-escuro.svg`

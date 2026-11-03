@@ -328,7 +328,7 @@ const FOTOS = {
   'marketing': ['servico-marketing.jpg', 'Convidado conversa com executivos e alunos num auditório em semicírculo da Saint Paul', 1503, 1002, 'center'],
   'consultoria-operacional': ['servico-operacional.webp', 'Professor conduz discussão sobre protagonismo e accountability com a turma', 2000, 1125, 'center 45%'],
   'consultoria-financeira': ['servico-financeira.jpg', 'Palestra em auditório da Saint Paul com gráfico na tela', 1280, 735, '70% center'],
-  'consultoria-de-ia': ['servico-ia.jpg', 'Turma reunida no auditório da Escola de Negócios Saint Paul durante apresentação', 1599, 1066, 'center'],
+  'consultoria-de-ia': ['servico-ia-recorte.jpg', 'Turma reunida no auditório da Escola de Negócios Saint Paul durante apresentação', 1599, 890, 'center'],
 };
 
 // Textura de pontos e ponto cortado no canto (Brand Book, p. 12; anexo de textura em ferramentas/anexo-brand-book.md)

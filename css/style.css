@@ -667,6 +667,65 @@ blockquote {
   padding-block: clamp(72px, 9vw, 128px);
 }
 
+/* Emendas entre seções (main.js, iniciarEmendas): faixas em degradê
+   no topo e na base de cada seção, por baixo do conteúdo */
+:where(.com-emenda) {
+  position: relative;
+  isolation: isolate;
+}
+
+.emenda {
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: -1;
+  height: clamp(56px, 8vw, 120px);
+  pointer-events: none;
+  /* Curva suave (começa e termina devagar), sem degrau visível nas pontas */
+  background: linear-gradient(
+    var(--direcao),
+    transparent 0%,
+    color-mix(in srgb, var(--cor) 3%, transparent) 10%,
+    color-mix(in srgb, var(--cor) 10%, transparent) 20%,
+    color-mix(in srgb, var(--cor) 22%, transparent) 30%,
+    color-mix(in srgb, var(--cor) 35%, transparent) 40%,
+    color-mix(in srgb, var(--cor) 50%, transparent) 50%,
+    color-mix(in srgb, var(--cor) 65%, transparent) 60%,
+    color-mix(in srgb, var(--cor) 78%, transparent) 70%,
+    color-mix(in srgb, var(--cor) 90%, transparent) 80%,
+    color-mix(in srgb, var(--cor) 97%, transparent) 90%,
+    var(--cor) 100%
+  );
+}
+
+.emenda-base {
+  bottom: 0;
+  --direcao: to bottom;
+}
+
+.emenda-topo {
+  top: 0;
+  --direcao: to top;
+}
+
+/* No campo de pontos interativo, a faixa passa por cima dos pontos para eles sumirem na emenda */
+.fundo-rede > .emenda {
+  z-index: 0;
+}
+
+/* Seções com foto de fundo: a cor da emenda é a do véu escuro sobre a foto */
+.hero {
+  --cor-emenda: rgb(12, 20, 21);
+}
+
+.secao-sintomas-foto {
+  --cor-emenda: rgb(12, 28, 30);
+}
+
+.contato-capa {
+  --cor-emenda: rgb(20, 20, 20);
+}
+
 .secao-areia,
 .secao-areia + .secao,
 .cta-final-areia,

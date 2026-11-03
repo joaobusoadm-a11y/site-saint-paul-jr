@@ -52,6 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
   iniciarCarrossel();
   iniciarCtaDor();
   iniciarRede();
+  iniciarEmendas();
   iniciarValores();
   iniciarMetodo();
   iniciarHeroSlides();
@@ -555,6 +556,46 @@ function iniciarRede() {
   document.querySelectorAll('[data-rede]').forEach(montarRede);
 }
 
+/* ---------- Emendas entre seções ----------
+   Em vez do corte seco entre duas seções, a de cima esmaece até a cor
+   do meio entre as duas e a de baixo nasce dessa mesma cor.
+   A cor de cada seção é o fundo dela; seções com foto de fundo dizem
+   a cor em --cor-emenda no CSS. */
+function iniciarEmendas() {
+  const main = document.querySelector('main');
+  if (!main) return;
+
+  const blocos = [...main.children, document.querySelector('.rodape')].filter(
+    (el) => el && !el.matches('script, template') && el.offsetHeight > 0
+  );
+  const fundoPagina = getComputedStyle(document.body).backgroundColor;
+  const corDe = (el) => {
+    const estilo = getComputedStyle(el);
+    const declarada = estilo.getPropertyValue('--cor-emenda').trim();
+    if (declarada) return declarada;
+    const fundo = estilo.backgroundColor;
+    return fundo === 'transparent' || /,\s*0\)$/.test(fundo) ? fundoPagina : fundo;
+  };
+
+  for (let i = 1; i < blocos.length; i++) {
+    const acima = corDe(blocos[i - 1]);
+    const abaixo = corDe(blocos[i]);
+    if (acima === abaixo) continue;
+    const meio = `color-mix(in oklab, ${acima}, ${abaixo})`;
+    acrescentarEmenda(blocos[i - 1], 'base', meio);
+    acrescentarEmenda(blocos[i], 'topo', meio);
+  }
+}
+
+function acrescentarEmenda(secao, lado, cor) {
+  const faixa = document.createElement('span');
+  faixa.className = `emenda emenda-${lado}`;
+  faixa.setAttribute('aria-hidden', 'true');
+  faixa.style.setProperty('--cor', cor);
+  secao.classList.add('com-emenda');
+  secao.append(faixa);
+}
+
 function montarRede(canvas) {
   if (!canvas.getContext) return;
   const secao = canvas.parentElement;
@@ -563,17 +604,21 @@ function montarRede(canvas) {
   const estatico = document.documentElement.classList.contains('estatico');
 
   const COR = '159, 211, 203'; // petróleo claro
-  const LIGA = 130; // distância máxima para ligar dois pontos
-  const ALCANCE_CURSOR = 190; // distância em que o cursor puxa as linhas
+  const ALCANCE_CURSOR = 130; // raio da "lente" do cursor
+  const EMPURRAO = 6; // quanto os pontos se afastam no centro da lente, em px
   const larguraCelular = () => window.matchMedia('(max-width: 640px)').matches;
   let pontos = [];
   let largura = 0;
   let altura = 0;
   let cursor = null;
+  // A luz segue o cursor com um leve atraso e acende/apaga aos poucos, em vez de grudar nele
+  const luz = { x: 0, y: 0, forca: 0 };
+  let agora = 0;
   let intersectando = false;
   let visivel = false;
   let quadro = null;
 
+  // Campo de pontos em grade: o mesmo ponto do j repetido da textura das seções claras
   const montar = () => {
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
     largura = secao.clientWidth;
@@ -581,90 +626,71 @@ function montarRede(canvas) {
     canvas.width = largura * dpr;
     canvas.height = altura * dpr;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    // Densidade pela área: telas grandes ganham mais pontos, com teto para não pesar
-    const celular = larguraCelular();
-    const total = Math.min(celular ? 38 : 90, Math.round((largura * altura) / (celular ? 28000 : 15000)));
-    pontos = Array.from({ length: total }, () => ({
-      x: Math.random() * largura,
-      y: Math.random() * altura,
-      vx: (Math.random() - 0.5) * 0.35,
-      vy: (Math.random() - 0.5) * 0.35,
-      r: 1.2 + Math.random() * 1.6,
-    }));
+    const passo = larguraCelular() ? 36 : 32;
+    pontos = [];
+    for (let y = passo / 2; y < altura; y += passo) {
+      for (let x = passo / 2; x < largura; x += passo) {
+        pontos.push({ x, y, dx: 0, dy: 0, aceso: 0 });
+      }
+    }
   };
 
   const desenhar = () => {
     ctx.clearRect(0, 0, largura, altura);
 
-    // Brilho suave que acompanha o cursor
-    if (cursor) {
-      const brilho = ctx.createRadialGradient(cursor.x, cursor.y, 0, cursor.x, cursor.y, 260);
-      brilho.addColorStop(0, 'rgba(24, 72, 72, 0.55)');
-      brilho.addColorStop(1, 'rgba(24, 72, 72, 0)');
+    // Brilho suave que acompanha o cursor; a queda em curva não deixa borda de disco
+    if (luz.forca > 0.005) {
+      const a = 0.5 * luz.forca;
+      const brilho = ctx.createRadialGradient(luz.x, luz.y, 0, luz.x, luz.y, 340);
+      [[0, 1], [0.2, 0.82], [0.4, 0.52], [0.6, 0.24], [0.8, 0.07], [1, 0]].forEach(([parada, k]) =>
+        brilho.addColorStop(parada, `rgba(24, 72, 72, ${(a * k).toFixed(3)})`)
+      );
       ctx.fillStyle = brilho;
       ctx.fillRect(0, 0, largura, altura);
     }
 
-    for (let i = 0; i < pontos.length; i++) {
-      const a = pontos[i];
-      for (let j = i + 1; j < pontos.length; j++) {
-        const b = pontos[j];
-        const d = Math.hypot(a.x - b.x, a.y - b.y);
-        if (d < LIGA) {
-          ctx.strokeStyle = `rgba(${COR}, ${(1 - d / LIGA) * 0.28})`;
-          ctx.lineWidth = 1;
-          ctx.beginPath();
-          ctx.moveTo(a.x, a.y);
-          ctx.lineTo(b.x, b.y);
-          ctx.stroke();
-        }
-      }
-      if (cursor) {
-        const d = Math.hypot(a.x - cursor.x, a.y - cursor.y);
-        if (d < ALCANCE_CURSOR) {
-          ctx.strokeStyle = `rgba(${COR}, ${(1 - d / ALCANCE_CURSOR) * 0.6})`;
-          ctx.lineWidth = 1.2;
-          ctx.beginPath();
-          ctx.moveTo(a.x, a.y);
-          ctx.lineTo(cursor.x, cursor.y);
-          ctx.stroke();
-        }
-      }
-    }
-
     ctx.fillStyle = `rgb(${COR})`;
     for (const p of pontos) {
+      // Uma onda de brilho bem leve atravessa a grade na diagonal, para o fundo nunca ficar parado
+      const onda = agora ? Math.max(0, Math.sin((p.x + p.y) * 0.003 - agora * 0.0003)) ** 8 : 0;
+      ctx.globalAlpha = 0.1 + onda * 0.06 + p.aceso * 0.3;
       ctx.beginPath();
-      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.arc(p.x + p.dx, p.y + p.dy, 1 + p.aceso * 0.4, 0, Math.PI * 2);
       ctx.fill();
     }
+    ctx.globalAlpha = 1;
   };
 
+  // Perto do cursor, os pontos se afastam como sob uma lente, crescem e acendem;
+  // quando ele sai, voltam devagar para o lugar
   const mover = () => {
+    agora = performance.now();
+    if (cursor) {
+      // Entrando com a luz apagada, ela nasce já no cursor; depois só o acompanha
+      if (luz.forca < 0.02) Object.assign(luz, cursor);
+      luz.x += (cursor.x - luz.x) * 0.08;
+      luz.y += (cursor.y - luz.y) * 0.08;
+    }
+    luz.forca += ((cursor ? 1 : 0) - luz.forca) * 0.06;
+
     for (const p of pontos) {
-      // Perto do cursor, o ponto é empurrado de leve para fora
-      if (cursor) {
-        const dx = p.x - cursor.x;
-        const dy = p.y - cursor.y;
+      let alvoX = 0;
+      let alvoY = 0;
+      let alvo = 0;
+      if (luz.forca > 0.005) {
+        const dx = p.x - luz.x;
+        const dy = p.y - luz.y;
         const d = Math.hypot(dx, dy);
-        if (d < 120 && d > 0.1) {
-          p.vx += (dx / d) * 0.06;
-          p.vy += (dy / d) * 0.06;
+        if (d < ALCANCE_CURSOR && d > 0.1) {
+          const forca = (1 - d / ALCANCE_CURSOR) ** 2 * luz.forca; // suave na borda da lente
+          alvoX = (dx / d) * forca * EMPURRAO;
+          alvoY = (dy / d) * forca * EMPURRAO;
+          alvo = (1 - d / ALCANCE_CURSOR) * luz.forca;
         }
       }
-      // Atrito leve para a velocidade voltar ao ritmo calmo
-      p.vx *= 0.985;
-      p.vy *= 0.985;
-      if (Math.hypot(p.vx, p.vy) < 0.12) {
-        p.vx += (Math.random() - 0.5) * 0.05;
-        p.vy += (Math.random() - 0.5) * 0.05;
-      }
-      p.x += p.vx;
-      p.y += p.vy;
-      if (p.x < 0 || p.x > largura) p.vx *= -1;
-      if (p.y < 0 || p.y > altura) p.vy *= -1;
-      p.x = Math.max(0, Math.min(largura, p.x));
-      p.y = Math.max(0, Math.min(altura, p.y));
+      p.dx += (alvoX - p.dx) * 0.06;
+      p.dy += (alvoY - p.dy) * 0.06;
+      p.aceso += (alvo - p.aceso) * 0.06;
     }
   };
 
@@ -712,32 +738,86 @@ function iniciarValores() {
   if (!caixa) return;
   const abas = [...caixa.querySelectorAll('[role="tab"]')];
   const paineis = abas.map((aba) => document.getElementById(aba.getAttribute('aria-controls')));
+  const ultimo = abas.length - 1;
+  const posicao = (indice) => (ultimo > 0 ? indice / ultimo : 0);
   caixa.classList.add('ativo');
+  let atual = 0;
+  let espera = 0;
 
   const abrir = (indice, focar) => {
+    atual = indice;
     abas.forEach((aba, i) => {
-      const atual = i === indice;
-      aba.setAttribute('aria-selected', String(atual));
-      aba.tabIndex = atual ? 0 : -1;
-      paineis[i].hidden = !atual;
+      const selecionada = i === indice;
+      aba.setAttribute('aria-selected', String(selecionada));
+      aba.tabIndex = selecionada ? 0 : -1;
+      paineis[i].hidden = !selecionada;
     });
     // Até onde o caminho chegou: o traço se preenche até o ponto escolhido
-    caixa.style.setProperty('--progresso', abas.length > 1 ? indice / (abas.length - 1) : 0);
+    caixa.style.setProperty('--progresso', posicao(indice));
     if (focar) abas[indice].focus();
   };
 
+  /* Troca automática: a cada 8 s (--tempo-valor no CSS) o traço enche até o
+     próximo ponto e o valor seguinte abre; depois do último, volta ao primeiro.
+     Clicar num ponto abre o valor dele e a contagem segue dali. */
+  const automatico =
+    !window.matchMedia('(prefers-reduced-motion: reduce)').matches &&
+    !document.documentElement.classList.contains('estatico');
+  const tempo = (parseFloat(getComputedStyle(caixa).getPropertyValue('--tempo-valor')) || 8) * 1000;
+  let relogio = 0;
+
+  const parar = () => {
+    clearTimeout(espera);
+    clearTimeout(relogio);
+    caixa.classList.remove('enchendo');
+  };
+
+  const avancar = () => {
+    if (atual < ultimo) {
+      abrir(atual + 1);
+      encher();
+    } else {
+      abrir(0);
+      encherDepoisDoSalto();
+    }
+  };
+
+  const encher = () => {
+    parar();
+    caixa.style.setProperty('--progresso-proximo', posicao(atual < ultimo ? atual + 1 : atual));
+    void caixa.offsetWidth; // reinicia a animação do traço
+    caixa.classList.add('enchendo');
+    relogio = setTimeout(avancar, tempo);
+  };
+
+  // Depois de um salto (clique ou volta ao primeiro), espera o traço chegar ao ponto antes de encher de novo
+  const encherDepoisDoSalto = () => {
+    parar();
+    espera = setTimeout(encher, 600);
+  };
+
   abas.forEach((aba, i) => {
-    aba.addEventListener('click', () => abrir(i));
+    aba.addEventListener('click', () => {
+      abrir(i);
+      if (automatico) encherDepoisDoSalto();
+    });
     aba.addEventListener('keydown', (e) => {
-      const ultimo = abas.length - 1;
       const destino = { ArrowRight: i === ultimo ? 0 : i + 1, ArrowLeft: i === 0 ? ultimo : i - 1, Home: 0, End: ultimo }[e.key];
       if (destino === undefined) return;
       e.preventDefault();
       abrir(destino, true);
+      if (automatico) encherDepoisDoSalto();
     });
   });
 
   abrir(Math.max(0, abas.findIndex((aba) => aba.getAttribute('aria-selected') === 'true')));
+
+  // Só conta o tempo com o caminho na tela; ao voltar, a etapa atual recomeça do início
+  if (automatico && 'IntersectionObserver' in window) {
+    new IntersectionObserver(([entrada]) => (entrada.isIntersecting ? encher() : parar()), {
+      threshold: 0.5,
+    }).observe(caixa);
+  }
 }
 
 /* ---------- Como trabalhamos: seletor de etapas acessível ---------- */

@@ -35,7 +35,7 @@
   color: rgba(255, 255, 255, 0.86);
 }
 
-/* Rede de pontos no lugar da grade: os pontos se ligam entre si e ao cursor */
+/* Campo de pontos interativo no lugar da grade: perto do cursor, os pontos se afastam e acendem (montarRede em main.js) */
 .fundo-rede {
   background-image: none;
 }

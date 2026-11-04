@@ -53,6 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
   iniciarCases();
   iniciarCtaDor();
   iniciarRede();
+  iniciarEmendas();
   montarPontosEcossistema();
   iniciarAcordeoes();
   iniciarMetodo();
@@ -673,6 +674,51 @@ function iniciarCtaDor() {
 // Uma malha em cada fundo marcado com data-rede: Sobre nós e o topo das páginas internas
 function iniciarRede() {
   document.querySelectorAll('[data-rede]').forEach(montarRede);
+}
+
+/* ---------- Emendas entre seções ----------
+   Em vez do corte seco entre duas seções, a de cima esmaece até a cor
+   do meio entre as duas e a de baixo nasce dessa mesma cor.
+   A cor de cada seção é o fundo dela; seções com foto de fundo dizem
+   a cor em --cor-emenda no CSS.
+   As seções de Sobre nós (inclusive missão, visão e valores) ficam de fora:
+   mantêm as bordas e as cores da versão do Kalil. */
+const SEM_EMENDA = '#sobre-nos, .historia-trilho, .historia-espaco, #proposito';
+
+function iniciarEmendas() {
+  const main = document.querySelector('main');
+  if (!main) return;
+
+  const blocos = [...main.children, document.querySelector('.rodape')].filter(
+    (el) => el && !el.matches('script, template') && el.offsetHeight > 0
+  );
+  const fundoPagina = getComputedStyle(document.body).backgroundColor;
+  const corDe = (el) => {
+    const estilo = getComputedStyle(el);
+    const declarada = estilo.getPropertyValue('--cor-emenda').trim();
+    if (declarada) return declarada;
+    const fundo = estilo.backgroundColor;
+    return fundo === 'transparent' || /,\s*0\)$/.test(fundo) ? fundoPagina : fundo;
+  };
+
+  for (let i = 1; i < blocos.length; i++) {
+    const acima = corDe(blocos[i - 1]);
+    const abaixo = corDe(blocos[i]);
+    if (acima === abaixo) continue;
+    if (blocos[i - 1].matches(SEM_EMENDA) || blocos[i].matches(SEM_EMENDA)) continue;
+    const meio = `color-mix(in oklab, ${acima}, ${abaixo})`;
+    acrescentarEmenda(blocos[i - 1], 'base', meio);
+    acrescentarEmenda(blocos[i], 'topo', meio);
+  }
+}
+
+function acrescentarEmenda(secao, lado, cor) {
+  const faixa = document.createElement('span');
+  faixa.className = `emenda emenda-${lado}`;
+  faixa.setAttribute('aria-hidden', 'true');
+  faixa.style.setProperty('--cor', cor);
+  secao.classList.add('com-emenda');
+  secao.append(faixa);
 }
 
 function montarRede(canvas) {

@@ -461,6 +461,9 @@ function iniciarAnimacoes() {
     '.metodo-etapa',
     '.garantias > div',
     '.metodo-orientador',
+    '.etapa-passo',
+    '.garantias-titulo',
+    '.metodo-secao .compromissos > li',
     '.canais-grid > *',
     '.proposito-grid > *',
     '.valores-intro',
@@ -1067,8 +1070,11 @@ function iniciarMetodo() {
   const caixa = document.querySelector('[data-metodo]');
   if (!caixa) return;
   const trilho = caixa.querySelector('.metodo-trilho');
-  const abas = [...trilho.querySelectorAll('.etapa-aba')];
-  const paineis = abas.map((aba) => document.getElementById(aba.getAttribute('aria-controls')));
+  const passos = [...trilho.querySelectorAll('.etapa-passo')];
+  const abas = passos.map((passo) => passo.querySelector('.etapa-aba'));
+  const bolinha = caixa.querySelector('.metodo-bola');
+  const pontos = [...caixa.querySelectorAll('.metodo-parada')];
+  const numeros = [...caixa.querySelectorAll('.metodo-numeros span')];
   const secao = caixa.closest('.metodo-secao');
   const rolagem = caixa.closest('[data-metodo-rolagem]');
   const palco = rolagem.querySelector('.metodo-palco');
@@ -1077,24 +1083,68 @@ function iniciarMetodo() {
   const podeRolar =
     !document.documentElement.classList.contains('estatico') &&
     !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  let atual = Math.max(0, abas.findIndex((aba) => aba.getAttribute('aria-selected') === 'true'));
+  let atual = 0;
   let comRolagem = false;
   let topoFixo = 0;
   let pedido = false;
+  let paradas = [];
+  let emPe = false;
 
-  const mostrar = (indice, focar) => {
+  // As etapas e, por último, o fim da linha: a borda direita da página (no celular, o pé da linha)
+  const medirParadas = () => {
+    const limites = caixa.getBoundingClientRect();
+    const largura = document.documentElement.clientWidth;
+    const bola = bolinha.offsetWidth;
+    emPe = window.matchMedia('(max-width: 760px)').matches;
+    paradas = passos.map((passo) => ({ x: passo.offsetLeft, y: passo.offsetTop }));
+    paradas.forEach((parada, i) => {
+      pontos[i].style.translate = `${parada.x}px ${parada.y}px`;
+    });
+    paradas.push(emPe ? { x: 0, y: caixa.offsetHeight - bola } : { x: largura - limites.left - bola / 2, y: 0 });
+    caixa.style.setProperty('--borda-e', `${limites.left}px`);
+    caixa.style.setProperty('--borda-d', `${largura - limites.right}px`);
+  };
+
+  // Entre duas paradas a gota acelera e freia, e fica um tempo parada em cada uma
+  const suave = (t) => t * t * (3 - 2 * t);
+  const limitar = (v) => Math.min(Math.max(v, 0), 1);
+
+  // posicao vai de 0 (primeira etapa) até o fim da linha: posiciona e molda a gota, troca o número e revela as etapas
+  const pintar = (posicao) => {
+    const trecho = Math.min(Math.floor(posicao), paradas.length - 2);
+    const t = suave(posicao - trecho);
+    const de = paradas[trecho];
+    const ate = paradas[trecho + 1];
+    const q = trecho + t;
+    // Estica no meio do caminho e, no último trecho, cresce até virar o ponto cortado na borda
+    const estica = Math.sin(Math.PI * t);
+    const cresce = trecho === ultimo && !emPe ? 1 + 1.7 * t : 1;
+    const forca = trecho === ultimo && !emPe ? 0.5 : 1;
+    const longo = cresce * (1 + 0.42 * forca * estica);
+    const curto = cresce * (1 - 0.16 * forca * estica);
+    caixa.style.setProperty('--pingo-x', `${(de.x + (ate.x - de.x) * t).toFixed(1)}px`);
+    caixa.style.setProperty('--pingo-y', `${(de.y + (ate.y - de.y) * t).toFixed(1)}px`);
+    caixa.style.setProperty('--sx', (emPe ? curto : longo).toFixed(3));
+    caixa.style.setProperty('--sy', (emPe ? longo : curto).toFixed(3));
+    numeros.forEach((numero, i) => numero.style.setProperty('--ver', limitar(1 - Math.abs(q - i) * 4).toFixed(3)));
+    passos.forEach((passo, i) => {
+      // Sem a rolagem ligada não há gota para revelar nada: tudo fica à vista e clicável
+      const surge = (ini, fim) => (comRolagem ? suave(limitar((q - i + ini) / (ini - fim))) : 1);
+      const nome = surge(0.5, 0.15);
+      pontos[i].style.setProperty('--surge-ponto', surge(0.6, 0.3).toFixed(3));
+      passo.style.setProperty('--surge-nome', nome.toFixed(3));
+      passo.style.setProperty('--surge-texto', surge(0.35, 0).toFixed(3));
+      passo.style.pointerEvents = nome < 0.5 ? 'none' : '';
+    });
+  };
+
+  const mostrar = (indice) => {
     atual = indice;
     abas.forEach((aba, i) => {
-      const selecionada = i === indice;
-      aba.setAttribute('aria-selected', String(selecionada));
-      aba.tabIndex = selecionada ? 0 : -1;
-      aba.classList.toggle('feita', i < indice);
-      // Os painéis ficam empilhados: o palco não muda de altura ao trocar de etapa
-      paineis[i].removeAttribute('hidden');
-      paineis[i].classList.toggle('fora', !selecionada);
+      if (i === indice) aba.setAttribute('aria-current', 'step');
+      else aba.removeAttribute('aria-current');
     });
-    if (!comRolagem) caixa.style.setProperty('--progresso', indice / ultimo);
-    if (focar) abas[indice].focus();
+    if (!comRolagem) pintar(indice);
   };
 
   // 0 quando o palco acabou de grudar, 1 quando todo o espaço abaixo dele foi rolado
@@ -1102,8 +1152,9 @@ function iniciarMetodo() {
     pedido = false;
     if (!comRolagem) return;
     const p = Math.min(Math.max((topoFixo - rolagem.getBoundingClientRect().top) / espaco.offsetHeight, 0), 1);
-    caixa.style.setProperty('--progresso', p.toFixed(4));
-    const indice = Math.round(p * ultimo);
+    const posicao = p * passos.length;
+    pintar(posicao);
+    const indice = Math.min(Math.round(posicao), ultimo);
     if (indice !== atual) mostrar(indice);
   };
 
@@ -1115,7 +1166,11 @@ function iniciarMetodo() {
 
   // Só gruda se as etapas couberem na tela; senão elas ficariam escondidas e valem os cliques
   const medir = () => {
-    if (!podeRolar) return;
+    medirParadas();
+    if (!podeRolar) {
+      pintar(atual);
+      return;
+    }
     const cabecalho = document.querySelector('[data-cabecalho]')?.offsetHeight || 0;
     secao.classList.add('com-rolagem');
     topoFixo = Math.min(cabecalho, window.innerHeight - palco.offsetHeight);
@@ -1127,34 +1182,31 @@ function iniciarMetodo() {
     else mostrar(atual);
   };
 
-  const irPara = (indice, focar) => {
+  const irPara = (indice) => {
     if (!comRolagem) {
-      mostrar(indice, focar);
+      mostrar(indice);
       return;
     }
     // Com a rolagem ligada, a etapa acompanha a página: basta levar a página até ela
-    const alvo = topoFixo - (indice / ultimo) * espaco.offsetHeight;
+    const alvo = topoFixo - (indice / passos.length) * espaco.offsetHeight;
     window.scrollBy({ top: rolagem.getBoundingClientRect().top - alvo + 1, behavior: 'smooth' });
-    if (focar) abas[indice].focus({ preventScroll: true });
   };
 
   abas.forEach((aba, i) => {
     aba.addEventListener('click', () => irPara(i));
-    aba.addEventListener('keydown', (e) => {
-      const destino = { ArrowRight: i === ultimo ? 0 : i + 1, ArrowLeft: i === 0 ? ultimo : i - 1, Home: 0, End: ultimo }[e.key];
-      if (destino === undefined) return;
-      e.preventDefault();
-      irPara(destino, true);
+    // Quem navega pelo teclado leva a gota até a etapa, para ela não ficar escondida
+    aba.addEventListener('focus', () => {
+      if (comRolagem && aba.matches(':focus-visible')) irPara(i);
     });
   });
 
+  medirParadas();
   mostrar(atual);
   medir();
-  if (podeRolar) {
-    window.addEventListener('scroll', agendar, { passive: true });
-    window.addEventListener('resize', medir);
-    window.addEventListener('load', medir);
-  }
+  window.addEventListener('resize', medir);
+  window.addEventListener('load', medir);
+  document.fonts?.ready.then(medir);
+  if (podeRolar) window.addEventListener('scroll', agendar, { passive: true });
 
   const flutuante = document.querySelector('[data-whatsapp-flutuante]');
   const secoesDeAbertura = [...document.querySelectorAll('.sobre-secao, .metodo-secao')];

@@ -1783,6 +1783,40 @@ a.contato-item:hover span:last-child {
   min-height: calc(100vh - var(--altura-cabecalho));
 }
 
+/* Grade ao fundo, parada e em cinza claro, continuando a malha de "Quem somos"
+   (#proposito, data-rede="claro" no main.js): mesmo quadrado (56 px; 44 px até 640 px),
+   mesma cor e ancorada à direita. Fica presa à base para a última linha cair a um
+   quadrado da primeira linha da seção de baixo, sem degrau na emenda.
+   O canvas de baixo desenha cada linha centrada na divisa dos pixels: ela se espalha
+   por 2 px a meia força. Aqui a linha é igual: --traco de cada lado da divisa dos
+   quadrados, com --tom de opacidade. */
+.historia-secao {
+  --celula-grade: 56px;
+  --traco: 1px;
+  --tom: rgba(25, 24, 24, 0.03);
+  background-color: var(--fundo-claro);
+  background-image:
+    linear-gradient(var(--tom) var(--traco), transparent var(--traco), transparent calc(100% - var(--traco)), var(--tom) calc(100% - var(--traco))),
+    linear-gradient(90deg, var(--tom) var(--traco), transparent var(--traco), transparent calc(100% - var(--traco)), var(--tom) calc(100% - var(--traco)));
+  background-size: var(--celula-grade) var(--celula-grade);
+  background-position: right 0 bottom 0;
+}
+
+/* Em telas de alta densidade (Mac, iPhone) o canvas desenha a linha fina e cheia:
+   meio pixel de cada lado da divisa, na força inteira */
+@media (min-resolution: 2dppx) {
+  .historia-secao {
+    --traco: 0.5px;
+    --tom: rgba(25, 24, 24, 0.06);
+  }
+}
+
+@media (max-width: 640px) {
+  .historia-secao {
+    --celula-grade: 44px;
+  }
+}
+
 .historia-espaco {
   display: none;
 }

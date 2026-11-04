@@ -679,14 +679,17 @@ function iniciarRede() {
    A cor de cada seção é o fundo dela; seções com foto de fundo dizem
    a cor em --cor-emenda no CSS.
    As seções de Sobre nós (inclusive missão, visão e valores) ficam de fora:
-   mantêm as bordas e as cores da versão do Kalil. */
-const SEM_EMENDA = '#sobre-nos, .historia-trilho, .historia-espaco, #proposito';
+   mantêm as bordas e as cores da versão do Kalil. A capa de Contato também
+   fica de fora: termina com corte reto antes de "Prefere falar direto?". */
+const SEM_EMENDA = '#sobre-nos, .historia-trilho, .historia-espaco, #proposito, .contato-capa';
 
 function iniciarEmendas() {
   const main = document.querySelector('main');
-  if (!main) return;
+  // Páginas com data-sem-emenda no <main> (hoje, Cases) mantêm o corte reto entre as seções
+  if (!main || main.hasAttribute('data-sem-emenda')) return;
 
-  const blocos = [...main.children, document.querySelector('.rodape')].filter(
+  // O rodapé fica de fora: a seção acima dele termina com corte reto, sem esmaecer
+  const blocos = [...main.children].filter(
     (el) => el && !el.matches('script, template') && el.offsetHeight > 0
   );
   const fundoPagina = getComputedStyle(document.body).backgroundColor;

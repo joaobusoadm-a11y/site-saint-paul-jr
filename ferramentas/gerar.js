@@ -390,9 +390,7 @@ const spjSecoes = `<!-- ===== A. Sobre a Saint Paul Jr ===== -->
           <p class="spj-texto">A Saint Paul Jr é a consultoria estratégica da Escola de Negócios Saint Paul. Entramos na operação da sua empresa, mapeamos como ela funciona e acompanhamos a implementação do que precisa mudar.</p>
           <p class="spj-texto">Atuamos em plano de negócios, análise mercadológica, consultoria operacional e consultoria financeira. Cada projeto tem escopo definido, etapas e acompanhamento de um professor orientador.</p>
           <div class="sobre-acoes">
-            <a class="spj-botao spj-botao-primario" data-contato="whatsapp" href="contato.html">Converse sobre sua operação</a>
-            <a class="spj-botao spj-botao-secundario" href="#como-trabalhamos">Veja como trabalhamos</a>
-          </div>
+            <a class="spj-botao spj-botao-primario" data-contato="whatsapp" href="contato.html">Converse sobre sua operação</a>          </div>
           <p class="sobre-nota">A Saint Paul Jr é uma associação sem fins lucrativos, formada e gerida por alunos da Escola de Negócios Saint Paul.</p>
         </div>
       </div>

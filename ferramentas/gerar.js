@@ -331,6 +331,28 @@ const FOTOS = {
   'consultoria-de-ia': ['servico-ia-recorte.jpg', 'Turma reunida no auditório da Escola de Negócios Saint Paul durante apresentação', 1599, 890, 'center'],
 };
 
+// Fotos dos cards da home e dos painéis da página Serviços; o topo da home segue usando FOTOS
+const FOTOS_CARDS = {
+  'plano-de-negocios': ['escopo-plano-de-negocios.jpg', 'Pessoas revisando documentos em uma mesa de reunião', 1167, 781, 'center 60%'],
+  'analise-mercadologica': ['escopo-analise-mercadologica-quadro.jpg', 'Quatro pessoas conversam em um escritório diante de um quadro com notas adesivas', 1074, 805, 'center 50%'],
+  'analise-do-consumidor': ['escopo-analise-consumidor-loja.jpg', 'Mulher observa produtos na prateleira de uma loja', 1170, 780, 'center 30%'],
+  'marketing': ['escopo-marketing-notebook.jpg', 'Vista de cima de três pessoas trabalhando com um notebook e um caderno', 600, 400, 'center'],
+  'consultoria-financeira': ['servico-mercado.jpg', 'Turma em sala de aula com painel do Valor Econômico ao fundo', 1931, 1287, 'center 20%'],
+  'consultoria-operacional': ['escopo-operacoes-quadro.jpg', 'Duas pessoas organizam um processo em um quadro branco com anotações e notas adesivas', 600, 400, 'center 10%'],
+  'consultoria-de-ia': ['escopo-ia.jpg', 'Chip de computador com a sigla AI em uma placa de circuito', 996, 830, 'center 40%'],
+};
+
+// Enquadramento das mesmas fotos na faixa 21:9 da página Serviços, sem cortar os rostos
+const FOCO_PAINEIS = {
+  'plano-de-negocios': 'center 55%',
+  'analise-mercadologica': 'center 60%',
+  'analise-do-consumidor': 'center 32%',
+  'marketing': 'center 50%',
+  'consultoria-financeira': 'center 35%',
+  'consultoria-operacional': 'center 0%',
+  'consultoria-de-ia': 'center 25%',
+};
+
 // Textura de pontos e ponto cortado no canto (Brand Book, p. 12; anexo de textura em ferramentas/anexo-brand-book.md)
 const servicosResumo = `<section class="secao secao-textura" id="servicos" aria-labelledby="titulo-servicos">
       <div class="ponto-cortado ponto-cortado-topo" aria-hidden="true"></div>
@@ -343,7 +365,7 @@ const servicosResumo = `<section class="secao secao-textura" id="servicos" aria-
         <div class="servicos-grid">
           ${FRENTES.map(([id, nome], i) => {
             const [desc] = DESCRICOES[id];
-            const [arquivo, alt, w, h, foco] = FOTOS[id];
+            const [arquivo, alt, w, h, foco] = FOTOS_CARDS[id];
             return `<a class="servico-card" href="servicos.html#${id}">
             <span class="servico-foto"><img src="assets/img/${arquivo}" alt="${alt}" width="${w}" height="${h}" loading="lazy" style="object-position:${foco}"></span>
             <span class="servico-num">0${i + 1}</span>
@@ -499,7 +521,8 @@ const solucoes = secao(indexAntigo, 'Nossas soluções')
   .replace(/href="#contato" data-interesse="([^"]+)"/g, (_, frente) => `href="contato.html?frente=${encodeURIComponent(frente)}"`)
   // Foto da frente no topo de cada painel
   .replace(/(<div class="painel" role="tabpanel" id="([a-z-]+)"[^>]*>)/g, (abre, _, id) => {
-    const [arquivo, alt, w, h, foco] = FOTOS[id];
+    const [arquivo, alt, w, h] = FOTOS_CARDS[id];
+    const foco = FOCO_PAINEIS[id];
     return `${abre}
               <div class="painel-foto"><img src="assets/img/${arquivo}" alt="${alt}" width="${w}" height="${h}" loading="lazy" style="object-position:${foco}"></div>`;
   });

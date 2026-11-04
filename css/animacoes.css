@@ -210,6 +210,52 @@
   }
 }
 
+/* Símbolos dos compromissos: desenham-se uma vez, sem quique */
+@keyframes spj-sinal-desenha {
+  from {
+    stroke-dashoffset: 100;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes spj-sinal-surge {
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+@keyframes spj-sinal-esquerda {
+  from {
+    transform: translateX(-13px);
+  }
+  to {
+    transform: none;
+  }
+}
+
+@keyframes spj-sinal-direita {
+  from {
+    transform: translateX(13px);
+  }
+  to {
+    transform: none;
+  }
+}
+
+@keyframes spj-sinal-gira {
+  from {
+    transform: rotate(-300deg);
+  }
+  to {
+    transform: none;
+  }
+}
+
 @keyframes spj-flutuar {
   0%,
   100% {
@@ -318,6 +364,62 @@
   .metodo-entregas .metodo-etapa:hover .metodo-ponto::before,
   .js .metodo-entregas .metodo-etapa.visivel:hover .metodo-ponto::before {
     transform: scale(1.3);
+  }
+
+  /* Compromissos: cada símbolo se forma depois que o item aparece */
+  .compromisso-sinal {
+    --espera: calc(var(--atraso, 0s) + 0.25s);
+    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .compromissos li:hover .compromisso-sinal {
+    transform: scale(1.08);
+  }
+
+  .compromisso-sinal .sinal-surge {
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+
+  .compromisso-sinal .sinal-anel {
+    stroke-dasharray: 100;
+  }
+
+  .compromissos li.revelar.visivel .sinal-anel {
+    animation: spj-sinal-desenha 1.1s cubic-bezier(0.65, 0, 0.35, 1) var(--espera) backwards;
+  }
+
+  .compromissos li.revelar.visivel .sinal-surge {
+    animation: spj-sinal-surge 0.5s cubic-bezier(0.22, 1, 0.36, 1) calc(var(--espera) + 0.1s) backwards;
+  }
+
+  .compromissos li.revelar.visivel .sinal-depois {
+    animation-delay: calc(var(--espera) + 0.45s);
+  }
+
+  .compromissos li.revelar.visivel .sinal-por-ultimo {
+    animation-delay: calc(var(--espera) + 0.8s);
+  }
+
+  /* O escopo só "fecha" quando o anel termina de se desenhar */
+  .compromissos li.revelar.visivel:first-child .sinal-surge {
+    animation-delay: calc(var(--espera) + 0.9s);
+  }
+
+  .compromissos li.revelar.visivel .sinal-vem-esquerda {
+    animation: spj-sinal-esquerda 1s cubic-bezier(0.22, 1, 0.36, 1) var(--espera) backwards;
+  }
+
+  .compromissos li.revelar.visivel .sinal-vem-direita {
+    animation: spj-sinal-direita 1s cubic-bezier(0.22, 1, 0.36, 1) var(--espera) backwards;
+  }
+
+  .compromisso-sinal .sinal-orbita {
+    transform-origin: 32px 32px;
+  }
+
+  .compromissos li.revelar.visivel .sinal-orbita {
+    animation: spj-sinal-gira 1.6s cubic-bezier(0.22, 1, 0.36, 1) var(--espera) backwards;
   }
 
   /* NPS: o ponto corre do começo da escala até a nota */

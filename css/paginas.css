@@ -1600,7 +1600,6 @@ a.gaveta-grupo {
   scroll-margin-top: calc(var(--altura-cabecalho) + 8px);
   background: var(--fundo-claro);
   color: var(--petroleo-escuro);
-  border-bottom: 1px solid var(--linha);
 }
 
 /* O palco gruda na tela enquanto a rolagem atravessa o espaço abaixo dele (main.js) */
@@ -1612,7 +1611,6 @@ a.gaveta-grupo {
   flex-direction: column;
   justify-content: center;
   padding-block: clamp(32px, 4vw, 56px);
-  border-bottom: 1px solid var(--linha);
 }
 
 .metodo-espaco {
@@ -1626,7 +1624,7 @@ a.gaveta-grupo {
 
 .com-rolagem .metodo-espaco {
   display: block;
-  height: 130vh;
+  height: 180vh;
 }
 
 .metodo-cabeca {
@@ -1682,214 +1680,283 @@ a.gaveta-grupo {
   margin-top: clamp(24px, 3vw, 40px);
 }
 
+/* Faixa petróleo de ponta a ponta: fecha a seção e tem suas próprias cores de fundo escuro */
 .metodo-garantias {
-  padding-block: clamp(24px, 3vw, 40px) clamp(36px, 5vw, 64px);
+  --spj-white: var(--branco);
+  --spj-text-secondary: #c8d8d7;
+  padding-block: clamp(44px, 5.5vw, 76px);
+  background: var(--petroleo);
+  color: var(--branco);
+}
+
+.garantias-titulo {
+  margin: 0 0 clamp(28px, 3.5vw, 44px);
+  font-family: var(--fonte-titulo);
+  font-size: clamp(1.625rem, 1.2rem + 1.6vw, 2.5rem);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1.1;
 }
 
 .metodo-garantias .compromissos {
   margin: 0;
+  padding: 0;
   border-top: 0;
 }
 
-.metodo-trilho {
+/* Símbolos feitos com o ponto da marca: cada um mostra o que o compromisso promete */
+.metodo-secao .compromisso-sinal {
+  width: 64px;
+  height: 64px;
+  overflow: visible;
+  stroke: none;
+  fill: none;
+}
+
+.compromisso-sinal .sinal-anel,
+.compromisso-sinal .sinal-traco {
+  fill: none;
+  stroke: var(--petroleo-claro);
+  stroke-width: 2;
+}
+
+.compromisso-sinal .sinal-fraco {
+  stroke-opacity: 0.4;
+}
+
+.compromisso-sinal .sinal-cheio {
+  fill: var(--cta);
+}
+
+.compromisso-sinal .sinal-claro {
+  fill: var(--petroleo-claro);
+}
+
+/* Uma gota mostarda percorre a linha de ponta a ponta da página: estica ao andar, funde-se
+   com os pontos das etapas e termina como o ponto cortado na borda (Brand Book, p. 12).
+   Posição, formato e números vêm do main.js. */
+.metodo-seletor {
+  --bola: 48px;
   position: relative;
+}
+
+.metodo-trilho {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  max-width: 1040px;
-  margin-inline: auto;
-}
-
-/* Traço entre as etapas: o fundo apagado e, por cima, o quanto já foi percorrido */
-.metodo-trilho::before,
-.metodo-trilho::after {
-  position: absolute;
-  top: 34px;
-  left: 16.666%;
-  height: 2px;
-  margin-top: -1px;
-  content: "";
-}
-
-.metodo-trilho::before {
-  right: 16.666%;
-  background: rgba(24, 72, 72, 0.2);
-}
-
-.metodo-trilho::after {
-  width: calc(66.666% * var(--progresso, 0));
-  background: var(--spj-light-petroleum);
-  transition: width 0.15s linear;
-}
-
-.etapa-aba {
-  position: relative;
-  z-index: 1;
-  display: grid;
-  justify-items: center;
-  align-content: start;
-  min-width: 0;
-  padding: 8px 8px 12px;
-  border: 0;
-  border-radius: 8px;
-  background: transparent;
-  color: var(--spj-text-secondary);
-  font: inherit;
-  text-align: center;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.etapa-aba:hover {
-  background: rgba(24, 72, 72, 0.06);
-}
-
-.etapa-aba:focus-visible {
-  outline: 2px solid var(--spj-light-petroleum);
-  outline-offset: 2px;
-}
-
-.etapa-circulo {
-  display: grid;
-  width: 52px;
-  height: 52px;
-  place-items: center;
-  border: 1px solid var(--spj-light-petroleum);
-  border-radius: 50%;
-  background: var(--spj-page);
-  color: var(--spj-white);
-  font-size: 1.125rem;
-  font-weight: 600;
-  transition: background-color 0.2s, color 0.2s, box-shadow 0.2s, transform 0.2s;
-}
-
-.etapa-aba:hover .etapa-circulo {
-  box-shadow: 0 0 0 6px rgba(24, 72, 72, 0.14);
-  transform: scale(1.06);
-}
-
-.etapa-aba.feita .etapa-circulo {
-  background: #e4e5d6;
-}
-
-.etapa-aba[aria-selected="true"] .etapa-circulo {
-  background: var(--spj-light-petroleum);
-  color: var(--spj-page);
-  box-shadow: 0 0 0 6px rgba(24, 72, 72, 0.14);
-}
-
-.etapa-nome {
-  margin-top: 10px;
-  font-family: var(--fonte-titulo);
-  font-size: clamp(1rem, 0.88rem + 0.45vw, 1.25rem);
-  font-weight: 700;
-  line-height: 1.2;
-  color: var(--spj-white);
-}
-
-.etapa-aba[aria-selected="true"] .etapa-nome {
-  color: var(--spj-light-petroleum);
-}
-
-/* A chamada deixa claro que a etapa se abre; na escolhida, ela marca onde você está */
-.etapa-acao {
-  margin-top: 4px;
-  font-size: 0.8125rem;
-  line-height: 1.3;
-  color: var(--spj-text-secondary);
-}
-
-.etapa-acao::after {
-  content: "Ver etapa \2192";
-}
-
-.etapa-aba:hover .etapa-acao {
-  color: var(--spj-white);
-}
-
-.etapa-aba[aria-selected="true"] .etapa-acao::after {
-  content: "Você está aqui";
-}
-
-.etapa-previa {
-  margin-top: 4px;
-  font-size: 0.9375rem;
-  line-height: 1.4;
-  color: var(--spj-text-secondary);
-}
-
-.metodo-detalhe {
-  display: grid;
-  overflow: hidden;
-  margin-top: 8px;
-  padding: clamp(20px, 2.6vw, 28px) clamp(20px, 3.2vw, 32px);
-  border: 1px solid #cfc8ab;
-  border-radius: 14px;
-  background: var(--spj-surface);
-}
-
-/* Etapas empilhadas na mesma célula: a altura é a da maior e nada pula ao trocar */
-.etapa-painel {
-  grid-area: 1 / 1;
-  transition: opacity 0.3s, translate 0.3s, visibility 0.3s;
-}
-
-.etapa-painel.fora {
-  visibility: hidden;
-  opacity: 0;
-  translate: 0 8px;
-}
-
-.etapa-painel[hidden] {
-  display: none;
-}
-
-.painel-grade {
-  display: grid;
-  grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
-  align-items: center;
-  gap: 28px clamp(28px, 5vw, 64px);
-}
-
-.metodo-secao .painel-grade {
-  grid-template-columns: minmax(0, 1fr);
-}
-
-.painel-descricao {
-  max-width: 55ch;
-  margin-top: 10px;
-  color: var(--spj-text-secondary);
-}
-
-.painel-pontos {
-  display: grid;
-  gap: 12px;
   margin: 0;
-  padding: 0 0 0 clamp(24px, 4vw, 48px);
-  border-left: 1px solid rgba(200, 216, 215, 0.35);
+  padding: 0;
   list-style: none;
 }
 
-.painel-pontos li {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  color: var(--spj-text-secondary);
-  font-size: 0.9375rem;
-  line-height: 1.35;
+/* A linha vai de uma borda à outra da página: apagada e, por cima, o trecho percorrido */
+.metodo-seletor::before,
+.metodo-seletor::after {
+  position: absolute;
+  top: calc(var(--bola) / 2 - 1px);
+  left: calc(var(--borda-e, 0px) * -1);
+  height: 2px;
+  content: "";
 }
 
-.painel-pontos svg {
-  flex: none;
-  width: 21px;
-  height: 21px;
-  padding: 3px;
+.metodo-seletor::before {
+  right: calc(var(--borda-d, 0px) * -1);
+  background: rgba(24, 72, 72, 0.22);
+}
+
+.metodo-seletor::after {
+  width: calc(var(--borda-e, 0px) + var(--pingo-x, 0px) + var(--bola) / 2);
+  background: var(--cta);
+  transition: width 0.12s linear, height 0.12s linear;
+}
+
+/* O filtro funde as formas que se tocam, como duas gotas */
+.metodo-filtro {
+  position: absolute;
+}
+
+.metodo-gota {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: var(--bola);
+  filter: url(#spj-gota);
+  pointer-events: none;
+}
+
+.metodo-gota i {
+  position: absolute;
+  top: 0;
+  left: 0;
   border-radius: 50%;
-  background: var(--spj-light-petroleum);
-  fill: none;
-  stroke: var(--spj-page);
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke-width: 2.5;
+  background: var(--cta);
+}
+
+.metodo-parada {
+  width: 14px;
+  height: 14px;
+  margin: calc(var(--bola) / 2 - 7px);
+  scale: var(--surge-ponto, 1);
+  transition: scale 0.12s linear;
+}
+
+.metodo-bola {
+  width: var(--bola);
+  height: var(--bola);
+  transform: scale(var(--sx, 1), var(--sy, 1));
+  translate: var(--pingo-x, 0px) var(--pingo-y, 0px);
+  transition: translate 0.12s linear, transform 0.12s linear;
+}
+
+/* O número some enquanto a gota anda e o próximo aparece quando ela chega */
+.metodo-numeros {
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  left: 0;
+  display: grid;
+  width: var(--bola);
+  height: var(--bola);
+  place-items: center;
+  color: var(--cta-texto);
+  font-size: 1.0625rem;
+  font-weight: 600;
+  pointer-events: none;
+  translate: var(--pingo-x, 0px) var(--pingo-y, 0px);
+  transition: translate 0.12s linear;
+}
+
+.metodo-numeros span {
+  grid-area: 1 / 1;
+  opacity: var(--ver, 0);
+  transition: opacity 0.12s linear;
+}
+
+.etapa-passo {
+  position: relative;
+  min-width: 0;
+  padding: calc(var(--bola) + 20px) clamp(20px, 3.5vw, 48px) 0 0;
+}
+
+/* Cada etapa só aparece quando a gota chega perto: primeiro o nome, depois o texto (main.js).
+   Depois de aparecer, fica com a cor cheia. */
+.etapa-nome,
+.etapa-descricao {
+  transition: opacity 0.12s linear, translate 0.12s linear;
+}
+
+.etapa-nome {
+  opacity: var(--surge-nome, 1);
+  translate: 0 calc((1 - var(--surge-nome, 1)) * 18px);
+}
+
+.etapa-descricao {
+  opacity: var(--surge-texto, 1);
+  translate: 0 calc((1 - var(--surge-texto, 1)) * 18px);
+}
+
+.etapa-nome {
+  margin: 0;
+  font-family: var(--fonte-titulo);
+  font-size: clamp(1.375rem, 1rem + 1.1vw, 1.875rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  color: var(--spj-white);
+}
+
+.etapa-aba {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+/* A etapa inteira responde ao clique; o texto continua selecionável */
+.etapa-aba::after {
+  position: absolute;
+  inset: 0;
+  content: "";
+}
+
+.etapa-aba:focus-visible {
+  outline: 2px solid var(--petroleo);
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+
+.etapa-descricao {
+  position: relative;
+  z-index: 1;
+  max-width: 34ch;
+  margin: 10px 0 0;
+  color: var(--spj-text-secondary);
+  font-size: 1rem;
+  line-height: 1.55;
+}
+
+/* Sem a rolagem ligada, a etapa muda por clique: a gota anda com calma */
+.metodo-secao:not(.com-rolagem) .metodo-seletor::after {
+  transition: width 0.7s cubic-bezier(0.65, 0, 0.35, 1), height 0.7s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.metodo-secao:not(.com-rolagem) .metodo-bola,
+.metodo-secao:not(.com-rolagem) .metodo-numeros {
+  transition: translate 0.7s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+/* Celular: a linha fica em pé, à esquerda, e a gota desce até o fim dela */
+@media (max-width: 760px) {
+  .metodo-seletor {
+    --bola: 42px;
+  }
+
+  .metodo-trilho {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .metodo-seletor::before,
+  .metodo-seletor::after {
+    top: 0;
+    right: auto;
+    left: calc(var(--bola) / 2 - 1px);
+    width: 2px;
+  }
+
+  .metodo-seletor::before {
+    bottom: 0;
+    height: auto;
+  }
+
+  .metodo-seletor::after {
+    height: calc(var(--pingo-y, 0px) + var(--bola) / 2);
+  }
+
+  /* O filtro pesa em aparelho simples: no celular, a gota anda sem a fusão */
+  .metodo-gota {
+    bottom: 0;
+    height: auto;
+    filter: none;
+  }
+
+  .etapa-passo {
+    padding: 8px 0 22px calc(var(--bola) + 16px);
+  }
+
+  .etapa-passo:last-child {
+    padding-bottom: 0;
+  }
+
+  .etapa-descricao {
+    max-width: none;
+    margin-top: 6px;
+    font-size: 0.9375rem;
+  }
 }
 
 .compromissos {
@@ -1918,9 +1985,19 @@ a.gaveta-grupo {
 }
 
 .metodo-secao .compromissos li {
+  flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
-  padding: 8px 16px;
+  gap: 18px;
+  padding: 0 clamp(14px, 2vw, 28px);
+}
+
+.metodo-secao .compromissos li:first-child {
+  padding-left: 0;
+}
+
+.metodo-secao .compromissos li:last-child {
+  padding-right: 0;
 }
 
 .metodo-secao .compromissos li > span {
@@ -1930,12 +2007,15 @@ a.gaveta-grupo {
 
 .metodo-secao .compromissos strong {
   color: var(--spj-white);
-  font-weight: 600;
+  font-family: var(--fonte-titulo);
+  font-size: clamp(1.0625rem, 0.95rem + 0.4vw, 1.25rem);
+  font-weight: 700;
+  line-height: 1.2;
 }
 
 .metodo-secao .compromissos small {
-  font-size: 0.8125rem;
-  line-height: 1.45;
+  font-size: 0.9375rem;
+  line-height: 1.5;
 }
 
 .compromissos li + li {
@@ -1975,95 +2055,57 @@ a.gaveta-grupo {
 }
 
 @media (max-width: 640px) {
-  .etapa-aba {
-    padding-inline: 2px;
-  }
-
-  .etapa-nome {
-    max-width: 11ch;
-    font-size: 0.9375rem;
-    text-wrap: balance;
-  }
-
-  .metodo-trilho::before {
-    right: 16%;
-    left: 16%;
-  }
-
-  .metodo-trilho::after {
-    left: 16%;
-    width: calc(68% * var(--progresso, 0));
-  }
-
-  .etapa-acao {
-    font-size: 0.75rem;
-  }
-
-  .painel-grade {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 20px;
-  }
-
-  .painel-pontos {
-    padding: 18px 0 0;
-    border-top: 1px solid rgba(200, 216, 215, 0.28);
-    border-left: 0;
-  }
-
-  .etapa-previa {
-    display: none;
-  }
-
   .metodo-secao .compromissos {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 0;
   }
 
   .metodo-secao .compromissos li {
-    padding: 14px 10px;
-    font-size: 0.75rem;
+    gap: 12px;
+    padding: 20px 14px;
   }
 
   .metodo-secao .compromissos li:nth-child(odd) {
+    padding-left: 0;
     border-left: 0;
   }
 
+  .metodo-secao .compromissos li:nth-child(even) {
+    padding-right: 0;
+  }
+
+  .metodo-secao .compromissos li:nth-child(-n + 2) {
+    padding-top: 0;
+  }
+
   .metodo-secao .compromissos li:nth-child(n + 3) {
-    border-top: 1px solid rgba(200, 216, 215, 0.28);
+    padding-bottom: 0;
+    border-top: 1px solid rgba(200, 216, 215, 0.24);
+  }
+
+  .metodo-secao .compromisso-sinal {
+    width: 52px;
+    height: 52px;
   }
 
   .metodo-secao .compromissos small {
-    font-size: 0.75rem;
-  }
-}
-
-@media (max-width: 380px) {
-  .etapa-circulo {
-    width: 46px;
-    height: 46px;
-  }
-
-  .metodo-trilho::before,
-  .metodo-trilho::after {
-    top: 31px;
+    font-size: 0.875rem;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .spj-botao,
-  .etapa-aba,
-  .etapa-circulo,
-  .etapa-painel,
-  .metodo-trilho::after {
-    transition: none;
-  }
-
-  .etapa-aba:hover .etapa-circulo {
-    transform: none;
+  .metodo-seletor::after,
+  .metodo-bola,
+  .metodo-numeros,
+  .metodo-numeros span,
+  .etapa-nome,
+  .etapa-descricao {
+    transition: none !important;
   }
 }
 
-/* Divisórias dos compromissos sobre areia */
+/* Divisórias dos compromissos sobre a faixa petróleo */
 .metodo-secao .compromissos li:nth-child(n) {
-  border-color: var(--linha);
+  border-color: rgba(200, 216, 215, 0.24);
 }

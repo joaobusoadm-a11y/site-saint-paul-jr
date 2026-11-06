@@ -15,6 +15,7 @@ Publicado pelo GitHub Pages a partir da branch `main`: toda alteração salva aq
 | Frentes e escopos | lista `FRENTES` em `ferramentas/gerar.js` e as abas em `ferramentas/base/index.html` |
 | Resultados (NPS e projetos) | `NPS` e `PROJETOS` em `ferramentas/gerar.js` |
 | Contato e formulário | `contato.html` |
+| Calculadora "5 números" e planilha de inscritos | `5-numeros.html` (URL em `ENDPOINT_URL`) e `ferramentas/planilha-5-numeros.gs` |
 | Páginas dos 3 sintomas | `dor-caixa.html`, `dor-inovacao.html`, `dor-recorrencia.html` |
 | Cores, fontes, espaçamentos | `css/style.css` e `css/paginas.css` |
 | Animações | `css/animacoes.css` |

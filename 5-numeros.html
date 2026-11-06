@@ -1,0 +1,420 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>5 números da sua empresa | Saint Paul Jr</title>
+<meta name="description" content="Calculadora gratuita da Saint Paul Jr: ticket médio, margem de contribuição, ponto de equilíbrio, CAC e taxa de recompra.">
+<meta name="theme-color" content="#f8f5e6">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Inter+Tight:wght@700;800&display=swap">
+<style>
+/* Saint Paul Jr · calculadora "5 números"
+   Cores, fontes e grafismo seguem o Brand Book SPJ v1.0 (paleta Oficial).
+   Layout: faixa areia no topo com o ponto cortado; blocos brancos de cálculo;
+   campos de entrada em areia, como células de planilha. */
+:root{
+  --preto:#191818;
+  --petroleo:#184848;
+  --petroleo-escuro:#193b3d;
+  --petroleo-claro:#9fd3cb;   /* só sobre fundo escuro */
+  --branco:#ffffff;
+  --areia:#f8f5e6;
+  --texto-suave:#3d3d3d;
+  --painel:#f3f3f1;
+  --linha:#d9d9d9;
+  --raio:6px;
+  --titulo:"Inter Tight", Inter, system-ui, sans-serif;
+  --texto:Inter, system-ui, sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--branco);color:var(--preto);font:17px/1.5 var(--texto)}
+.wrap{max-width:760px;margin:0 auto;padding-inline:max(16px,env(safe-area-inset-left,0px)) max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--titulo);text-wrap:balance;margin:0}
+a{color:var(--petroleo);font-weight:600}
+
+/* Rótulo de seção */
+.rotulo{font:600 13px/1.5 var(--texto);letter-spacing:.08em;text-transform:uppercase;color:var(--petroleo)}
+
+/* Topo: faixa areia com o ponto cortado no canto */
+.topo{position:relative;overflow:hidden;background:var(--areia);color:var(--petroleo-escuro)}
+.topo::after{content:"";position:absolute;width:360px;height:360px;border-radius:50%;background:var(--petroleo);top:-150px;right:-150px}
+.topo .wrap{position:relative;z-index:1;padding-block:28px 48px;display:flex;flex-direction:column;gap:20px}
+.logo{display:block;height:32px;width:auto}
+.topo h1{font-weight:800;font-size:clamp(34px,6.4vw,56px);line-height:1;letter-spacing:-.035em;max-width:15ch}
+.topo p{margin:0;max-width:58ch;font-size:18px}
+
+main.wrap{padding-block:32px 56px;display:flex;flex-direction:column;gap:24px}
+.como{background:var(--painel);border-radius:var(--raio);padding:16px 24px;display:flex;gap:16px;align-items:flex-start}
+.como .celula{flex:none;width:44px;height:26px;border-radius:4px;background:var(--areia);border:1px solid var(--linha);color:var(--petroleo);font-weight:600;font-size:13px;display:grid;place-items:center;margin-top:1px}
+.como p{margin:0}
+.como small{display:block;color:var(--texto-suave);font-size:16px;margin-top:2px}
+
+/* Blocos de cálculo */
+.bloco{background:var(--branco);border:1px solid var(--linha);border-top:3px solid var(--petroleo);border-radius:var(--raio);padding:24px;display:flex;flex-direction:column;gap:16px}
+.bloco header{display:flex;flex-direction:column;gap:4px}
+.bloco h2{font-weight:700;font-size:24px;line-height:1.25;letter-spacing:-.02em}
+.bloco header p{margin:0;color:var(--texto-suave)}
+.linhas{display:flex;flex-direction:column;border-top:1px solid var(--linha)}
+.linha{display:grid;grid-template-columns:minmax(0,1fr) 190px;gap:6px 16px;align-items:center;padding:12px 0;border-bottom:1px solid var(--linha)}
+.linha label,.linha .lbl{font-weight:500}
+.dica,.conta{grid-column:1/-1;font-size:15px;color:var(--texto-suave);margin-top:-4px}
+.campo{display:flex;align-items:center;background:var(--areia);border:1px solid var(--linha);border-radius:4px;padding:0 12px;height:44px}
+.campo:focus-within{outline:2px solid var(--petroleo);outline-offset:1px}
+.campo span{color:var(--texto-suave);font-size:15px;flex:none}
+.campo input{appearance:none;-webkit-appearance:none;border:0;background:transparent;outline:none;margin:0;padding:0 0 0 6px;height:100%;width:100%;min-width:0;text-align:right;color:var(--petroleo);font:600 17px var(--texto);font-variant-numeric:tabular-nums}
+.saida{text-align:right;font-weight:600;padding-right:13px;font-variant-numeric:tabular-nums}
+.linha.resultado .lbl{font-weight:600}
+.linha.resultado .saida{font:700 24px/1.2 var(--titulo);letter-spacing:-.01em}
+.bloqueado .saida,.bloqueado .linha.resultado .saida{font:500 15px/1.5 var(--texto);color:var(--texto-suave)}
+.negativo{color:var(--preto);text-decoration:underline;text-decoration-color:var(--petroleo);text-decoration-thickness:3px;text-underline-offset:4px}
+.sim{font:600 13px/1.5 var(--texto);letter-spacing:.08em;text-transform:uppercase;color:var(--texto-suave);padding-top:16px}
+
+/* Painel de nota: "Sinal de alerta" */
+.nota{display:flex;gap:16px;align-items:baseline;background:var(--painel);border-radius:var(--raio);padding:12px 16px;font-size:16px}
+.nota .rotulo{flex:none}
+
+/* Os números conversam: fundo petróleo */
+.juntos{background:var(--petroleo);color:var(--branco);border:0}
+.juntos .rotulo{color:var(--petroleo-claro)}
+.numeros{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.numero{background:var(--petroleo-escuro);border-radius:var(--raio);padding:16px;display:flex;flex-direction:column;gap:4px;min-width:0}
+.numero b{font:800 26px/1.1 var(--titulo);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.numero span{font-size:15px;color:var(--petroleo-claro)}
+
+/* Formulário de e-mail */
+.portao{border-top-width:3px}
+.portao form{display:flex;gap:12px;flex-wrap:wrap}
+.portao input[type=email],.portao input[type=text]{flex:1 1 220px;min-width:0;height:48px;border-radius:var(--raio);border:1px solid var(--linha);background:var(--branco);color:var(--preto);padding:0 14px;font:16px var(--texto)}
+.portao input:focus{outline:2px solid var(--petroleo);outline-offset:1px;border-color:var(--petroleo)}
+.btn{display:inline-flex;align-items:center;justify-content:center;height:48px;border:0;border-radius:var(--raio);padding:0 24px;font:600 16px var(--texto);background:var(--petroleo);color:var(--branco);cursor:pointer;text-decoration:none}
+.btn:hover{background:var(--petroleo-escuro)}
+.btn:focus-visible{outline:2px solid var(--preto);outline-offset:2px}
+.erro{color:var(--preto);font-weight:500;font-size:15px;margin:0;border-left:3px solid var(--petroleo);padding-left:10px}
+.fino{font-size:15px;color:var(--texto-suave);margin:0}
+
+.analise{display:flex;flex-direction:column;gap:12px}
+.analise .abre{font:700 22px/1.3 var(--titulo);letter-spacing:-.01em;margin:0}
+.item{display:grid;grid-template-columns:96px minmax(0,1fr);gap:4px 16px;padding:14px 0;border-top:1px solid var(--linha)}
+.item .selo{grid-row:span 2}
+.item h3{font:600 17px/1.4 var(--texto)}
+.item p{margin:0;color:var(--texto-suave);font-size:16px}
+/* Selos de situação, só com cores da paleta Oficial: intensidade sobe com a gravidade */
+.selo{display:inline-flex;align-self:start;justify-self:start;align-items:center;gap:6px;font:600 13px/1 var(--texto);letter-spacing:.06em;text-transform:uppercase;border-radius:4px;padding:6px 8px}
+.selo::before{content:"";width:8px;height:8px;border-radius:50%;background:currentColor;flex:none}
+.s-ok{background:var(--areia);color:var(--petroleo-escuro)}
+.s-atencao{background:var(--petroleo);color:var(--branco)}
+.s-alerta{background:var(--preto);color:var(--branco)}
+.s-alerta::before{background:var(--petroleo-claro)}
+
+.proximo{background:var(--areia);color:var(--petroleo-escuro);border-radius:var(--raio);padding:24px;display:flex;flex-direction:column;gap:12px;align-items:flex-start}
+.proximo h3{font-weight:700;font-size:22px;line-height:1.25;letter-spacing:-.01em}
+.proximo p{margin:0}
+
+footer{font-size:15px;color:var(--texto-suave);display:flex;flex-direction:column;gap:4px;padding-top:8px}
+
+@media (max-width:560px){
+  .topo::after{width:220px;height:220px;top:-110px;right:-110px}
+  .linha{grid-template-columns:minmax(0,1fr)}
+  .saida{text-align:left;padding-right:0}
+  .numeros{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .item{grid-template-columns:minmax(0,1fr)}
+  .item .selo{grid-row:auto}
+  .nota{flex-direction:column;gap:2px}
+  .btn{width:100%}
+}
+@media (prefers-reduced-motion:no-preference){
+  .analise{animation:entra .4s ease-out}
+  @keyframes entra{from{opacity:.4;transform:translateY(6px)}to{opacity:1;transform:none}}
+}
+</style>
+</head>
+<body class="bloqueado">
+
+<header class="topo">
+  <div class="wrap">
+    <a href="index.html" aria-label="Saint Paul Jr, página inicial"><img class="logo" src="assets/img/spjr-logo.png" alt="Saint Paul Jr" width="780" height="412"></a>
+    <span class="rotulo">Calculadora gratuita</span>
+    <h1>5 números que todo dono de empresa deveria saber</h1>
+    <p>Coloque os dados de um mês da sua empresa e veja quanto cada venda deixa, quanto você precisa vender para não ter prejuízo e quanto custa trazer um cliente novo.</p>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <div class="como">
+    <div class="celula" aria-hidden="true">123</div>
+    <p>Preencha só os campos em areia com os números da sua empresa. No final, coloque seu e-mail para ver os resultados.
+      <small>Os valores que já aparecem são de uma empresa de exemplo. Troque pelos seus.</small></p>
+  </div>
+
+  <!-- 01 -->
+  <section class="bloco">
+    <header><span class="rotulo">01 · Ticket médio</span><h2>Quanto cada venda traz, em média</h2></header>
+    <div class="linhas">
+      <div class="linha"><label for="fat">Faturamento do mês</label><div class="campo"><span>R$</span><input id="fat" data-type="money" inputmode="decimal" value="100000"></div></div>
+      <div class="linha"><label for="vendas">Número de vendas no mês</label><div class="campo"><input id="vendas" data-type="int" inputmode="numeric" value="2000"></div></div>
+      <div class="linha resultado"><span class="lbl">Ticket médio</span><span class="saida" id="o-ticket">–</span><span class="conta">Conta: faturamento ÷ número de vendas</span></div>
+    </div>
+    <div class="nota"><span class="rotulo">Sinal de alerta</span><span>O ticket cai mês a mês enquanto os custos sobem.</span></div>
+  </section>
+
+  <!-- 02 -->
+  <section class="bloco">
+    <header><span class="rotulo">02 · Margem de contribuição</span><h2>O que sobra de cada venda depois dos custos que variam com ela</h2></header>
+    <div class="linhas">
+      <div class="linha"><label for="cv">Custos variáveis por venda</label><div class="campo"><span>R$</span><input id="cv" data-type="money" inputmode="decimal" value="30"></div><span class="dica">Produto, taxa do cartão, comissão, embalagem, frete…</span></div>
+      <div class="linha"><span class="lbl">Sobra por venda</span><span class="saida" id="o-sobra">–</span><span class="conta">Conta: ticket médio − custos variáveis</span></div>
+      <div class="linha resultado"><span class="lbl">Margem de contribuição</span><span class="saida" id="o-margem">–</span><span class="conta">Conta: (preço − custos variáveis) ÷ preço</span></div>
+      <div class="sim">Simulação de desconto (opcional)</div>
+      <div class="linha"><label for="desc">Desconto na venda</label><div class="campo"><input id="desc" data-type="pct" inputmode="decimal" value="10"><span>%</span></div></div>
+      <div class="linha"><span class="lbl">Sobra por venda com o desconto</span><span class="saida" id="o-sobradesc">–</span></div>
+      <div class="linha"><span class="lbl">Quanto a sobra diminui</span><span class="saida" id="o-queda">–</span></div>
+    </div>
+    <div class="nota"><span class="rotulo">Sinal de alerta</span><span>Dar desconto sem saber quanto ele come da sobra de cada venda.</span></div>
+  </section>
+
+  <!-- 03 -->
+  <section class="bloco">
+    <header><span class="rotulo">03 · Ponto de equilíbrio</span><h2>Quanto vender por mês para não ter prejuízo</h2></header>
+    <div class="linhas">
+      <div class="linha"><label for="cf">Custos fixos do mês</label><div class="campo"><span>R$</span><input id="cf" data-type="money" inputmode="decimal" value="36000"></div><span class="dica">Aluguel, salários, contador, sistemas, pró-labore…</span></div>
+      <div class="linha resultado"><span class="lbl">Ponto de equilíbrio (por mês)</span><span class="saida" id="o-pe">–</span><span class="conta">Conta: custos fixos ÷ margem de contribuição</span></div>
+      <div class="linha"><span class="lbl">Folga do faturamento atual</span><span class="saida" id="o-folga">–</span><span class="conta">Se ficar negativo, a empresa está vendendo abaixo do necessário</span></div>
+    </div>
+    <div class="nota"><span class="rotulo">Sinal de alerta</span><span>Contratar, alugar ou abrir outra unidade sem saber esse número.</span></div>
+  </section>
+
+  <!-- 04 -->
+  <section class="bloco">
+    <header><span class="rotulo">04 · CAC</span><h2>Quanto custa conquistar um cliente novo</h2><p>CAC é o custo de aquisição de cliente.</p></header>
+    <div class="linhas">
+      <div class="linha"><label for="mkt">Investimento em marketing e vendas no mês</label><div class="campo"><span>R$</span><input id="mkt" data-type="money" inputmode="decimal" value="4000"></div><span class="dica">Anúncios, agência, comissão de venda, brindes…</span></div>
+      <div class="linha"><label for="novos">Clientes novos no mês</label><div class="campo"><input id="novos" data-type="int" inputmode="numeric" value="100"></div></div>
+      <div class="linha resultado"><span class="lbl">CAC (por cliente)</span><span class="saida" id="o-cac">–</span><span class="conta">Conta: investimento ÷ clientes novos</span></div>
+    </div>
+    <div class="nota"><span class="rotulo">Sinal de alerta</span><span>O cliente novo custa mais do que deixa de margem nas primeiras compras.</span></div>
+  </section>
+
+  <!-- 05 -->
+  <section class="bloco">
+    <header><span class="rotulo">05 · Taxa de recompra</span><h2>A parte dos clientes que volta a comprar</h2></header>
+    <div class="linhas">
+      <div class="linha"><label for="base">Clientes do período</label><div class="campo"><input id="base" data-type="int" inputmode="numeric" value="100"></div><span class="dica">Ex.: os clientes novos de um mês</span></div>
+      <div class="linha"><label for="volta">Desses, quantos compraram de novo</label><div class="campo"><input id="volta" data-type="int" inputmode="numeric" value="35"></div><span class="dica">Use sempre o mesmo prazo, ex.: 90 dias</span></div>
+      <div class="linha resultado"><span class="lbl">Taxa de recompra</span><span class="saida" id="o-rec">–</span><span class="conta">Conta: clientes que voltaram ÷ clientes do período</span></div>
+    </div>
+    <div class="nota"><span class="rotulo">Sinal de alerta</span><span>Investir para trazer cliente novo enquanto os antigos não voltam.</span></div>
+  </section>
+
+  <!-- Resumo -->
+  <section class="bloco juntos" id="juntos" hidden>
+    <header><span class="rotulo">Os números conversam</span><h2>Juntando as contas</h2></header>
+    <div class="numeros">
+      <div class="numero"><b id="t-sobra">–</b><span>sobra de cada venda</span></div>
+      <div class="numero"><b id="t-cac">–</b><span>custo do cliente novo</span></div>
+      <div class="numero"><b id="t-compras">–</b><span>compras para o cliente novo se pagar</span></div>
+      <div class="numero"><b id="t-rec">–</b><span>dos clientes voltam</span></div>
+    </div>
+  </section>
+
+  <!-- E-mail e análise -->
+  <section class="bloco portao" id="portao">
+    <header><span class="rotulo">Sua análise</span><h2>Para concluir sua análise, coloque seu e-mail</h2>
+      <p>Assim que você enviar, liberamos todos os resultados acima e mostramos aqui o que os seus números dizem, item por item.</p></header>
+    <form id="lead" novalidate>
+      <input type="text" id="nome" placeholder="Seu nome" autocomplete="name">
+      <input type="email" id="email" placeholder="seuemail@empresa.com.br" autocomplete="email" required>
+      <button class="btn" type="submit">Ver minha análise</button>
+    </form>
+    <p class="erro" id="erro" hidden>Confira o e-mail: parece que falta alguma parte (ex.: nome@empresa.com).</p>
+    <p class="fino" id="fino">Usamos seu e-mail só para a Saint Paul Jr entrar em contato sobre a sua análise.</p>
+
+    <div class="analise" id="analise" hidden>
+      <p class="abre" id="r-abre"></p>
+      <div id="r-itens"></div>
+      <div class="proximo">
+        <span class="rotulo">Próximo passo</span>
+        <h3>Quer melhorar esses números?</h3>
+        <p>A Saint Paul Jr é a consultoria estratégica da Escola de Negócios Saint Paul. Olhamos esses números com você, dentro da sua operação, e montamos o plano para melhorar cada um, com etapas e prazo.</p>
+        <a class="btn" id="whats" href="https://wa.me/556281770062" target="_blank" rel="noopener">Conversar sobre a minha análise</a>
+        <p class="fino">Ou fale com a gente no Instagram <a href="https://www.instagram.com/saintpauljrr/" target="_blank" rel="noopener">@saintpauljrr</a>.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span>Esta calculadora é um apoio para conversa e não substitui a análise do seu contador.</span>
+    <span>Saint Paul Jr · consultoria estratégica da Escola de Negócios Saint Paul</span>
+  </footer>
+</main>
+
+<script>
+/* PLANILHA DE INSCRITOS
+   Cole aqui a URL do App Script ligado à planilha (passo a passo em ferramentas/planilha-5-numeros.gs).
+   Vazio = a página só libera a análise e não salva nada. */
+const ENDPOINT_URL = "https://script.google.com/macros/s/AKfycbxFaH2qpoyBi_LIHkpxiYXGnOtUDrJ829e73uESoWQpktK2xSDzNEHihe9J7Gc2PMpcOQ/exec";
+
+/* WhatsApp da SPJ (mesmo número de js/main.js) */
+const WHATSAPP = "556281770062";
+
+const $ = id => document.getElementById(id);
+const brl = v => isFinite(v) ? v.toLocaleString("pt-BR",{style:"currency",currency:"BRL"}) : "–";
+const pct = v => isFinite(v) ? Math.round(v*100).toLocaleString("pt-BR") + "%" : "–";
+const CAMPOS = ["fat","vendas","cv","desc","cf","mkt","novos","base","volta"];
+
+function parse(str){
+  if(str==null) return 0;
+  let s = String(str).trim().replace(/[^\d,.\-]/g,"");
+  if(s.includes(",")) s = s.replace(/\./g,"").replace(",",".");      // 1.234,56
+  else if((s.match(/\./g)||[]).length>1 || /\.\d{3}$/.test(s)) s = s.replace(/\./g,""); // 100.000
+  const n = parseFloat(s);
+  return isFinite(n) ? n : 0;
+}
+function fmtInput(el){
+  const v = parse(el.value), t = el.dataset.type;
+  if(t==="money") el.value = v.toLocaleString("pt-BR",{minimumFractionDigits:2,maximumFractionDigits:2});
+  else if(t==="int") el.value = Math.round(v).toLocaleString("pt-BR");
+  else el.value = v.toLocaleString("pt-BR",{maximumFractionDigits:2});
+}
+const val = id => parse($(id).value);
+const div = (a,b) => b ? a/b : 0;   // mesmo IFERROR(...;0) da planilha
+
+let R = {};
+let liberado = false;
+function calc(){
+  const fat=val("fat"), vendas=val("vendas"), cv=val("cv"), desc=val("desc")/100,
+        cf=val("cf"), mkt=val("mkt"), novos=val("novos"), base=val("base"), volta=val("volta");
+  const ticket = div(fat,vendas);
+  const sobra = ticket - cv;
+  const margem = div(sobra,ticket);
+  const sobraDesc = ticket*(1-desc) - cv;
+  const queda = sobra ? 1 - sobraDesc/sobra : 0;
+  const pe = margem>0 ? cf/margem : 0;
+  const folga = fat - pe;
+  const cac = div(mkt,novos);
+  const rec = div(volta,base);
+  const compras = sobra>0 ? Math.ceil(cac/sobra) : 0;
+  R = {fat,vendas,cv,desc,cf,mkt,novos,base,volta,ticket,sobra,margem,sobraDesc,queda,pe,folga,cac,rec,compras};
+
+  if(!liberado){
+    document.querySelectorAll(".saida").forEach(o=>{o.textContent="Liberado no final";o.classList.remove("negativo");});
+    return;
+  }
+  $("o-ticket").textContent = brl(ticket);
+  $("o-sobra").textContent = brl(sobra);
+  $("o-margem").textContent = pct(margem);
+  $("o-sobradesc").textContent = brl(sobraDesc);
+  $("o-queda").textContent = pct(queda);
+  $("o-pe").textContent = margem>0 ? brl(pe) : "Sem margem";
+  $("o-folga").textContent = margem>0 ? brl(folga) : "–";
+  $("o-folga").classList.toggle("negativo", margem>0 && folga<0);
+  $("o-cac").textContent = brl(cac);
+  $("o-rec").textContent = pct(rec);
+
+  $("t-sobra").textContent = brl(sobra);
+  $("t-cac").textContent = brl(cac);
+  $("t-compras").textContent = sobra>0 ? compras : "–";
+  $("t-rec").textContent = pct(rec);
+
+  if(!$("analise").hidden) renderAnalise();
+}
+
+function item(sit,titulo,texto){
+  const cls = {ok:"s-ok",atencao:"s-atencao",alerta:"s-alerta"}[sit];
+  const lbl = {ok:"Ok",atencao:"Atenção",alerta:"Alerta"}[sit];
+  return `<div class="item"><span class="selo ${cls}">${lbl}</span><h3>${titulo}</h3><p>${texto}</p></div>`;
+}
+function renderAnalise(){
+  const r = R;
+  let abre;
+  if(r.sobra<=0) abre = "Cada venda não deixa sobra: revise preço e custos variáveis antes de investir em clientes novos.";
+  else if(r.compras<=1) abre = "O cliente novo se paga já na primeira compra.";
+  else abre = `O cliente novo precisa comprar ${r.compras} vezes para se pagar, e ${Math.round(r.rec*100)}% dos clientes voltam. Olhando só o faturamento, isso não aparece.`;
+  $("r-abre").textContent = abre;
+
+  const it = [];
+  it.push(item("ok","Ticket médio",
+    `Cada venda traz em média ${brl(r.ticket)}. Vale acompanhar mês a mês: se cair enquanto os custos sobem, a margem aperta.`));
+
+  if(r.sobra<=0) it.push(item("alerta","Margem de contribuição",
+    `Os custos variáveis (${brl(r.cv)}) são iguais ou maiores que o ticket médio. Cada venda está dando prejuízo antes mesmo dos custos fixos.`));
+  else it.push(item(r.queda>=0.25?"atencao":"ok","Margem de contribuição",
+    `Sobram ${brl(r.sobra)} de cada venda (${pct(r.margem)}). Um desconto de ${pct(r.desc)} reduz essa sobra em ${pct(r.queda)}.`));
+
+  if(r.margem<=0) it.push(item("alerta","Ponto de equilíbrio","Sem margem positiva não existe um volume de vendas que cubra os custos fixos."));
+  else if(r.folga<0) it.push(item("alerta","Ponto de equilíbrio",
+    `Para não ter prejuízo, a empresa precisa faturar ${brl(r.pe)} por mês. Hoje faltam ${brl(-r.folga)}.`));
+  else it.push(item(div(r.folga,r.pe)<0.15?"atencao":"ok","Ponto de equilíbrio",
+    `O mínimo para não ter prejuízo é ${brl(r.pe)} por mês. O faturamento atual está ${brl(r.folga)} acima disso${div(r.folga,r.pe)<0.15?", uma folga pequena":""}.`));
+
+  if(r.sobra>0) it.push(item(r.cac>r.sobra?"atencao":"ok","CAC",
+    `Cada cliente novo custa ${brl(r.cac)}. ${r.compras<=1?"Ele se paga já na primeira compra.":`Ele só se paga depois de ${r.compras} compras.`}`));
+  else it.push(item("alerta","CAC",`Cada cliente novo custa ${brl(r.cac)}, e como a venda não deixa sobra, ele nunca se paga.`));
+
+  it.push(item(r.compras>1 && r.rec<0.5 ? "atencao" : "ok","Taxa de recompra",
+    `${pct(r.rec)} dos clientes voltaram a comprar.${r.compras>1?` Como o cliente novo precisa de ${r.compras} compras para se pagar, quem não volta sai no prejuízo.`:""}`));
+
+  $("r-itens").innerHTML = it.join("");
+}
+
+/* Link que reabre a calculadora com os números da pessoa e a análise já liberada (vai para a planilha) */
+function linkAnalise(){
+  const p = new URLSearchParams();
+  CAMPOS.forEach(k=>p.set(k, val(k)));
+  p.set("analise","1");
+  return location.origin + location.pathname + "?" + p.toString();
+}
+
+function liberar(){
+  liberado = true;
+  document.body.classList.remove("bloqueado");
+  $("juntos").hidden = false;
+  $("analise").hidden = false;
+  $("lead").hidden = true;
+  $("fino").hidden = true;
+  calc(); renderAnalise();
+  const msg = `Olá, Saint Paul Jr! Fiz a calculadora dos 5 números e quero conversar sobre a minha análise: ${linkAnalise()}`;
+  $("whats").href = `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(msg)}`;
+}
+
+/* Números vindos do link (?fat=...&analise=1) */
+const q = new URLSearchParams(location.search);
+CAMPOS.forEach(k=>{ if(q.has(k)) $(k).value = String(parse(q.get(k))).replace(".",","); });
+
+document.querySelectorAll("input[data-type]").forEach(el=>{
+  fmtInput(el);
+  el.addEventListener("input",calc);
+  el.addEventListener("blur",()=>{fmtInput(el);calc();});
+  el.addEventListener("focus",()=>el.select());
+});
+
+$("lead").addEventListener("submit",e=>{
+  e.preventDefault();
+  const email = $("email").value.trim();
+  const ok = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email);
+  $("erro").hidden = ok;
+  if(!ok){ $("email").focus(); return; }
+  liberar();
+  $("portao").scrollIntoView({behavior:"smooth",block:"start"});
+  if(ENDPOINT_URL){
+    const dados = new URLSearchParams();
+    dados.append("nome",$("nome").value.trim());
+    dados.append("email",email);
+    dados.append("link",linkAnalise());
+    ["fat","vendas","ticket","cv","margem","cf","pe","folga","mkt","novos","cac","base","volta","rec","compras"]
+      .forEach(k=>dados.append(k,R[k]));
+    fetch(ENDPOINT_URL,{method:"POST",mode:"no-cors",keepalive:true,body:dados}).catch(()=>{});
+  }
+});
+
+calc();
+if(q.get("analise")==="1") liberar();
+</script>
+</body>
+</html>

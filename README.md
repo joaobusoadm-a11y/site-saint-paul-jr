@@ -36,3 +36,9 @@ Com o Node.js instalado, na pasta do projeto:
     node .claude/servidor.js
 
 e abra http://localhost:5173.
+
+## Site interno
+
+A pasta `interno/` guarda o site interno da SPJ (CRM, equipe e, depois, agenda, tarefas e processos).
+É um projeto separado, com login, publicado na Vercel e não pelo GitHub Pages.
+Veja [`interno/README.md`](interno/README.md).

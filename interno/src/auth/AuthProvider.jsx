@@ -63,7 +63,6 @@ export function AuthProvider({ children }) {
         p_telefone: membro.telefone,
         p_foto: fotoDoGoogle,
         p_bio: membro.bio,
-        p_aniversario: membro.aniversario,
       })
       .then(({ data }) => data && setMembro(data));
   }, [membro, fotoDoGoogle]);

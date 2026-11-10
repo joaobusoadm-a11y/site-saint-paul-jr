@@ -13,7 +13,7 @@ export const NOME_DA_ETAPA = Object.fromEntries(ETAPAS.map((e) => [e.id, e.nome]
 
 export const ETAPAS_ABERTAS = ['lead', 'qualificacao', 'diagnostico', 'proposta', 'negociacao'];
 
-// Jornada do cliente (ficha do cliente). "Em projeto" e "Entregue" chegam com a tela Projetos (Fase 2).
+// Jornada do cliente (ficha do cliente)
 export const JORNADA = ['Lead', 'Diagnóstico', 'Proposta', 'Fechado', 'Em projeto', 'Entregue'];
 
 const POSICAO_NA_JORNADA = {
@@ -25,15 +25,21 @@ const POSICAO_NA_JORNADA = {
   ganha: 3,
 };
 
-// Posição do cliente na jornada: a etapa mais avançada entre os leads dele (-1 se não tem lead)
-export function posicaoNaJornada(leads) {
+// Posição do cliente na jornada: a etapa mais avançada entre os leads e projetos dele (-1 se não tem nada)
+export function posicaoNaJornada(leads, projetos) {
   let posicao = -1;
   for (const lead of leads || []) {
     const p = POSICAO_NA_JORNADA[lead.etapa];
     if (p !== undefined && p > posicao) posicao = p;
   }
+  for (const projeto of projetos || []) {
+    const p = projeto.status === 'Concluído' ? 5 : 4;
+    if (p > posicao) posicao = p;
+  }
   return posicao;
 }
+
+export const STATUS_PROJETO = ['Em andamento', 'Pausado', 'Concluído'];
 
 export const STATUS_CLIENTE = ['Prospect', 'Ativo', 'Inativo', 'Perdido'];
 

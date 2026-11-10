@@ -64,7 +64,7 @@ export default function Clientes() {
         ) : (
           <ul className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
             {clientes.map((cliente) => {
-              const posicao = posicaoNaJornada(cliente.leads);
+              const posicao = posicaoNaJornada(cliente.leads, cliente.projetos);
               return (
                 <li key={cliente.id}>
                   <Link

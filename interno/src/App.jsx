@@ -10,6 +10,7 @@ import ClienteFicha from './paginas/ClienteFicha.jsx';
 import Contatos from './paginas/Contatos.jsx';
 import Propostas from './paginas/Propostas.jsx';
 import Equipe from './paginas/Equipe.jsx';
+import Projetos from './paginas/Projetos.jsx';
 import Membros from './paginas/Membros.jsx';
 import { Vazio } from './componentes/Basicos.jsx';
 
@@ -51,6 +52,7 @@ export default function App() {
         <Route path="crm/clientes/:id" element={<ClienteFicha />} />
         <Route path="crm/contatos" element={<Contatos />} />
         <Route path="crm/propostas" element={<SoGestao><Propostas /></SoGestao>} />
+        <Route path="projetos" element={<Projetos />} />
         <Route path="equipe" element={<Equipe />} />
         <Route path="membros" element={<SoGestao><Membros /></SoGestao>} />
         <Route path="*" element={<Vazio titulo="Página não encontrada.">Confira o endereço ou use o menu.</Vazio>} />

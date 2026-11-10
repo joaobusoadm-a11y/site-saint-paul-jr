@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { useAuth } from '../auth/AuthProvider.jsx';
 import { Cabecalho, Carregando, Entrada, Erro, Ponto, Vazio } from '../componentes/Basicos.jsx';
 import { useAoRegistrarContato, useRegistrarContato } from '../componentes/Layout.jsx';
+import CriarProjeto, { podeVirarProjeto } from '../crm/CriarProjeto.jsx';
 import FormLead from '../crm/FormLead.jsx';
 import MotivoPerda from '../crm/MotivoPerda.jsx';
 import { ETAPAS } from '../lib/constantes.js';
@@ -52,6 +53,11 @@ function CardLead({ lead, podeMover, aoAbrir, aoArrastar }) {
               : 'Sem próximo contato'}
           </span>
         )}
+        {lead.etapa === 'ganha' && (
+          <span className="mt-1 block text-sm text-suave">
+            {(lead.projetos || []).length ? 'Projeto criado' : 'Ainda sem projeto'}
+          </span>
+        )}
         {lead.valor !== null && lead.valor !== undefined && (
           <span className="mt-1 block text-sm font-semibold">{moeda(lead.valor)}</span>
         )}
@@ -74,6 +80,7 @@ export default function Leads() {
   const [perda, setPerda] = useState(null); // lead a caminho de Perdida
   const [erro, setErro] = useState('');
   const [movendo, setMovendo] = useState(false);
+  const [ganho, setGanho] = useState(null); // lead que acabou de ir para Ganha: "Criar projeto?"
 
   const podeMover = (lead) => ehGestao || lead.responsavel_id === membro.id;
 
@@ -102,6 +109,7 @@ export default function Leads() {
     try {
       await moverLead(lead.id, etapa, motivo);
       setPerda(null);
+      if (podeVirarProjeto({ ...lead, etapa }, membro, ehGestao)) setGanho(lead);
     } catch (e) {
       setErro(e.message);
     } finally {
@@ -209,13 +217,20 @@ export default function Leads() {
       {aberto !== undefined && (
         <FormLead
           lead={aberto}
+          aoCriarProjeto={setGanho}
           aoFechar={() => setAberto(undefined)}
-          aoSalvar={() => {
+          aoSalvar={(salvo) => {
+            // Mudou para Ganha pelo formulário: também oferece criar o projeto
+            if (salvo && aberto?.etapa !== 'ganha' && podeVirarProjeto({ ...aberto, ...salvo }, membro, ehGestao)) {
+              setGanho(salvo);
+            }
             setAberto(undefined);
             consulta.recarregar();
           }}
         />
       )}
+
+      {ganho && <CriarProjeto lead={ganho} aoFechar={() => setGanho(null)} />}
 
       {perda && (
         <MotivoPerda

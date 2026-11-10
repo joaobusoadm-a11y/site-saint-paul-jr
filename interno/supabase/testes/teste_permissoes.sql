@@ -1,5 +1,5 @@
 -- =====================================================================
--- Teste das permissões (RLS) da Fase 1
+-- Teste das permissões (RLS)
 --
 -- Como usar: cole no SQL Editor do Supabase e clique em Run.
 -- Se aparecer "Tudo certo", as permissões estão valendo.
@@ -113,7 +113,7 @@ begin
   end;
 
   -- edita o próprio perfil pelo caminho certo
-  perform public.atualizar_meu_perfil('11 99999-0000', null, 'Bio de teste', null);
+  perform public.atualizar_meu_perfil('11 99999-0000', null, 'Bio de teste');
   assert (select bio from public.membros where id = '00000000-0000-4000-8000-0000000000a2') = 'Bio de teste',
     'FALHOU: associado não editou o próprio perfil';
 
@@ -142,6 +142,38 @@ begin
   update public.leads set etapa = 'ganha' where id = '00000000-0000-4000-8000-0000000000d1';
   assert (select status from public.clientes where id = '00000000-0000-4000-8000-0000000000c1') = 'Ativo',
     'FALHOU: lead ganho não ativou o cliente';
+
+  -- não muda o próprio aniversário (só a gestão)
+  update public.membros set aniversario = '2000-01-01' where id = '00000000-0000-4000-8000-0000000000a2';
+  get diagnostics n = row_count;
+  assert n = 0, 'FALHOU: associado mudou o próprio aniversário';
+
+  -- "Criar projeto?": o responsável cria o projeto do próprio lead ganho, uma vez só
+  perform public.criar_projeto_do_lead('00000000-0000-4000-8000-0000000000d1');
+  assert (select count(*) from public.projetos where lead_id = '00000000-0000-4000-8000-0000000000d1') = 1,
+    'FALHOU: projeto não foi criado';
+  assert (select count(*) from public.projetos_valores) = 0, 'FALHOU: associado leu valor de projeto';
+  begin
+    perform public.criar_projeto_do_lead('00000000-0000-4000-8000-0000000000d1');
+    raise exception 'FALHOU: o mesmo lead virou dois projetos';
+  exception when unique_violation then null;
+  end;
+  begin
+    perform public.criar_projeto_do_lead('00000000-0000-4000-8000-0000000000d2');
+    raise exception 'FALHOU: associado criou projeto do lead de outra pessoa';
+  exception when insufficient_privilege then null;
+  end;
+  begin
+    insert into public.projetos (nome, cliente_id) values ('Solto', '00000000-0000-4000-8000-0000000000c1');
+    raise exception 'FALHOU: associado criou projeto sem lead ganho';
+  exception when insufficient_privilege then null;
+  end;
+  update public.projetos set status = 'Pausado' where lead_id = '00000000-0000-4000-8000-0000000000d1';
+  get diagnostics n = row_count;
+  assert n = 1, 'FALHOU: responsável não editou o próprio projeto';
+  delete from public.projetos where lead_id = '00000000-0000-4000-8000-0000000000d1';
+  get diagnostics n = row_count;
+  assert n = 0, 'FALHOU: associado apagou projeto';
 end $$;
 
 -- ---------- 2. Gestão ----------
@@ -153,6 +185,10 @@ begin
   assert (select count(*) from public.propostas) >= 1,           'FALHOU: gestão não lê propostas';
   assert (select count(*) from public.leads_valores) >= 1,       'FALHOU: gestão não lê valores';
   assert (select count(*) from public.clientes_documentos) >= 1, 'FALHOU: gestão não lê CPF/CNPJ';
+  assert (select valor from public.projetos_valores v join public.projetos p on p.id = v.projeto_id
+          where p.lead_id = '00000000-0000-4000-8000-0000000000d1') = 12000,
+    'FALHOU: o valor do lead não foi para o projeto';
+  update public.membros set aniversario = '2000-05-20' where id = '00000000-0000-4000-8000-0000000000a2';
   update public.leads set proximo_passo = 'ok' where id = '00000000-0000-4000-8000-0000000000d2';
   insert into public.membros (nome, email) values ('Novo Teste', 'novo@teste.spj');
 
@@ -176,6 +212,7 @@ begin
     assert (select count(*) from public.leads) = 0,     'FALHOU: sem acesso leu leads';
     assert (select count(*) from public.contatos) = 0,  'FALHOU: sem acesso leu contatos';
     assert (select count(*) from public.propostas) = 0, 'FALHOU: sem acesso leu propostas';
+    assert (select count(*) from public.projetos) = 0,  'FALHOU: sem acesso leu projetos';
     assert (select count(*) from public.listas) = 0,    'FALHOU: sem acesso leu listas';
     begin
       insert into public.clientes (empresa) values ('Invasor');
@@ -219,4 +256,4 @@ end $$;
 
 rollback;
 
-select 'Tudo certo: as permissões da Fase 1 estão valendo.' as resultado;
+select 'Tudo certo: as permissões estão valendo.' as resultado;

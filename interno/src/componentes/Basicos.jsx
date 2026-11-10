@@ -59,7 +59,7 @@ export function Carregando({ consulta, children }) {
 export function Etiqueta({ children, destaque = false }) {
   const cor = destaque ? 'border-petroleo bg-petroleo text-white' : 'border-linha bg-white text-preto';
   return (
-    <span className={`inline-flex items-center rounded border px-2 py-0.5 text-sm font-semibold ${cor}`}>
+    <span className={`inline-flex shrink-0 items-center whitespace-nowrap rounded border px-2 py-0.5 text-sm font-semibold ${cor}`}>
       {children}
     </span>
   );

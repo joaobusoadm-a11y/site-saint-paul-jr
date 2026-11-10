@@ -17,6 +17,10 @@ const MENU = [
     ],
   },
   {
+    titulo: 'Projetos',
+    itens: [{ para: '/projetos', nome: 'Projetos' }],
+  },
+  {
     titulo: 'Pessoas',
     itens: [
       { para: '/equipe', nome: 'Equipe' },

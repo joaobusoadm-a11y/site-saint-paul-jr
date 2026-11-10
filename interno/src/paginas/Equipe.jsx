@@ -5,10 +5,10 @@ import {
   AcoesDoFormulario, AreaTexto, Cabecalho, Campo, Entrada, Erro, Foto, LinkExterno, Modal, Selecao, Vazio,
 } from '../componentes/Basicos.jsx';
 import { atualizarMeuPerfil } from '../lib/dados.js';
-import { aniversarioBR, aniversarioISO, contem, linkWhatsApp, textoOuNulo } from '../lib/formato.js';
+import { aniversarioBR, contem, linkWhatsApp, textoOuNulo } from '../lib/formato.js';
 import { useCampos, useEnvio } from '../lib/useEnvio.js';
 
-// Cada pessoa edita a própria foto, telefone, bio e aniversário
+// Cada pessoa edita a própria foto, telefone e bio. O aniversário é a gestão que edita, em Membros.
 function FormPerfil({ aoFechar, aoSalvar }) {
   const { membro, fotoDoGoogle } = useAuth();
   const envio = useEnvio();
@@ -16,22 +16,15 @@ function FormPerfil({ aoFechar, aoSalvar }) {
     foto: membro.foto || '',
     telefone: membro.telefone || '',
     bio: membro.bio || '',
-    aniversario: aniversarioBR(membro.aniversario),
   });
 
   const aoEnviar = (evento) => {
     evento.preventDefault();
-    const aniversario = aniversarioISO(f.aniversario);
-    if (aniversario === undefined) {
-      envio.setErro('Escreva o aniversário como dia/mês, por exemplo 05/09.');
-      return;
-    }
     envio.enviar(async () => {
       await atualizarMeuPerfil({
         telefone: textoOuNulo(f.telefone),
         foto: textoOuNulo(f.foto),
         bio: textoOuNulo(f.bio),
-        aniversario,
       });
       aoSalvar();
     });
@@ -44,7 +37,7 @@ function FormPerfil({ aoFechar, aoSalvar }) {
           <Foto src={f.foto} nome={membro.nome} tamanho={72} />
           <div className="min-w-0">
             <p className="font-semibold">{membro.nome}</p>
-            <p className="text-sm text-suave">Nome, setor e cargo são alterados pela gestão.</p>
+            <p className="text-sm text-suave">Nome, setor, cargo e aniversário são alterados pela gestão.</p>
           </div>
         </div>
         <Campo rotulo="Foto (link da imagem)">
@@ -64,14 +57,9 @@ function FormPerfil({ aoFechar, aoSalvar }) {
             </button>
           </p>
         )}
-        <div className="grid gap-4 sm:grid-cols-2">
-          <Campo rotulo="WhatsApp">
-            <Entrada type="tel" value={f.telefone} onChange={mudar('telefone')} placeholder="(11) 90000-0000" />
-          </Campo>
-          <Campo rotulo="Aniversário (dia/mês)">
-            <Entrada inputMode="numeric" value={f.aniversario} onChange={mudar('aniversario')} placeholder="dd/mm" />
-          </Campo>
-        </div>
+        <Campo rotulo="WhatsApp">
+          <Entrada type="tel" value={f.telefone} onChange={mudar('telefone')} placeholder="(11) 90000-0000" />
+        </Campo>
         <Campo rotulo="Bio curta" dica={`${f.bio.length}/280`}>
           <AreaTexto maxLength={280} value={f.bio} onChange={mudar('bio')} placeholder="O que você faz na SPJ, em uma ou duas frases" />
         </Campo>
@@ -143,6 +131,9 @@ export default function Equipe() {
                   </div>
                 </div>
                 {pessoa.bio && <p className="mt-3">{pessoa.bio}</p>}
+                {pessoa.aniversario && (
+                  <p className="mt-3 text-sm text-suave">Aniversário: {aniversarioBR(pessoa.aniversario)}</p>
+                )}
                 <p className="mt-3 break-all">
                   <a className="btn-texto" href={`mailto:${pessoa.email}`}>{pessoa.email}</a>
                 </p>

@@ -4,8 +4,9 @@ Site com login que junta o CRM, a equipe e (nas próximas fases) a agenda, as ta
 O que o site deve ser está em [`INSTRUCOES.md`](INSTRUCOES.md). Este arquivo explica como colocar no ar, testar e mexer.
 
 **Pronto (Fase 1):** login com Google, perfis Gestão e Associado com permissões no banco, Membros, Equipe e o CRM
-(kanban de leads, clientes, contatos, registrar contato e propostas).
-**Falta:** Fase 2 (Início, Calendário, Tarefas, Projetos, Arquivos), Fase 3 (Processos, Modelos, Mural, FAQ, Sugestões,
+(kanban de leads, clientes, contatos, registrar contato e propostas). Da Fase 2 já entrou a base de Projetos:
+lead que vai para Ganha oferece "Criar projeto?" e o projeto aparece na lista de Projetos.
+**Falta:** Fase 2 (Início, Calendário, Tarefas, entregas e handoff dos projetos, Arquivos), Fase 3 (Processos, Modelos, Mural, FAQ, Sugestões,
 Onboarding) e Fase 4 (Precificação, Viabilidade, Indicadores, Financeiro).
 
 Feito com React + Tailwind (Vite) e Supabase. Os planos gratuitos bastam.
@@ -17,7 +18,8 @@ Use as contas **da SPJ**, com dois administradores da gestão, nunca a conta pes
 ### 1. Banco (Supabase)
 
 1. Crie um projeto em [supabase.com](https://supabase.com).
-2. Em **SQL Editor**, cole o arquivo [`supabase/migrations/0001_fase1.sql`](supabase/migrations/0001_fase1.sql) inteiro e clique em **Run**.
+2. Em **SQL Editor**, rode os arquivos de [`supabase/migrations/`](supabase/migrations/) um por vez, na ordem do
+   número (`0001_fase1.sql`, depois `0002_projetos.sql`): cole o arquivo inteiro e clique em **Run**.
 3. Abra [`supabase/primeiro-acesso.sql`](supabase/primeiro-acesso.sql), troque o nome e o e-mail pela primeira pessoa
    da gestão e rode. Os outros membros são cadastrados depois, pelo site.
 
@@ -33,7 +35,7 @@ Use as contas **da SPJ**, com dois administradores da gestão, nunca a conta pes
 
 ### 3. Hospedagem (Vercel)
 
-1. Importe este repositório na Vercel e, em **Root Directory**, escolha `interno`.
+1. Importe este repositório na Vercel.
 2. Em **Environment Variables**, crie `VITE_SUPABASE_URL` e `VITE_SUPABASE_ANON_KEY` com os valores de
    **Project Settings > API** do Supabase. A chave "anon" é pública e pode ficar no site.
    A chave `service_role` nunca entra no site.
@@ -41,7 +43,6 @@ Use as contas **da SPJ**, com dois administradores da gestão, nunca a conta pes
 
 ### Rodar no computador
 
-    cd interno
     cp .env.example .env.local     (e preencha as duas variáveis)
     npm install
     npm run dev
@@ -57,8 +58,8 @@ Editor e rode. Tem que aparecer "Tudo certo". O teste cria dados de exemplo, con
 
     await supabase.from('propostas').select('*')
 
-A resposta tem que ser `data: []`. Vale o mesmo para `leads_valores` (valor dos leads) e `clientes_documentos`
-(CPF/CNPJ). Logado como gestão, as mesmas linhas trazem os dados.
+A resposta tem que ser `data: []`. Vale o mesmo para `leads_valores` (valor dos leads), `projetos_valores`
+(valor dos projetos) e `clientes_documentos` (CPF/CNPJ). Logado como gestão, as mesmas linhas trazem os dados.
 
 **Na mão:**
 
@@ -75,18 +76,19 @@ As regras valem no banco (RLS), no arquivo da migração. O site só esconde o q
 
 | | Gestão | Associado |
 |---|---|---|
-| Membros e listas | cadastra e edita | vê a equipe; edita a própria foto, WhatsApp, bio e aniversário |
+| Membros e listas | cadastra e edita (inclusive o aniversário) | vê a equipe; edita a própria foto, WhatsApp e bio |
 | Clientes e contatos | vê e edita tudo | vê tudo, sem CPF/CNPJ; cadastra; edita onde é responsável ou tem um lead |
 | Leads | vê e edita tudo | vê tudo, sem valor; cadastra no próprio nome; edita os leads em que é responsável |
 | Registrar contato | sim | sim, no próprio nome |
 | Propostas | sim | não |
-| Excluir cliente ou lead | sim | não |
+| Projetos | vê e edita tudo; cadastra do zero | vê tudo, sem valor; cria o projeto do próprio lead ganho; edita onde é responsável ou está na equipe |
+| Excluir cliente, lead ou projeto | sim | não |
 
 Como o login funciona: no primeiro acesso, a conta Google é ligada ao membro que tem o mesmo e-mail. Vale o e-mail
 confirmado pelo Google. Se a gestão troca o e-mail de um membro, a conta antiga deixa de valer.
 
 Regras automáticas do banco: registrar contato atualiza o próximo passo e a data do lead; lead que vai para Ganha
-deixa o cliente como Ativo; lead só vai para Perdida com motivo; sempre sobra uma pessoa ativa na gestão.
+deixa o cliente como Ativo e pode virar um projeto (um por lead, com o valor do lead); lead só vai para Perdida com motivo; sempre sobra uma pessoa ativa na gestão.
 
 ## Onde fica cada coisa
 

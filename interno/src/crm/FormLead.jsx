@@ -5,6 +5,7 @@ import {
   AcoesDoFormulario, AreaTexto, Campo, Entrada, EntradaData, Erro, MaisDetalhes, Modal, Selecao,
 } from '../componentes/Basicos.jsx';
 import { useRegistrarContato } from '../componentes/Layout.jsx';
+import { podeVirarProjeto } from './CriarProjeto.jsx';
 import { ETAPAS } from '../lib/constantes.js';
 import {
   buscarClientesResumo, buscarContatosDoCliente, excluirLead, salvarCliente, salvarLead,
@@ -17,7 +18,7 @@ const NOVO_CLIENTE = '__novo__';
 
 // Cadastro e edição de lead. Campos obrigatórios em cima; o resto em "Mais detalhes".
 // lead = null para cadastrar. clienteId fixa o cliente (quando aberto pela ficha do cliente).
-export default function FormLead({ lead, clienteId, aoFechar, aoSalvar }) {
+export default function FormLead({ lead, clienteId, aoFechar, aoSalvar, aoCriarProjeto }) {
   const { membro, ehGestao } = useAuth();
   const { membros, opcoes } = useApoio();
   const registrarContato = useRegistrarContato();
@@ -121,6 +122,18 @@ export default function FormLead({ lead, clienteId, aoFechar, aoSalvar }) {
           <Link className="btn-texto min-h-[44px]" to={`/crm/clientes/${lead.cliente_id}`}>
             Ver ficha do cliente
           </Link>
+          {aoCriarProjeto && podeVirarProjeto(lead, membro, ehGestao) && (
+            <button
+              type="button"
+              className="btn-texto min-h-[44px]"
+              onClick={() => {
+                aoFechar();
+                aoCriarProjeto(lead);
+              }}
+            >
+              Criar projeto
+            </button>
+          )}
         </div>
       )}
       {!podeEditar && (

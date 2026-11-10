@@ -10,6 +10,7 @@ import FormCliente from '../crm/FormCliente.jsx';
 import FormContato from '../crm/FormContato.jsx';
 import FormLead from '../crm/FormLead.jsx';
 import FormProposta from '../crm/FormProposta.jsx';
+import CriarProjeto, { podeVirarProjeto } from '../crm/CriarProjeto.jsx';
 import { NOME_DA_ETAPA, NOME_DO_TIPO, posicaoNaJornada } from '../lib/constantes.js';
 import { buscarCliente } from '../lib/dados.js';
 import { aniversarioBR, dataBR, jaPassou, linkWhatsApp, moeda } from '../lib/formato.js';
@@ -52,6 +53,16 @@ export default function ClienteFicha() {
     setJanela(null);
     consulta.recarregar();
   };
+  // Lead salvo: se acabou de ir para Ganha, oferece criar o projeto
+  const salvouLead = (salvo) => {
+    const antes = janela?.item;
+    consulta.recarregar();
+    if (salvo && antes?.etapa !== 'ganha' && podeVirarProjeto({ ...antes, ...salvo }, membro, ehGestao)) {
+      setJanela({ tipo: 'projeto', item: salvo });
+    } else {
+      setJanela(null);
+    }
+  };
 
   const cliente = consulta.dados;
 
@@ -93,7 +104,7 @@ export default function ClienteFicha() {
           <div className="grid gap-4 sm:gap-6">
             <section className="rounded bg-areia p-4 sm:p-6" aria-label="Jornada">
               <p className="rotulo mb-4 text-petroleo-escuro">Jornada do cliente</p>
-              <Jornada posicao={posicaoNaJornada(cliente.leads)} />
+              <Jornada posicao={posicaoNaJornada(cliente.leads, cliente.projetos)} />
             </section>
 
             <Secao titulo="Dados da empresa">
@@ -234,6 +245,31 @@ export default function ClienteFicha() {
               )}
             </Secao>
 
+            <Secao titulo="Projetos" acao={<Link className="btn-texto min-h-[44px]" to="/projetos">Ver todos</Link>}>
+              {cliente.projetos.length === 0 ? (
+                <p className="text-suave">Nenhum projeto. Quando um lead vai para Ganha, o site oferece criar o projeto.</p>
+              ) : (
+                <ul className="grid gap-2">
+                  {cliente.projetos.map((projeto) => (
+                    <li
+                      key={projeto.id}
+                      className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 rounded border border-linha p-3"
+                    >
+                      <span className="min-w-0">
+                        <span className="block font-semibold">{projeto.nome}</span>
+                        <span className="block text-sm text-suave">
+                          {projeto.responsavel?.nome || 'Sem responsável'}
+                          {projeto.prazo && ` · prazo final ${dataBR(projeto.prazo)}`}
+                          {projeto.valor !== null && ` · ${moeda(projeto.valor)}`}
+                        </span>
+                      </span>
+                      <Etiqueta destaque={projeto.status === 'Em andamento'}>{projeto.status}</Etiqueta>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </Secao>
+
             {ehGestao && (
               <Secao
                 titulo="Propostas"
@@ -285,8 +321,15 @@ export default function ClienteFicha() {
             <FormContato contato={janela.item} clienteId={cliente.id} aoFechar={fechar} aoSalvar={salvou} />
           )}
           {janela?.tipo === 'lead' && (
-            <FormLead lead={janela.item} clienteId={cliente.id} aoFechar={fechar} aoSalvar={salvou} />
+            <FormLead
+              lead={janela.item}
+              clienteId={cliente.id}
+              aoFechar={fechar}
+              aoSalvar={salvouLead}
+              aoCriarProjeto={(lead) => setJanela({ tipo: 'projeto', item: lead })}
+            />
           )}
+          {janela?.tipo === 'projeto' && <CriarProjeto lead={janela.item} aoFechar={salvou} />}
           {janela?.tipo === 'proposta' && (
             <FormProposta proposta={janela.item} clienteId={cliente.id} aoFechar={fechar} aoSalvar={salvou} />
           )}

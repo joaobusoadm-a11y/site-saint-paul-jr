@@ -8,7 +8,7 @@ import { LISTAS, PERFIS } from '../lib/constantes.js';
 import {
   adicionarNaLista, buscarNoNomeDe, reatribuir, removerDaLista, salvarMembro,
 } from '../lib/dados.js';
-import { contem, textoOuNulo } from '../lib/formato.js';
+import { aniversarioBR, aniversarioISO, contem, textoOuNulo } from '../lib/formato.js';
 import { useConsulta } from '../lib/useConsulta.js';
 import { useCampos, useEnvio } from '../lib/useEnvio.js';
 
@@ -22,10 +22,16 @@ function FormMembro({ membro, aoFechar, aoSalvar }) {
     perfil: membro?.perfil || 'associado',
     setor: membro?.setor || '',
     cargo: membro?.cargo || '',
+    aniversario: aniversarioBR(membro?.aniversario),
   });
 
   const aoEnviar = (evento) => {
     evento.preventDefault();
+    const aniversario = aniversarioISO(f.aniversario);
+    if (aniversario === undefined) {
+      envio.setErro('Escreva o aniversário como dia/mês, por exemplo 05/09.');
+      return;
+    }
     envio.enviar(async () => {
       await salvarMembro(membro?.id, {
         nome: f.nome.trim(),
@@ -33,6 +39,7 @@ function FormMembro({ membro, aoFechar, aoSalvar }) {
         perfil: f.perfil,
         setor: textoOuNulo(f.setor),
         cargo: textoOuNulo(f.cargo),
+        aniversario,
       });
       aoSalvar();
     });
@@ -63,6 +70,9 @@ function FormMembro({ membro, aoFechar, aoSalvar }) {
             <Entrada value={f.cargo} onChange={mudar('cargo')} />
           </Campo>
         </div>
+        <Campo rotulo="Aniversário (dia/mês)" dica="Aparece na Equipe e, depois, no Calendário.">
+          <Entrada inputMode="numeric" value={f.aniversario} onChange={mudar('aniversario')} placeholder="dd/mm" />
+        </Campo>
         <Erro>{envio.erro}</Erro>
         <AcoesDoFormulario salvando={envio.salvando} aoCancelar={aoFechar} />
       </form>

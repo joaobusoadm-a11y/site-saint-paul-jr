@@ -22,14 +22,9 @@ export function salvarMembro(id, dados) {
   );
 }
 
-export function atualizarMeuPerfil({ telefone, foto, bio, aniversario }) {
+export function atualizarMeuPerfil({ telefone, foto, bio }) {
   return executar(
-    supabase.rpc('atualizar_meu_perfil', {
-      p_telefone: telefone,
-      p_foto: foto,
-      p_bio: bio,
-      p_aniversario: aniversario,
-    }),
+    supabase.rpc('atualizar_meu_perfil', { p_telefone: telefone, p_foto: foto, p_bio: bio }),
   );
 }
 
@@ -92,7 +87,9 @@ export function buscarClientes() {
   return executar(
     supabase
       .from('clientes')
-      .select('*, responsavel:membros!responsavel_id(id, nome), leads!cliente_id(id, etapa)')
+      .select(
+        '*, responsavel:membros!responsavel_id(id, nome), leads!cliente_id(id, etapa), projetos!cliente_id(id, status)',
+      )
       .order('empresa'),
   );
 }
@@ -102,12 +99,14 @@ export async function buscarCliente(id, ehGestao) {
   const soGestao = ehGestao
     ? ', documento:clientes_documentos(documento), propostas!cliente_id(*)'
     : '';
+  const valorDoProjeto = ehGestao ? ', valor:projetos_valores(valor)' : '';
   const cliente = await executar(
     supabase
       .from('clientes')
       .select(
         '*, responsavel:membros!responsavel_id(id, nome), contatos!cliente_id(*), ' +
-          `leads!cliente_id(*, responsavel:membros!responsavel_id(id, nome)${valorDoLead}), ` +
+          `leads!cliente_id(*, responsavel:membros!responsavel_id(id, nome), projetos!lead_id(id)${valorDoLead}), ` +
+          `projetos!cliente_id(*, responsavel:membros!responsavel_id(id, nome)${valorDoProjeto}), ` +
           'contatos_feitos!cliente_id(*, responsavel:membros!responsavel_id(id, nome), lead:leads!lead_id(id, titulo))' +
           soGestao,
       )
@@ -122,6 +121,7 @@ export async function buscarCliente(id, ehGestao) {
     (a, b) => b.data.localeCompare(a.data) || b.criado_em.localeCompare(a.criado_em),
   );
   cliente.propostas = cliente.propostas || [];
+  cliente.projetos = (cliente.projetos || []).map((p) => ({ ...p, valor: umValor(p.valor, 'valor') }));
   return cliente;
 }
 
@@ -178,7 +178,7 @@ export async function buscarLeads(ehGestao) {
     supabase
       .from('leads')
       .select(
-        '*, cliente:clientes!cliente_id(id, empresa), responsavel:membros!responsavel_id(id, nome)' +
+        '*, cliente:clientes!cliente_id(id, empresa), responsavel:membros!responsavel_id(id, nome), projetos!lead_id(id)' +
           (ehGestao ? ', valor:leads_valores(valor)' : ''),
       )
       .order('data_proximo_contato', { ascending: true, nullsFirst: false }),
@@ -226,6 +226,48 @@ export function moverLead(id, etapa, motivoPerda = null) {
 
 export function excluirLead(id) {
   return executar(supabase.from('leads').delete().eq('id', id).select().single());
+}
+
+// ---------- Projetos ----------
+// Base da tela Projetos. Entregas e checklist de handoff chegam na Fase 2.
+
+export async function buscarProjetos(ehGestao) {
+  const projetos = await executar(
+    supabase
+      .from('projetos')
+      .select(
+        '*, cliente:clientes!cliente_id(id, empresa), responsavel:membros!responsavel_id(id, nome)' +
+          (ehGestao ? ', valor:projetos_valores(valor)' : ''),
+      )
+      .order('prazo', { ascending: true, nullsFirst: false }),
+  );
+  return projetos.map((projeto) => ({ ...projeto, valor: umValor(projeto.valor, 'valor') }));
+}
+
+// "Criar projeto?": o banco cria o projeto a partir do lead ganho e leva o valor junto
+export function criarProjetoDoLead(leadId) {
+  return executar(supabase.rpc('criar_projeto_do_lead', { p_lead_id: leadId }));
+}
+
+// "valor" só é gravado quando quem salva é da gestão (undefined = não mexer no valor)
+export async function salvarProjeto(id, dados, valor, ehGestao) {
+  const tabela = supabase.from('projetos');
+  const projeto = await executar(
+    id ? tabela.update(dados).eq('id', id).select().single() : tabela.insert(dados).select().single(),
+  );
+  if (ehGestao && valor !== undefined) {
+    const valores = supabase.from('projetos_valores');
+    await executar(
+      valor === null
+        ? valores.delete().eq('projeto_id', projeto.id)
+        : valores.upsert({ projeto_id: projeto.id, valor }),
+    );
+  }
+  return projeto;
+}
+
+export function excluirProjeto(id) {
+  return executar(supabase.from('projetos').delete().eq('id', id).select().single());
 }
 
 // ---------- Contatos feitos ----------
